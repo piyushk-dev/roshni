@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import re
 
-from . import doctor, journey, qa, quote, voice
+from . import doctor, journey, performance, qa, quote, rwa, voice
 from .format import BillProblem, message
 
 DEVANAGARI = re.compile(r"[ऀ-ॿ]")
@@ -28,7 +28,11 @@ TEXT = {
         ),
     },
     "lang_set": {"en": "Okay, replies will be in English now.", "hi": "ठीक है, अब जवाब हिंदी में आएँगे।"},
-    "reading": {"en": "⏳ Reading your bill…", "hi": "⏳ आपका बिल पढ़ा जा रहा है…"},
+    "reading": {"en": "⏳ Reading your photo…", "hi": "⏳ आपकी फोटो पढ़ी जा रही है…"},
+    "system_set": {"en": "Got it: a {kw:g} kW system. Send a photo of your inverter or solar app any time to check its output.",
+                   "hi": "ठीक है: {kw:g} kW सिस्टम। उत्पादन जाँचने के लिए कभी भी इन्वर्टर या सोलर ऐप की फोटो भेजें।"},
+    "need_size": {"en": "What size is your system? Reply SYSTEM followed by its kW, for example SYSTEM 3.",
+                  "hi": "आपका सिस्टम कितने kW का है? SYSTEM और फिर kW लिखें, जैसे SYSTEM 3।"},
     "location_saved": {
         "en": "📍 Got it. Estimates will use the sunlight at this spot. Now send your bill.",
         "hi": "📍 लोकेशन मिल गई। अब इसी जगह की धूप से अनुमान लगेगा। अब अपना बिल भेजें।",
@@ -51,6 +55,8 @@ TEXT = {
 ENGLISH_WORDS = {"english", "eng", "en"}
 HINDI_WORDS = {"hindi", "हिंदी", "हिन्दी"}
 DELETE_WORDS = {"delete my data", "delete", "मेरा डेटा मिटाओ"}
+FLAT_WORDS = {"flat", "apartment", "society", "rwa", "फ्लैट", "फ़्लैट", "सोसाइटी"}
+SYSTEM_SIZE = re.compile(r"^system\s+(\d+(?:\.\d+)?)\s*(?:kw)?$", re.IGNORECASE)
 GREETINGS = {"hi", "hii", "hello", "hey", "namaste", "namaskar", "नमस्ते", "नमस्कार", "menu", "start over"}
 COMMANDS = {
     "apply": {"apply", "start", "apply demo", "आवेदन", "aavedan"},
@@ -91,6 +97,18 @@ def journey_reply(cmd: str, text: str, user: dict, to: str, lang: str) -> str:
     return t["done"].format(n=j["stage"] + 1, title=st["title"].get(lang, st["title"]["en"]))
 
 
+def _output_check(data: bytes, media_type: str, user: dict, wa, to: str, lang: str, pipeline) -> dict:
+    reading = performance.read_generation(data, media_type)
+    kw = reading.get("system_kw") or user.get("system_kw") or (user.get("last") or {}).get("kw")
+    if not kw:
+        wa.send_text(to, TEXT["need_size"][lang])
+        return user
+    assumed = not reading.get("system_kw") and not user.get("system_kw")
+    sy = pipeline.yield_for(user.get("lat") or 28.61, user.get("lon") or 77.21)
+    wa.send_text(to, performance.message(performance.check(reading, kw, sy), kw, lang, assumed))
+    return user
+
+
 def handle(msg: dict, user: dict, wa, pipeline) -> dict | None:
     """Reply to one incoming message. Returns the user's updated state, or None if they asked to be forgotten."""
     to, kind = msg["from"], msg.get("type")
@@ -110,6 +128,15 @@ def handle(msg: dict, user: dict, wa, pipeline) -> dict | None:
         if cmd:
             wa.send_text(to, journey_reply(cmd, text, user, to, user["lang"]))
             return user
+        size = SYSTEM_SIZE.match(text.strip())
+        if size:
+            user["system_kw"] = float(size.group(1))
+            wa.send_text(to, TEXT["system_set"][user["lang"]].format(kw=user["system_kw"]))
+            return user
+        if text.lower().strip(" !.") in FLAT_WORDS:
+            sy = pipeline.yield_for(user.get("lat") or 28.61, user.get("lon") or 77.21)
+            wa.send_text(to, rwa.message(user["lang"], sy.annual))
+            return user
         if text.lower().strip(" !.") in GREETINGS or len(text) < 4:
             wa.send_text(to, TEXT["welcome"][user["lang"]])
             return user
@@ -123,6 +150,13 @@ def handle(msg: dict, user: dict, wa, pipeline) -> dict | None:
     elif kind in ("image", "document"):
         wa.send_text(to, TEXT["reading"][lang])
         data, media_type = wa.download_media(msg[kind]["id"])
+        doc = performance.classify(data, media_type)
+        if doc == "solar_quote":
+            q, flags, band = pipeline.check_quote(data, media_type)
+            wa.send_text(to, quote.message(q, flags, lang, band))
+            return user
+        if doc == "inverter_reading":
+            return _output_check(data, media_type, user, wa, to, lang, pipeline)
         try:
             request, reading = pipeline.request_from_bill(data, media_type)
             a = pipeline.run({**request, **{k: user[k] for k in ("lat", "lon") if k in user}})

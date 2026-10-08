@@ -26,3 +26,11 @@ LOW = [150, 140, 160, 190, 240, 260, 230, 210, 190, 170, 150, 150]
 
 def months(units: list[float]) -> dict[int, float]:
     return dict(enumerate(units, start=1))
+
+
+@pytest.fixture(autouse=True)
+def no_network_classifier(monkeypatch):
+    """Photos route as bills unless a test says otherwise; never call Bedrock from tests."""
+    from surya import performance
+
+    monkeypatch.setattr(performance, "classify", lambda data, media_type, client=None: "electricity_bill")
