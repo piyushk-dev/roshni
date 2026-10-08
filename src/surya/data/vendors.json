@@ -1,73 +1,351 @@
 {
-  "_note": "Demo vendors for the hackathon. The companies are fictional and their scorecards are sample data; the site and bot label them as demo. Each one shows a different trap the quote checker catches.",
+  "_note": "Real businesses researched from their own published pages. Prices and instant replies are simulations, not quotes from these businesses; no contact, partnership, portal verification or quality rating is implied. Educational risk examples are anonymous.",
   "vendors": [
     {
-      "id": "dhoop",
-      "name": "Dhoop Rooftop Co.",
+      "id": "solarsquare",
+      "name": "SolarSquare",
       "demo": true,
-      "areas": ["*"],
-      "since": 2018,
+      "areas": [
+        "DL"
+      ],
+      "region": "Delhi",
+      "reply_after_s": 2,
+      "verified": false,
+      "scenario": false,
+      "checked_on": "2026-10-08",
+      "source": "https://www.solarsquare.in/rooftop-solar-in-delhi/",
+      "website": "https://www.solarsquare.in/rooftop-solar-in-delhi/",
+      "services": {
+        "en": "Residential solar; monitoring and maintenance plans",
+        "hi": "घरेलू सोलर; निगरानी और रखरखाव योजनाएँ"
+      },
+      "coverage_note": {
+        "en": "Published region; confirm service at your PIN code and current registration for your DISCOM.",
+        "hi": "प्रकाशित क्षेत्र; अपने पिन कोड पर सेवा और बिजली कंपनी की मौजूदा रजिस्ट्रेशन सूची जाँचें।"
+      },
+      "quote": {
+        "price": {
+          "of": "typical",
+          "x": 1.0
+        },
+        "dcr": "yes",
+        "module_watt": 545,
+        "inverter_ratio": 1.0,
+        "module_performance_warranty_years": 25,
+        "inverter_warranty_years": 10,
+        "system_warranty_years": 5,
+        "advance_pct": 30,
+        "timeline_days": 21,
+        "promised_units_per_kw": 1350,
+        "net_meter_included": "yes",
+        "structure_included": "yes",
+        "earthing_included": "yes",
+        "subsidy": "max"
+      },
+      "scorecard": {}
+    },
+    {
+      "id": "alien-energy",
+      "name": "Alien Energy",
+      "demo": true,
+      "areas": [
+        "DL",
+        "HR",
+        "UP"
+      ],
+      "region": "Delhi NCR",
+      "reply_after_s": 4,
+      "verified": false,
+      "scenario": false,
+      "checked_on": "2026-10-08",
+      "source": "https://alienenergy.in/solar-energy-company-delhi/",
+      "website": "https://alienenergy.in/solar-energy-company-delhi/",
+      "services": {
+        "en": "Home and society solar; site surveys and net-metering support",
+        "hi": "घर और सोसाइटी सोलर; साइट सर्वे और नेट मीटर सहायता"
+      },
+      "coverage_note": {
+        "en": "Published region; confirm service at your PIN code and current registration for your DISCOM.",
+        "hi": "प्रकाशित क्षेत्र; अपने पिन कोड पर सेवा और बिजली कंपनी की मौजूदा रजिस्ट्रेशन सूची जाँचें।"
+      },
+      "quote": {
+        "price": {
+          "of": "typical",
+          "x": 1.0
+        },
+        "dcr": "yes",
+        "module_watt": 545,
+        "inverter_ratio": 1.0,
+        "module_performance_warranty_years": 25,
+        "inverter_warranty_years": 10,
+        "system_warranty_years": 5,
+        "advance_pct": 30,
+        "timeline_days": 21,
+        "promised_units_per_kw": 1350,
+        "net_meter_included": "yes",
+        "structure_included": "yes",
+        "earthing_included": "yes",
+        "subsidy": "max"
+      },
+      "scorecard": {}
+    },
+    {
+      "id": "bridgeway-power",
+      "name": "Bridgeway Power",
+      "demo": true,
+      "areas": [
+        "DL",
+        "HR",
+        "UP"
+      ],
+      "region": "Delhi NCR",
+      "reply_after_s": 6,
+      "verified": false,
+      "scenario": false,
+      "checked_on": "2026-10-08",
+      "source": "https://bridgewaypower.in/",
+      "website": "https://bridgewaypower.in/",
+      "services": {
+        "en": "Rooftop installation, maintenance and community solar enquiries",
+        "hi": "रूफ़टॉप इंस्टॉलेशन, रखरखाव और कम्युनिटी सोलर"
+      },
+      "coverage_note": {
+        "en": "Published region; confirm service at your PIN code and current registration for your DISCOM.",
+        "hi": "प्रकाशित क्षेत्र; अपने पिन कोड पर सेवा और बिजली कंपनी की मौजूदा रजिस्ट्रेशन सूची जाँचें।"
+      },
+      "quote": {
+        "price": {
+          "of": "typical",
+          "x": 1.0
+        },
+        "dcr": "yes",
+        "module_watt": 545,
+        "inverter_ratio": 1.0,
+        "module_performance_warranty_years": 25,
+        "inverter_warranty_years": 10,
+        "system_warranty_years": 5,
+        "advance_pct": 30,
+        "timeline_days": 21,
+        "promised_units_per_kw": 1350,
+        "net_meter_included": "yes",
+        "structure_included": "yes",
+        "earthing_included": "yes",
+        "subsidy": "max"
+      },
+      "scorecard": {}
+    },
+    {
+      "id": "freyr-energy",
+      "name": "Freyr Energy",
+      "demo": true,
+      "areas": [
+        "TS",
+        "AP"
+      ],
+      "region": "Hyderabad / Andhra Pradesh",
+      "reply_after_s": 8,
+      "verified": false,
+      "scenario": false,
+      "checked_on": "2026-10-08",
+      "source": "https://freyrenergy.com/hyderabad/",
+      "website": "https://freyrenergy.com/hyderabad/",
+      "services": {
+        "en": "Residential rooftop solar; SunPro monitoring",
+        "hi": "घरेलू रूफ़टॉप सोलर; SunPro निगरानी"
+      },
+      "coverage_note": {
+        "en": "Published region; confirm service at your PIN code and current registration for your DISCOM.",
+        "hi": "प्रकाशित क्षेत्र; अपने पिन कोड पर सेवा और बिजली कंपनी की मौजूदा रजिस्ट्रेशन सूची जाँचें।"
+      },
+      "quote": {
+        "price": {
+          "of": "typical",
+          "x": 1.0
+        },
+        "dcr": "yes",
+        "module_watt": 545,
+        "inverter_ratio": 1.0,
+        "module_performance_warranty_years": 25,
+        "inverter_warranty_years": 10,
+        "system_warranty_years": 5,
+        "advance_pct": 30,
+        "timeline_days": 21,
+        "promised_units_per_kw": 1350,
+        "net_meter_included": "yes",
+        "structure_included": "yes",
+        "earthing_included": "yes",
+        "subsidy": "max"
+      },
+      "scorecard": {}
+    },
+    {
+      "id": "tata-power-solaroof",
+      "name": "Tata Power Solaroof",
+      "demo": true,
+      "areas": [
+        "*"
+      ],
+      "region": "National enquiry network",
+      "reply_after_s": 8,
+      "verified": false,
+      "scenario": false,
+      "checked_on": "2026-10-08",
+      "source": "https://www.tatapower.com/solaroof",
+      "website": "https://www.tatapower.com/solaroof",
+      "services": {
+        "en": "Residential rooftop design, installation and after-sales support",
+        "hi": "घरेलू रूफ़टॉप डिज़ाइन, इंस्टॉलेशन और बाद की सहायता"
+      },
+      "coverage_note": {
+        "en": "National enquiry channel; service at every PIN code is not guaranteed. Confirm a local installer and current DISCOM registration.",
+        "hi": "राष्ट्रीय पूछताछ चैनल; हर पिन कोड पर सेवा की गारंटी नहीं। स्थानीय वेंडर और बिजली कंपनी की मौजूदा रजिस्ट्रेशन सूची जाँचें।"
+      },
+      "quote": {
+        "price": {
+          "of": "typical",
+          "x": 1.0
+        },
+        "dcr": "yes",
+        "module_watt": 545,
+        "inverter_ratio": 1.0,
+        "module_performance_warranty_years": 25,
+        "inverter_warranty_years": 10,
+        "system_warranty_years": 5,
+        "advance_pct": 30,
+        "timeline_days": 21,
+        "promised_units_per_kw": 1350,
+        "net_meter_included": "yes",
+        "structure_included": "yes",
+        "earthing_included": "yes",
+        "subsidy": "max"
+      },
+      "scorecard": {}
+    }
+  ],
+  "scenarios": [
+    {
+      "id": "example-1",
+      "name": "Example quote A",
+      "demo": true,
+      "areas": [
+        "*"
+      ],
       "reply_after_s": 6,
       "quote": {
-        "price": {"of": "typical", "x": 1.0},
-        "dcr": "yes", "module_watt": 545, "inverter_ratio": 1.0,
-        "module_performance_warranty_years": 25, "inverter_warranty_years": 10, "system_warranty_years": 5,
-        "advance_pct": 30, "timeline_days": 21, "promised_units_per_kw": 1350,
-        "net_meter_included": "yes", "structure_included": "yes", "earthing_included": "yes",
+        "price": {
+          "of": "typical",
+          "x": 1.0
+        },
+        "dcr": "yes",
+        "module_watt": 545,
+        "inverter_ratio": 1.0,
+        "module_performance_warranty_years": 25,
+        "inverter_warranty_years": 10,
+        "system_warranty_years": 5,
+        "advance_pct": 30,
+        "timeline_days": 21,
+        "promised_units_per_kw": 1350,
+        "net_meter_included": "yes",
+        "structure_included": "yes",
+        "earthing_included": "yes",
         "subsidy": "max"
       },
-      "scorecard": {"portal_grade": "A", "installs": 620, "on_time_pct": 91, "output_vs_promise_pct": 103, "would_recommend_pct": 89, "flagged_quotes_pct": 4}
+      "scorecard": {},
+      "scenario": true,
+      "verified": false
     },
     {
-      "id": "jhatpat",
-      "name": "Jhatpat Solar",
+      "id": "example-2",
+      "name": "Example quote B",
       "demo": true,
-      "areas": ["*"],
-      "since": 2023,
+      "areas": [
+        "*"
+      ],
       "reply_after_s": 2,
       "quote": {
-        "price": {"of": "low", "x": 0.8},
-        "dcr": "no", "module_watt": 550, "inverter_ratio": 1.0,
-        "module_performance_warranty_years": 25, "inverter_warranty_years": 5, "system_warranty_years": 1,
-        "advance_pct": 20, "timeline_days": 10, "promised_units_per_kw": 1500,
-        "net_meter_included": "no", "structure_included": "yes", "earthing_included": "no",
+        "price": {
+          "of": "low",
+          "x": 0.8
+        },
+        "dcr": "no",
+        "module_watt": 550,
+        "inverter_ratio": 1.0,
+        "module_performance_warranty_years": 25,
+        "inverter_warranty_years": 5,
+        "system_warranty_years": 1,
+        "advance_pct": 20,
+        "timeline_days": 10,
+        "promised_units_per_kw": 1500,
+        "net_meter_included": "no",
+        "structure_included": "yes",
+        "earthing_included": "no",
         "subsidy": "max"
       },
-      "scorecard": {"portal_grade": "C", "installs": 140, "on_time_pct": 72, "output_vs_promise_pct": 84, "would_recommend_pct": 58, "flagged_quotes_pct": 61}
+      "scorecard": {},
+      "scenario": true,
+      "verified": false
     },
     {
-      "id": "shaan",
-      "name": "Shaan Solar Roofs",
+      "id": "example-3",
+      "name": "Example quote C",
       "demo": true,
-      "areas": ["*"],
-      "since": 2020,
+      "areas": [
+        "*"
+      ],
       "reply_after_s": 4,
       "quote": {
-        "price": {"of": "high", "x": 1.22},
-        "dcr": "yes", "module_watt": 545, "inverter_ratio": 1.0,
-        "module_performance_warranty_years": 25, "inverter_warranty_years": 10, "system_warranty_years": 5,
-        "advance_pct": 60, "timeline_days": 30, "promised_units_per_kw": 1450,
-        "net_meter_included": "yes", "structure_included": "yes", "earthing_included": "yes",
+        "price": {
+          "of": "high",
+          "x": 1.22
+        },
+        "dcr": "yes",
+        "module_watt": 545,
+        "inverter_ratio": 1.0,
+        "module_performance_warranty_years": 25,
+        "inverter_warranty_years": 10,
+        "system_warranty_years": 5,
+        "advance_pct": 60,
+        "timeline_days": 30,
+        "promised_units_per_kw": 1450,
+        "net_meter_included": "yes",
+        "structure_included": "yes",
+        "earthing_included": "yes",
         "subsidy": "over"
       },
-      "scorecard": {"portal_grade": "B", "installs": 310, "on_time_pct": 80, "output_vs_promise_pct": 98, "would_recommend_pct": 70, "flagged_quotes_pct": 45}
+      "scorecard": {},
+      "scenario": true,
+      "verified": false
     },
     {
-      "id": "aaram",
-      "name": "Aaram Energy Services",
+      "id": "example-4",
+      "name": "Example quote D",
       "demo": true,
-      "areas": ["*"],
-      "since": 2016,
+      "areas": [
+        "*"
+      ],
       "reply_after_s": 9,
       "quote": {
-        "price": {"of": "typical", "x": 1.04},
-        "dcr": "yes", "module_watt": 540, "inverter_ratio": 0.75,
-        "module_performance_warranty_years": 25, "inverter_warranty_years": 8, "system_warranty_years": 5,
-        "advance_pct": 25, "timeline_days": 50, "promised_units_per_kw": 1300,
-        "net_meter_included": "yes", "structure_included": "yes", "earthing_included": "yes",
+        "price": {
+          "of": "typical",
+          "x": 1.04
+        },
+        "dcr": "yes",
+        "module_watt": 540,
+        "inverter_ratio": 0.75,
+        "module_performance_warranty_years": 25,
+        "inverter_warranty_years": 8,
+        "system_warranty_years": 5,
+        "advance_pct": 25,
+        "timeline_days": 50,
+        "promised_units_per_kw": 1300,
+        "net_meter_included": "yes",
+        "structure_included": "yes",
+        "earthing_included": "yes",
         "subsidy": "max"
       },
-      "scorecard": {"portal_grade": "A", "installs": 480, "on_time_pct": 54, "output_vs_promise_pct": 101, "would_recommend_pct": 76, "flagged_quotes_pct": 8}
+      "scorecard": {},
+      "scenario": true,
+      "verified": false
     }
   ]
 }

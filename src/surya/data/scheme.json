@@ -61,9 +61,9 @@
   },
   "grid_emission_t_per_mwh": 0.675,
   "sources": {
-    "subsidy_and_target": "https://www.drishtiias.com/important-government-schemes/ministry-of-new-and-renewable-energy/pm-surya-ghar-muft-bijli-yojana-1",
-    "dcr_rule": "https://www.securedengineers.com/insights/pm-surya-ghar-almm-non-dcr-module-exemption-explained/",
-    "loans": "https://www.solarsquare.in/blog/solar-loan-interest-rates/",
+    "subsidy_and_target": "https://mnre.gov.in/notice/operational-guidelines-for-implementation-of-the-component-central-financial-assistance-to-residential-consumers-of-pm-surya-ghar-muft-bijli-yojana/",
+    "dcr_rule": "https://mnre.gov.in/en/notice/solar-dcr-verification-portal-reg/",
+    "loans": "https://sbi.bank.in/web/sbi-green/green-loans/personal/pm-surya-ghar-loan-for-solar-roof-top",
     "cost": [
       "https://bridgewaypower.in/blog/cost-of-solar-installation-delhi-ncr",
       "https://www.solarsquare.in/blog/3-kw-solar-plant-price/"
@@ -73,20 +73,21 @@
   "state_schemes": {
     "DL": {
       "name": "Delhi Solar Energy Policy 2023, second amendment",
-      "approved": "2026-09-02",
-      "status": "Cabinet-approved; scheme guidelines and vendor list still being notified",
+      "approved": "2026-09-17",
+      "status": "Second amendment notified; route, allocation and eligibility require DISCOM confirmation",
       "zero_upfront": {
         "max_avg_units_per_month": 400,
         "max_kw": 3,
         "free_maintenance_years": 5
       },
-      "top_up_matches_central_subsidy": true,
       "net_metering_days": 25,
       "apply_at": "solar.delhi.gov.in",
       "sources": [
-        "https://desitalkchicago.com/delhi-solar-policy-gets-major-push-2-30-lakh-rooftops-targeted-by-march-2027/",
-        "https://bridgewaypower.in/delhi-solar-policy-2026"
-      ]
+        "https://solar.delhi.gov.in/page/state-subsidy",
+        "https://solar.delhi.gov.in/consumer-consents"
+      ],
+      "top_up_per_kw": 26000,
+      "top_up_cap": 78000
     }
   }
 }

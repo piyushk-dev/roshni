@@ -1,16 +1,10 @@
-"""Get quotes from vendors, compared on one basis and checked before the household sees them.
+"""Compare structured quote terms and provide sourced installer profiles.
 
-A household asks once (size from the bill, provider, pin code). Vendors in the area quote in a
-fixed shape; every quote goes through the same checker as an uploaded quote, and is shown with the
-price after subsidy, because a cheap quote with imported panels is the most expensive one once the
-subsidy is lost. The household's number is shared only with the vendor they choose.
+The public demo simulates replies and group prices; it does not contact installers, share
+household details, rank real businesses or invent completed-job outcomes. Risk examples are
+anonymous. A preference is saved without submitting a lead. Requests expire after 30 days.
 
-Vendors are scored on what happened, not on stars: price against the local fair band, how often
-their quotes get flagged, and (for the demo vendors) sample outcome figures. Requests from the same
-pin code are pooled, and five or more homes unlock a group price, like a Solarize campaign.
-
-Everything lives in one DynamoDB table (pk, sk). Without MARKET_TABLE it falls back to memory, so
-tests and local runs need no AWS.
+Everything lives in one DynamoDB table (pk, sk). Without MARKET_TABLE it falls back to memory.
 """
 
 from __future__ import annotations
@@ -25,6 +19,7 @@ import time
 from . import knowledge, load_data, quote
 from .format import inr
 from .scheme import SCHEME, central_subsidy
+from .product import number, state_code
 
 TTL_DAYS = 30
 GROUP_WINDOW_DAYS = 30
@@ -58,7 +53,7 @@ def _put(pk: str, sk: str, data: dict) -> None:
 def _get(pk: str, sk: str) -> dict | None:
     t = _t()
     item = t.get_item(Key={"pk": pk, "sk": sk}).get("Item") if t else _mem.get(pk, {}).get(sk)
-    return json.loads(item["data"]) if item else None
+    return json.loads(item["data"]) if item and item.get("expires", 0) > time.time() else None
 
 
 def _query(pk: str, prefix: str = "", since: int | None = None) -> list[dict]:
@@ -71,21 +66,56 @@ def _query(pk: str, prefix: str = "", since: int | None = None) -> list[dict]:
             cond &= Key("sk").gte(f"{since:010d}")
         elif prefix:
             cond &= Key("sk").begins_with(prefix)
-        items = t.query(KeyConditionExpression=cond)["Items"]
+        result = t.query(KeyConditionExpression=cond)
+        items = result["Items"]
+        while result.get("LastEvaluatedKey"):
+            result = t.query(KeyConditionExpression=cond, ExclusiveStartKey=result["LastEvaluatedKey"])
+            items.extend(result["Items"])
     else:
         items = [i for sk, i in sorted(_mem.get(pk, {}).items())
                  if sk.startswith(prefix) and (since is None or sk >= f"{since:010d}")]
-    return [json.loads(i["data"]) for i in items]
+    return [json.loads(i["data"]) for i in items if i.get("expires", 0) > time.time()]
+
+
+def _delete(pk: str, sk: str) -> None:
+    t = _t()
+    if t:
+        t.delete_item(Key={"pk": pk, "sk": sk})
+    else:
+        _mem.get(pk, {}).pop(sk, None)
+
+
+def forget(rid: str) -> None:
+    req = _get(f"REQ#{rid}", "META")
+    if not req:
+        raise KeyError(rid)
+    key = f"{req['created']:010d}#{rid}"
+    for row in _query(f"REQ#{rid}", "QUOTE#"):
+        _delete(f"REQ#{rid}", f"QUOTE#{row['vendor_id']}")
+    _delete(f"REQ#{rid}", "META")
+    _delete(f"OPEN#{req['state']}", key)
+    if req.get("pincode"):
+        _delete(f"GROUP#{req['state']}#{req['pincode']}", key)
+    if req.get("wa_id"):
+        _delete(f"USER#{req['wa_id']}", rid)
+
+
+def forget_user(wa_id: str) -> None:
+    for row in _query(f"USER#{wa_id}"):
+        try:
+            forget(row["id"])
+        except KeyError:
+            _delete(f"USER#{wa_id}", row["id"])
 
 
 # --- vendors ---------------------------------------------------------------------------------
 
-def demo_vendors() -> list[dict]:
-    return load_data("vendors.json")["vendors"]
+def demo_vendors(mode: str = "sample") -> list[dict]:
+    return load_data("vendors.json")["scenarios" if mode == "traps" else "vendors"]
 
 
 def _vendor(vendor_id: str) -> dict | None:
-    for v in demo_vendors():
+    for v in demo_vendors() + demo_vendors("traps"):
         if v["id"] == vendor_id:
             return v
     return _get(f"VENDOR#{vendor_id}", "PROFILE")
@@ -101,6 +131,7 @@ def register_vendor(name: str, state: str) -> dict:
     if len(name) < 3:
         raise ValueError("vendor name is too short")
     vid = knowledge.slug(name)[:40]
+    state = state_code(state)
     v = _vendor(vid)
     if v and v.get("demo"):
         raise ValueError("that name belongs to a demo vendor")
@@ -114,7 +145,7 @@ def register_vendor(name: str, state: str) -> dict:
 def scorecard(v: dict) -> dict:
     """Outcome-based score: the demo vendors carry sample figures; everyone gets live quote stats."""
     sent = _query(f"VQ#{v['id']}")
-    card: dict = {"demo": bool(v.get("demo")), "quotes_sent": len(sent)}
+    card: dict = {"demo": bool(v.get("demo")), "quotes_sent": len(sent), "outcomes_available": False}
     if sent:
         card["flagged_quotes_pct"] = round(100 * sum(1 for s in sent if s["verdict"] != "ok") / len(sent))
         card["price_vs_typical_pct"] = round(100 * sum(s["per_kw"] / s["typical"] for s in sent) / len(sent) - 100)
@@ -124,12 +155,11 @@ def scorecard(v: dict) -> dict:
 
 
 def vendors_for(state: str) -> list[dict]:
-    real = [_vendor(i["id"]) for i in _query("VENDORS")]
+    state = state_code(state)
     out = []
-    for v in demo_vendors() + [r for r in real if r]:
+    for v in demo_vendors():
         if serves(v, state):
-            out.append({"id": v["id"], "name": v["name"], "demo": bool(v.get("demo")), "since": v.get("since"),
-                        "verified": v.get("verified", v.get("demo", False)), "scorecard": scorecard(v)})
+            out.append({k: v[k] for k in ("id", "name", "region", "services", "source", "website", "checked_on", "coverage_note", "verified")})
     return out
 
 
@@ -180,9 +210,15 @@ YES_NO = ("dcr", "gst_included", "net_meter_included", "structure_included", "ea
 
 def clean_quote(raw: dict, vendor_name: str, state: str) -> dict:
     q: dict = {"is_solar_quote": True, "vendor_name": vendor_name, "state": state}
+    limits = {"total_price_rs": (10000, 5e7), "system_kw": (.5, 500), "advance_pct": (0, 100),
+              "module_watt": (100, 1000), "module_count": (1, 10000), "inverter_kw": (.1, 1000),
+              "timeline_days": (1, 730), "subsidy_promised_rs": (0, 5e7), "promised_units_per_year": (0, 1e7)}
     for k, cast in QUOTE_FIELDS.items():
         if raw.get(k) not in (None, ""):
-            q[k] = cast(raw[k])
+            val = number(raw[k], k, *limits.get(k, (0, 100)))
+            if cast is int and int(val) != val:
+                raise ValueError(f"{k} must be a whole number")
+            q[k] = cast(val)
     for k in YES_NO:
         q[k] = raw.get(k) if raw.get(k) in ("yes", "no") else "not_stated"
     if not q.get("total_price_rs") or not q.get("system_kw"):
@@ -202,8 +238,10 @@ def assess(q: dict, band: dict) -> dict:
         "verdict": quote.verdict(flags),
         "flags": quote.flags_dict(flags),
         "views": {lang: quote.render(q, flags, lang, band) for lang in ("en", "hi")},
-        "total_rs": round(total), "per_kw": round(total / kw), "subsidy_rs": subsidy, "net_rs": round(total - subsidy),
-        "pay_upfront_rs": round(total * (q.get("advance_pct") or 0) / 100),
+        "total_rs": round(total), "per_kw": round(total / kw), "subsidy_rs": subsidy, "net_rs": round(max(0, total - subsidy)),
+        "pay_upfront_rs": round(total * q["advance_pct"] / 100) if q.get("advance_pct") is not None else None,
+        "subsidy_status": "subject_to_approval" if q.get("dcr") == "yes" else "not_eligible" if q.get("dcr") == "no" else "evidence_needed",
+        "gst_unknown": q.get("gst_included") not in ("yes", "no"),
     }
 
 
@@ -225,34 +263,37 @@ def recommend(quotes: list[dict]) -> dict | None:
 # --- requests --------------------------------------------------------------------------------
 
 def _clean_request(body: dict) -> dict:
-    kw = float(body.get("kw") or 3)
-    if not 0.5 <= kw <= 10:
-        raise ValueError("size should be between 0.5 and 10 kW")
-    state = str(body.get("state") or "DL").upper()[:2]
-    pincode = re.sub(r"\D", "", str(body.get("pincode") or ""))
-    if pincode and len(pincode) != 6:
-        raise ValueError("pin code should have 6 digits")
+    kw = number(body.get("kw", 3), "system size", .5, 10)
+    state = state_code(body.get("state", "DL"))
+    pincode = str(body.get("pincode") or "").strip()
+    if pincode and not re.fullmatch(r"[1-9]\d{5}", pincode):
+        raise ValueError("PIN code must be 6 digits and cannot start with zero")
+    mode = body.get("mode", "sample")
+    if mode not in ("sample", "traps"):
+        raise ValueError("unknown comparison mode")
     return {"kw": round(kw, 1), "state": state, "discom": str(body.get("discom") or "")[:20], "pincode": pincode,
-            "sanctioned_kw": body.get("sanctioned_kw"), "source": body.get("source", "web")}
+            "sanctioned_kw": body.get("sanctioned_kw"), "source": body.get("source", "web"), "mode": mode}
 
 
 def create_request(body: dict, wa_id: str | None = None, now: float | None = None) -> dict:
     now = now or time.time()
     req = _clean_request(body)
-    rid = secrets.token_hex(4)
+    rid = secrets.token_hex(16)
     band = knowledge.price_band(req["state"], req["kw"])
     if req["pincode"]:
         _put(f"GROUP#{req['state']}#{req['pincode']}", f"{int(now):010d}#{rid}", {"id": rid})
     g = group(req["state"], req["pincode"])
     req.update({"id": rid, "created": int(now), "status": "open", "wa_id": wa_id, "band": band, "group": g})
     _put(f"REQ#{rid}", "META", req)
+    if wa_id:
+        _put(f"USER#{wa_id}", rid, {"id": rid})
     _put(f"OPEN#{req['state']}", f"{int(now):010d}#{rid}", {"id": rid})
     discount = g["discount_pct"] if g else 0
-    for v in demo_vendors():
+    for v in demo_vendors(req["mode"]):
         if serves(v, req["state"]):
             q = demo_quote(v, req, band, discount)
             _put(f"REQ#{rid}", f"QUOTE#{v['id']}", {"vendor_id": v["id"], "quote": q, "ready_at": now + v["reply_after_s"]})
-    knowledge.count(quote_requests=1)
+    # Simulations must not inflate the live impact counters.
     return view(rid, now)
 
 
@@ -268,15 +309,17 @@ def view(rid: str, now: float | None = None, for_vendor: bool = False) -> dict:
             continue
         v = _vendor(row["vendor_id"]) or {"id": row["vendor_id"], "name": row["quote"].get("vendor_name", "vendor")}
         ready.append({"vendor_id": v["id"], "vendor": {"name": v["name"], "demo": bool(v.get("demo")),
-                                                        "verified": v.get("verified", v.get("demo", False)), "scorecard": scorecard(v)},
+                                                        "verified": v.get("verified", False), "scorecard": scorecard(v),
+                                                        "source": v.get("source"), "scenario": v.get("scenario", False)},
                       "quote": row["quote"], "check": assess(row["quote"], req["band"]), "ready_at": row["ready_at"]})
     ready.sort(key=lambda r: r["ready_at"])
     waiting = [r["ready_at"] - now for r in all_quotes if r["ready_at"] > now]
-    public = {k: req[k] for k in ("id", "kw", "state", "discom", "pincode", "created", "status", "band", "group")}
+    public = {k: req[k] for k in ("id", "kw", "state", "discom", "pincode", "created", "status", "band", "group", "mode")}
     if req.get("chosen"):
         public["chosen"] = req["chosen"]
     out = {"request": public, "quotes": ready, "pending": len(waiting),
-           "next_in": round(min(waiting), 1) if waiting else None, "recommendation": recommend(ready) if ready else None}
+           "next_in": round(min(waiting), 1) if waiting else None,
+           "recommendation": recommend(ready) if ready and req["mode"] == "traps" else None}
     if for_vendor:
         out["quotes"] = [{"vendor_id": r["vendor_id"]} for r in ready]
     return out
@@ -286,13 +329,16 @@ def choose(rid: str, vendor_id: str) -> dict:
     req = _get(f"REQ#{rid}", "META")
     if not req:
         raise KeyError(rid)
-    if not _get(f"REQ#{rid}", f"QUOTE#{vendor_id}"):
+    row = _get(f"REQ#{rid}", f"QUOTE#{vendor_id}")
+    if not row or row["ready_at"] > time.time():
         raise ValueError("that vendor hasn't quoted on this request")
     v = _vendor(vendor_id)
     req.update({"status": "chosen", "chosen": vendor_id, "chosen_at": int(time.time())})
     _put(f"REQ#{rid}", "META", req)
-    knowledge.count(vendor_choices=1)
-    return {"vendor": {"id": vendor_id, "name": v["name"], "demo": bool(v.get("demo"))}, "request": rid}
+    if not v.get("demo"):
+        knowledge.count(vendor_choices=1)
+    return {"vendor": {"id": vendor_id, "name": v["name"], "demo": bool(v.get("demo"))}, "request": rid,
+            "contact_shared": False, "website": v.get("website")}
 
 
 def open_requests(state: str, vendor_id: str | None = None, limit: int = 20) -> list[dict]:
@@ -414,4 +460,26 @@ def wa_compare(view_: dict, lang: str) -> str:
 def wa_chosen(result: dict, lang: str) -> str:
     t = TEXT[lang if lang in TEXT else "en"]
     v = result["vendor"]
-    return t["chosen"].format(name=v["name"], demo=t["demo"] if v["demo"] else "")
+    reply = t["chosen"].format(name=v["name"].rstrip(" ."), demo=t["demo"] if v["demo"] else "")
+    return reply + ("\n" + result["website"] if result.get("website") else "")
+
+
+# Public installer names are real; instant quotes and the group-price mechanics are simulations.
+TEXT["en"].update(
+    ask_pin="Reply with your 6-digit PIN code to see a sample comparison using published installer profiles. No installer is contacted and your number is not shared.",
+    waiting="Sample comparison for {kw:g} kW is preparing ({n} profiles). These are illustrative prices, not installer offers. Reply QUOTES shortly.",
+    group="Demo group: {homes} requests in {pincode} this month. At {needed}, the simulation illustrates a group price; real discounts need vendor confirmation.",
+    group_on="Demo group price: {homes} requests in {pincode}; simulated {pct}% reduction. No vendor has offered this discount.",
+    head="Sample quotes for {kw:g} kW. Prices and checks are illustrative, not actual offers or ratings of these businesses:",
+    best="Best fit among these sample terms: {name}. Reply CHOOSE {n} to save this preference. No contact is shared.",
+    chosen="Saved your preference for {name}{demo}. No installer was contacted. Use their website to ask for an actual survey and quote. Reply PASSPORT for the signing and handover checks.",
+)
+TEXT["hi"].update(
+    ask_pin="प्रकाशित वेंडर प्रोफ़ाइल के साथ सैंपल तुलना के लिए 6 अंकों का पिन कोड भेजें। कोई वेंडर संपर्क नहीं किया जाएगा और नंबर साझा नहीं होगा।",
+    waiting="{kw:g} kW की सैंपल तुलना बन रही है ({n} प्रोफ़ाइल)। कीमतें उदाहरण हैं, वेंडर के असली ऑफ़र नहीं। थोड़ी देर बाद QUOTES लिखें।",
+    group="डेमो ग्रुप: इस महीने {pincode} में {homes} अनुरोध। {needed} पर ग्रुप कीमत का उदाहरण; असली छूट वेंडर से तय होगी।",
+    group_on="डेमो ग्रुप कीमत: {pincode} में {homes} अनुरोध; उदाहरण में {pct}% छूट। किसी वेंडर ने यह छूट नहीं दी।",
+    head="{kw:g} kW के सैंपल कोटेशन। कीमत और जाँच उदाहरण हैं, इन कंपनियों के असली ऑफ़र या रेटिंग नहीं:",
+    best="इन सैंपल शर्तों में सबसे सही: {name}। पसंद सेव करने के लिए CHOOSE {n} लिखें। संपर्क साझा नहीं होगा।",
+    chosen="{name}{demo} की पसंद सेव की। वेंडर से संपर्क नहीं किया गया। असली सर्वे और कोटेशन उनकी वेबसाइट पर माँगें। जाँच सूची के लिए PASSPORT लिखें।",
+)

@@ -1,133 +1,555 @@
 {
   "_note": "Government help for rooftop solar, shown on the Schemes page. Amounts come from facts.json, where people can confirm them or report a change; 'calc' tells the page how to add them up.",
-  "special_category_states": ["AR", "AS", "MN", "ML", "MZ", "NL", "SK", "TR", "HP", "UK", "JK", "LA", "AN", "LD"],
+  "special_category_states": [
+    "AR",
+    "AS",
+    "MN",
+    "ML",
+    "MZ",
+    "NL",
+    "SK",
+    "TR",
+    "HP",
+    "UK",
+    "JK",
+    "LA",
+    "AN",
+    "LD"
+  ],
   "states": {
-    "DL": {"en": "Delhi", "hi": "दिल्ली"},
-    "UP": {"en": "Uttar Pradesh", "hi": "उत्तर प्रदेश"},
-    "HR": {"en": "Haryana", "hi": "हरियाणा"},
-    "RJ": {"en": "Rajasthan", "hi": "राजस्थान"},
-    "AS": {"en": "Assam", "hi": "असम"},
-    "MH": {"en": "Maharashtra", "hi": "महाराष्ट्र"},
-    "GJ": {"en": "Gujarat", "hi": "गुजरात"},
-    "KL": {"en": "Kerala", "hi": "केरल"},
-    "HP": {"en": "Himachal Pradesh", "hi": "हिमाचल प्रदेश"},
-    "UK": {"en": "Uttarakhand", "hi": "उत्तराखंड"},
-    "XX": {"en": "Another state", "hi": "कोई और राज्य"}
+    "AN": {
+      "en": "Andaman & Nicobar Islands",
+      "hi": "अंडमान और निकोबार"
+    },
+    "AP": {
+      "en": "Andhra Pradesh",
+      "hi": "आंध्र प्रदेश"
+    },
+    "AR": {
+      "en": "Arunachal Pradesh",
+      "hi": "अरुणाचल प्रदेश"
+    },
+    "AS": {
+      "en": "Assam",
+      "hi": "असम"
+    },
+    "BR": {
+      "en": "Bihar",
+      "hi": "बिहार"
+    },
+    "CH": {
+      "en": "Chandigarh",
+      "hi": "चंडीगढ़"
+    },
+    "CG": {
+      "en": "Chhattisgarh",
+      "hi": "छत्तीसगढ़"
+    },
+    "DN": {
+      "en": "Dadra & Nagar Haveli and Daman & Diu",
+      "hi": "दादरा नगर हवेली और दमन दीव"
+    },
+    "DL": {
+      "en": "Delhi",
+      "hi": "दिल्ली"
+    },
+    "GA": {
+      "en": "Goa",
+      "hi": "गोवा"
+    },
+    "GJ": {
+      "en": "Gujarat",
+      "hi": "गुजरात"
+    },
+    "HR": {
+      "en": "Haryana",
+      "hi": "हरियाणा"
+    },
+    "HP": {
+      "en": "Himachal Pradesh",
+      "hi": "हिमाचल प्रदेश"
+    },
+    "JK": {
+      "en": "Jammu & Kashmir",
+      "hi": "जम्मू और कश्मीर"
+    },
+    "JH": {
+      "en": "Jharkhand",
+      "hi": "झारखंड"
+    },
+    "KA": {
+      "en": "Karnataka",
+      "hi": "कर्नाटक"
+    },
+    "KL": {
+      "en": "Kerala",
+      "hi": "केरल"
+    },
+    "LA": {
+      "en": "Ladakh",
+      "hi": "लद्दाख"
+    },
+    "LD": {
+      "en": "Lakshadweep",
+      "hi": "लक्षद्वीप"
+    },
+    "MP": {
+      "en": "Madhya Pradesh",
+      "hi": "मध्य प्रदेश"
+    },
+    "MH": {
+      "en": "Maharashtra",
+      "hi": "महाराष्ट्र"
+    },
+    "MN": {
+      "en": "Manipur",
+      "hi": "मणिपुर"
+    },
+    "ML": {
+      "en": "Meghalaya",
+      "hi": "मेघालय"
+    },
+    "MZ": {
+      "en": "Mizoram",
+      "hi": "मिज़ोरम"
+    },
+    "NL": {
+      "en": "Nagaland",
+      "hi": "नागालैंड"
+    },
+    "OD": {
+      "en": "Odisha",
+      "hi": "ओडिशा"
+    },
+    "PY": {
+      "en": "Puducherry",
+      "hi": "पुदुचेरी"
+    },
+    "PB": {
+      "en": "Punjab",
+      "hi": "पंजाब"
+    },
+    "RJ": {
+      "en": "Rajasthan",
+      "hi": "राजस्थान"
+    },
+    "SK": {
+      "en": "Sikkim",
+      "hi": "सिक्किम"
+    },
+    "TN": {
+      "en": "Tamil Nadu",
+      "hi": "तमिल नाडु"
+    },
+    "TS": {
+      "en": "Telangana",
+      "hi": "तेलंगाना"
+    },
+    "TR": {
+      "en": "Tripura",
+      "hi": "त्रिपुरा"
+    },
+    "UP": {
+      "en": "Uttar Pradesh",
+      "hi": "उत्तर प्रदेश"
+    },
+    "UK": {
+      "en": "Uttarakhand",
+      "hi": "उत्तराखंड"
+    },
+    "WB": {
+      "en": "West Bengal",
+      "hi": "पश्चिम बंगाल"
+    }
   },
   "schemes": [
     {
-      "id": "central", "scope": "IN", "kind": "central", "fact": "central-subsidy", "apply": "https://pmsuryaghar.gov.in",
-      "calc": {"type": "central"},
-      "title": {"en": "PM Surya Ghar central subsidy", "hi": "PM सूर्य घर केंद्रीय सब्सिडी"},
-      "amount": {"en": "₹30,000 per kW for the first 2 kW, ₹18,000 for the 3rd kW. Up to ₹78,000.", "hi": "पहले 2 kW पर ₹30,000 प्रति kW, तीसरे kW पर ₹18,000। अधिकतम ₹78,000।"},
-      "who": {"en": "Any home with its own electricity connection and roof, using a registered vendor and made-in-India (DCR) panels.", "hi": "अपने बिजली कनेक्शन और छत वाला कोई भी घर, रजिस्टर्ड वेंडर और भारत में बने (DCR) पैनल के साथ।"},
-      "how": {"en": "Apply free at pmsuryaghar.gov.in. The money reaches your bank account about 30 working days after the system is commissioned.", "hi": "pmsuryaghar.gov.in पर मुफ़्त आवेदन करें। सिस्टम चालू होने के लगभग 30 कार्य-दिवस बाद पैसा बैंक खाते में आता है।"}
+      "id": "central",
+      "scope": "IN",
+      "kind": "central",
+      "fact": "central-subsidy",
+      "apply": "https://pmsuryaghar.gov.in",
+      "calc": {
+        "type": "central"
+      },
+      "title": {
+        "en": "PM Surya Ghar central subsidy",
+        "hi": "PM सूर्य घर केंद्रीय सब्सिडी"
+      },
+      "amount": {
+        "en": "₹30,000 per kW for the first 2 kW, ₹18,000 for the 3rd kW. Up to ₹78,000.",
+        "hi": "पहले 2 kW पर ₹30,000 प्रति kW, तीसरे kW पर ₹18,000। अधिकतम ₹78,000।"
+      },
+      "who": {
+        "en": "Eligible residential consumers with roof rights, a registered installer, and documented domestic cells and modules.",
+        "hi": "छत का अधिकार, रजिस्टर्ड वेंडर और देश में बने सेल तथा मॉड्यूल का प्रमाण वाले पात्र घरेलू उपभोक्ता।"
+      },
+      "how": {
+        "en": "Register on the official portal and follow feasibility, installation, inspection and claim steps. Assistance is conditional on approval; receipt timing varies after a complete eligible claim.",
+        "hi": "आधिकारिक पोर्टल पर रजिस्ट्रेशन करके पात्रता, इंस्टॉलेशन, जाँच और क्लेम के चरण पूरे करें। सहायता मंज़ूरी पर निर्भर है; पूरे पात्र क्लेम के बाद भुगतान का समय अलग हो सकता है।"
+      }
     },
     {
-      "id": "special", "scope": "SPECIAL", "kind": "central", "fact": "special-category", "apply": "https://pmsuryaghar.gov.in",
-      "calc": {"type": "central"},
-      "title": {"en": "Higher subsidy in hill and North-East states", "hi": "पहाड़ी और पूर्वोत्तर राज्यों में ज़्यादा सब्सिडी"},
-      "amount": {"en": "₹33,000 per kW for the first 2 kW, ₹19,800 for the 3rd. Up to ₹85,800.", "hi": "पहले 2 kW पर ₹33,000 प्रति kW, तीसरे पर ₹19,800। अधिकतम ₹85,800।"},
-      "who": {"en": "Homes in the North-Eastern states, Himachal Pradesh, Uttarakhand, Jammu & Kashmir, Ladakh, Andaman & Nicobar and Lakshadweep.", "hi": "पूर्वोत्तर राज्य, हिमाचल प्रदेश, उत्तराखंड, जम्मू-कश्मीर, लद्दाख, अंडमान-निकोबार और लक्षद्वीप के घर।"},
-      "how": {"en": "Same application on pmsuryaghar.gov.in; the higher rate applies automatically.", "hi": "pmsuryaghar.gov.in पर वही आवेदन; ज़्यादा दर अपने-आप लागू होती है।"}
+      "id": "special",
+      "scope": "SPECIAL",
+      "kind": "central",
+      "fact": "special-category",
+      "apply": "https://pmsuryaghar.gov.in",
+      "calc": {
+        "type": "central"
+      },
+      "title": {
+        "en": "Higher subsidy in hill and North-East states",
+        "hi": "पहाड़ी और पूर्वोत्तर राज्यों में ज़्यादा सब्सिडी"
+      },
+      "amount": {
+        "en": "₹33,000 per kW for the first 2 kW, ₹19,800 for the 3rd. Up to ₹85,800.",
+        "hi": "पहले 2 kW पर ₹33,000 प्रति kW, तीसरे पर ₹19,800। अधिकतम ₹85,800।"
+      },
+      "who": {
+        "en": "Homes in the North-Eastern states, Himachal Pradesh, Uttarakhand, Jammu & Kashmir, Ladakh, Andaman & Nicobar and Lakshadweep.",
+        "hi": "पूर्वोत्तर राज्य, हिमाचल प्रदेश, उत्तराखंड, जम्मू-कश्मीर, लद्दाख, अंडमान-निकोबार और लक्षद्वीप के घर।"
+      },
+      "how": {
+        "en": "Use the same official portal. The special-category rate still depends on DCR, registered installation, inspection and approval.",
+        "hi": "उसी आधिकारिक पोर्टल पर आवेदन करें। विशेष दर के लिए भी DCR, रजिस्टर्ड इंस्टॉलेशन, जाँच और मंज़ूरी चाहिए।"
+      }
     },
     {
-      "id": "loan", "scope": "IN", "kind": "loan", "fact": "loan-rate", "apply": "https://www.jansamarth.in",
-      "title": {"en": "Collateral-free solar loan", "hi": "बिना गारंटी का सोलर लोन"},
-      "amount": {"en": "About 5.75% up to ₹2 lakh with no collateral; about 7.9% above that (SBI). Up to 10 years, 10% margin.", "hi": "₹2 लाख तक लगभग 5.75% ब्याज, बिना गारंटी; उससे ऊपर लगभग 7.9% (SBI)। 10 साल तक, 10% मार्जिन।"},
-      "who": {"en": "Homes applying under PM Surya Ghar with a registered vendor. Most households who think solar is too costly don't know this loan exists.", "hi": "रजिस्टर्ड वेंडर के साथ PM सूर्य घर में आवेदन करने वाले घर। सोलर को महँगा मानने वाले ज़्यादातर लोग इस लोन के बारे में नहीं जानते।"},
-      "how": {"en": "Apply on the Jan Samarth portal, linked from pmsuryaghar.gov.in. Rates move with the RBI repo rate, so check the bank's page.", "hi": "pmsuryaghar.gov.in से जुड़े जन समर्थ पोर्टल पर आवेदन करें। ब्याज दर RBI रेपो रेट के साथ बदलती है, बैंक का पेज देखें।"}
+      "id": "loan",
+      "scope": "IN",
+      "kind": "loan",
+      "fact": "loan-rate",
+      "apply": "https://www.jansamarth.in",
+      "title": {
+        "en": "Collateral-free solar loan",
+        "hi": "बिना गारंटी का सोलर लोन"
+      },
+      "amount": {
+        "en": "SBI published floating rates: 5.75% for loans up to ₹2 lakh; 7.90% above ₹2 lakh up to ₹6 lakh. Minimum 10% contribution, up to 120 months.",
+        "hi": "SBI की प्रकाशित बदलती दर: ₹2 लाख तक 5.75%; ₹2 लाख से ऊपर ₹6 लाख तक 7.90%। कम से कम 10% अपना योगदान, 120 महीने तक अवधि।"
+      },
+      "who": {
+        "en": "Eligible residential applicants under PM Surya Ghar, subject to the lender’s sanction and scheme conditions.",
+        "hi": "PM सूर्य घर के पात्र घरेलू आवेदक; बैंक की मंज़ूरी और योजना की शर्तें लागू।"
+      },
+      "how": {
+        "en": "Apply on the Jan Samarth portal, linked from pmsuryaghar.gov.in. Rates move with the RBI repo rate, so check the bank's page.",
+        "hi": "pmsuryaghar.gov.in से जुड़े जन समर्थ पोर्टल पर आवेदन करें। ब्याज दर RBI रेपो रेट के साथ बदलती है, बैंक का पेज देखें।"
+      }
     },
     {
-      "id": "society", "scope": "IN", "kind": "society", "fact": "rwa-common-area", "apply": "https://pmsuryaghar.gov.in",
-      "calc": {"type": "society", "per_kw": 18000, "max_kw": 500},
-      "title": {"en": "Housing societies (RWA / GHS)", "hi": "हाउसिंग सोसाइटी (RWA / GHS)"},
-      "amount": {"en": "₹18,000 per kW for common areas, including EV charging, up to 500 kW.", "hi": "कॉमन एरिया के लिए ₹18,000 प्रति kW, EV चार्जिंग सहित, 500 kW तक।"},
-      "who": {"en": "Registered housing societies and RWAs, for lifts, pumps, lights and other shared loads.", "hi": "रजिस्टर्ड हाउसिंग सोसाइटी और RWA, लिफ़्ट, पंप, लाइट जैसी साझा बिजली के लिए।"},
-      "how": {"en": "The society applies on the same portal. Delhi also allows virtual net metering, so one system can credit every flat's bill.", "hi": "सोसाइटी उसी पोर्टल पर आवेदन करती है। दिल्ली में वर्चुअल नेट मीटरिंग से एक सिस्टम हर फ़्लैट के बिल में क्रेडिट दे सकता है।"}
+      "id": "society",
+      "scope": "IN",
+      "kind": "society",
+      "fact": "rwa-common-area",
+      "apply": "https://pmsuryaghar.gov.in",
+      "calc": {
+        "type": "society",
+        "per_kw": 18000,
+        "max_kw": 500
+      },
+      "title": {
+        "en": "Housing societies (RWA / GHS)",
+        "hi": "हाउसिंग सोसाइटी (RWA / GHS)"
+      },
+      "amount": {
+        "en": "₹18,000 per kW for common areas, including EV charging, up to 500 kW.",
+        "hi": "कॉमन एरिया के लिए ₹18,000 प्रति kW, EV चार्जिंग सहित, 500 kW तक।"
+      },
+      "who": {
+        "en": "Registered housing societies and RWAs, for lifts, pumps, lights and other shared loads. The central cap also depends on 3 kW per household, including residents’ individual plants.",
+        "hi": "रजिस्टर्ड हाउसिंग सोसाइटी और RWA, लिफ़्ट, पंप, लाइट जैसी साझा बिजली के लिए। केंद्रीय सीमा प्रति घर 3 kW है, जिसमें निवासियों के निजी सिस्टम भी शामिल हैं।"
+      },
+      "how": {
+        "en": "The society applies through the official portal. Verify roof rights, permissions and local metering arrangements before comparing savings.",
+        "hi": "सोसाइटी आधिकारिक पोर्टल पर आवेदन करे। बचत की तुलना से पहले छत के अधिकार, अनुमति और स्थानीय मीटर व्यवस्था जाँचें।"
+      }
     },
     {
-      "id": "deadline", "scope": "IN", "kind": "deadline", "fact": "cfa-claim-deadline",
-      "title": {"en": "Last date for claims from the earlier programme", "hi": "पिछली योजना के दावों की आखिरी तारीख"},
-      "amount": {"en": "30 November 2026", "hi": "30 नवंबर 2026"},
-      "who": {"en": "Systems already redeemed, inspected or installed under the earlier rooftop programme (Phase II).", "hi": "पिछली रूफ़टॉप योजना (फ़ेज़ II) में redeem, जाँच या इंस्टॉल हो चुके सिस्टम।"},
-      "how": {"en": "If your system is up but the subsidy hasn't arrived, ask your vendor and electricity company to file the claim now.", "hi": "अगर सिस्टम लग गया है पर सब्सिडी नहीं आई, तो वेंडर और बिजली कंपनी से अभी दावा भरवाएँ।"}
+      "id": "deadline",
+      "scope": "IN",
+      "kind": "deadline",
+      "fact": "cfa-claim-deadline",
+      "title": {
+        "en": "Last date for claims from the earlier programme",
+        "hi": "पिछली योजना के दावों की आखिरी तारीख"
+      },
+      "amount": {
+        "en": "Phase-II legacy claims: check the applicable notice; this is not the deadline for every PM Surya Ghar application.",
+        "hi": "पुराने फ़ेज़-II क्लेम के लिए लागू आदेश देखें; यह सभी PM सूर्य घर आवेदनों की अंतिम तारीख नहीं है।"
+      },
+      "who": {
+        "en": "Systems already redeemed, inspected or installed under the earlier rooftop programme (Phase II).",
+        "hi": "पिछली रूफ़टॉप योजना (फ़ेज़ II) में redeem, जाँच या इंस्टॉल हो चुके सिस्टम।"
+      },
+      "how": {
+        "en": "If your system is up but the subsidy hasn't arrived, ask your vendor and electricity company to file the claim now.",
+        "hi": "अगर सिस्टम लग गया है पर सब्सिडी नहीं आई, तो वेंडर और बिजली कंपनी से अभी दावा भरवाएँ।"
+      }
     },
     {
-      "id": "helpline", "scope": "IN", "kind": "help", "fact": "helpline", "apply": "https://pmsuryaghar.gov.in",
-      "title": {"en": "Scheme helpline", "hi": "योजना हेल्पलाइन"},
-      "amount": {"en": "15555, toll-free", "hi": "15555, टोल-फ़्री"},
-      "who": {"en": "Anyone with a question or a complaint about an application.", "hi": "आवेदन के बारे में सवाल या शिकायत वाला कोई भी।"},
-      "how": {"en": "Keep your application number ready. Complaints against vendors can also be filed on the portal.", "hi": "अपना आवेदन नंबर तैयार रखें। वेंडर के ख़िलाफ़ शिकायत पोर्टल पर भी दर्ज की जा सकती है।"}
+      "id": "helpline",
+      "scope": "IN",
+      "kind": "help",
+      "fact": "helpline",
+      "apply": "https://pmsuryaghar.gov.in",
+      "title": {
+        "en": "Scheme helpline",
+        "hi": "योजना हेल्पलाइन"
+      },
+      "amount": {
+        "en": "15555, toll-free",
+        "hi": "15555, टोल-फ़्री"
+      },
+      "who": {
+        "en": "Anyone with a question or a complaint about an application.",
+        "hi": "आवेदन के बारे में सवाल या शिकायत वाला कोई भी।"
+      },
+      "how": {
+        "en": "Keep your application number ready. Complaints against vendors can also be filed on the portal.",
+        "hi": "अपना आवेदन नंबर तैयार रखें। वेंडर के ख़िलाफ़ शिकायत पोर्टल पर भी दर्ज की जा सकती है।"
+      }
     },
     {
-      "id": "dl-zero", "scope": "DL", "kind": "state", "fact": "dl-zero-upfront", "apply": "https://solar.delhi.gov.in",
-      "calc": {"type": "zero_upfront", "max_kw": 3},
-      "title": {"en": "Delhi: ₹0 upfront for lower-use homes", "hi": "दिल्ली: कम खपत वाले घरों के लिए ₹0 शुरुआती खर्च"},
-      "amount": {"en": "Up to 3 kW with nothing to pay upfront, and 5 years of free maintenance.", "hi": "3 kW तक, बिना शुरुआती भुगतान के, और 5 साल मुफ़्त रखरखाव।"},
-      "who": {"en": "Homes using up to 400 units a month on average.", "hi": "औसतन महीने में 400 यूनिट तक खपत वाले घर।"},
-      "how": {"en": "Approved by the Delhi Cabinet on 2 September 2026; guidelines and the vendor list are still being notified. Check solar.delhi.gov.in.", "hi": "दिल्ली कैबिनेट ने 2 सितंबर 2026 को मंज़ूरी दी; दिशानिर्देश और वेंडर सूची अभी जारी हो रही है। solar.delhi.gov.in देखें।"}
+      "id": "dl-zero",
+      "scope": "DL",
+      "kind": "state",
+      "fact": "dl-zero-upfront",
+      "apply": "https://solar.delhi.gov.in",
+      "calc": {
+        "type": "zero_upfront",
+        "max_kw": 3
+      },
+      "title": {
+        "en": "Delhi: ₹0 upfront for lower-use homes",
+        "hi": "दिल्ली: कम खपत वाले घरों के लिए ₹0 शुरुआती खर्च"
+      },
+      "amount": {
+        "en": "Up to 3 kW with nothing to pay upfront, and 5 years of free maintenance.",
+        "hi": "3 kW तक, बिना शुरुआती भुगतान के, और 5 साल मुफ़्त रखरखाव।"
+      },
+      "who": {
+        "en": "Homes using up to 400 units a month on average.",
+        "hi": "औसतन महीने में 400 यूनिट तक खपत वाले घर।"
+      },
+      "how": {
+        "en": "Use the Delhi portal to check the utility-led route. The implementing agency assigns the installer and redeems the central subsidy; compare this route with an independently purchased installation.",
+        "hi": "दिल्ली पोर्टल पर बिजली कंपनी वाले विकल्प की जाँच करें। एजेंसी वेंडर तय करती है और केंद्रीय सब्सिडी रिडीम करती है; इसकी तुलना खुद खरीदे सिस्टम से करें।"
+      },
+      "source": "https://solar.delhi.gov.in/consumer-consents"
     },
     {
-      "id": "dl-topup", "scope": "DL", "kind": "state", "fact": "dl-top-up", "apply": "https://solar.delhi.gov.in",
-      "calc": {"type": "match_central"},
-      "title": {"en": "Delhi state top-up", "hi": "दिल्ली राज्य सब्सिडी"},
-      "amount": {"en": "Matches the central subsidy: up to another ₹78,000 for 3 kW.", "hi": "केंद्रीय सब्सिडी के बराबर: 3 kW पर ₹78,000 तक और।"},
-      "who": {"en": "Delhi homes above 400 units a month, alongside the central subsidy.", "hi": "महीने में 400 यूनिट से ज़्यादा खपत वाले दिल्ली के घर, केंद्रीय सब्सिडी के साथ।"},
-      "how": {"en": "Guidelines are being notified; ask your electricity company how it's paid.", "hi": "दिशानिर्देश जारी हो रहे हैं; अपनी बिजली कंपनी से पूछें कि भुगतान कैसे होगा।"}
+      "id": "dl-topup",
+      "scope": "DL",
+      "kind": "state",
+      "fact": "dl-top-up",
+      "apply": "https://solar.delhi.gov.in",
+      "calc": {
+        "type": "per_kw",
+        "per_kw": 26000,
+        "cap": 78000,
+        "conditional": true
+      },
+      "title": {
+        "en": "Delhi state top-up",
+        "hi": "दिल्ली राज्य सब्सिडी"
+      },
+      "amount": {
+        "en": "Up to ₹26,000/kW for the first 3 kW, capped at ₹78,000. Also capped by the trusteeship bid cost minus central assistance.",
+        "hi": "पहले 3 kW पर ₹26,000/kW तक, अधिकतम ₹78,000। ट्रस्टीशिप बोली की लागत में से केंद्रीय सहायता घटाने की सीमा भी लागू।"
+      },
+      "who": {
+        "en": "Eligible Delhi residential installations under the notified state policy. Confirm the route and bid-cost basis with your DISCOM.",
+        "hi": "अधिसूचित राज्य नीति के तहत पात्र दिल्ली के आवासीय सिस्टम। बिजली कंपनी से आवेदन का रास्ता और बोली की लागत जाँचें।"
+      },
+      "how": {
+        "en": "Second amendment notified 17 September 2026. This is not automatically a matching cash subsidy; confirm how it is redeemed.",
+        "hi": "दूसरा संशोधन 17 सितंबर 2026 को अधिसूचित। यह अपने-आप केंद्रीय राशि के बराबर नकद भुगतान नहीं है; भुगतान का तरीका पूछें।"
+      },
+      "source": "https://solar.delhi.gov.in/page/state-subsidy"
     },
     {
-      "id": "up-topup", "scope": "UP", "kind": "state", "fact": "up-top-up", "apply": "https://upneda.org.in",
-      "calc": {"type": "per_kw", "per_kw": 15000, "cap": 30000},
-      "title": {"en": "Uttar Pradesh state top-up", "hi": "उत्तर प्रदेश राज्य सब्सिडी"},
-      "amount": {"en": "₹15,000 per kW, up to ₹30,000 (sources disagree).", "hi": "₹15,000 प्रति kW, अधिकतम ₹30,000 (स्रोतों में मतभेद)।"},
-      "who": {"en": "Homes in Uttar Pradesh, on top of the central subsidy.", "hi": "उत्तर प्रदेश के घर, केंद्रीय सब्सिडी के ऊपर।"},
-      "how": {"en": "Paid through UPNEDA after the central subsidy.", "hi": "केंद्रीय सब्सिडी के बाद UPNEDA के ज़रिए मिलती है।"}
+      "id": "up-topup",
+      "scope": "UP",
+      "kind": "state",
+      "fact": "up-top-up",
+      "apply": "https://upneda.org.in",
+      "calc": {
+        "type": "per_kw",
+        "per_kw": 15000,
+        "cap": 30000
+      },
+      "title": {
+        "en": "Uttar Pradesh state top-up",
+        "hi": "उत्तर प्रदेश राज्य सब्सिडी"
+      },
+      "amount": {
+        "en": "₹15,000/kW, up to ₹30,000, in addition to central assistance.",
+        "hi": "केंद्रीय सहायता के ऊपर ₹15,000/kW, अधिकतम ₹30,000।"
+      },
+      "who": {
+        "en": "Homes in Uttar Pradesh, on top of the central subsidy.",
+        "hi": "उत्तर प्रदेश के घर, केंद्रीय सब्सिडी के ऊपर।"
+      },
+      "how": {
+        "en": "Paid through UPNEDA after the central subsidy.",
+        "hi": "केंद्रीय सब्सिडी के बाद UPNEDA के ज़रिए मिलती है।"
+      },
+      "source": "https://upneda.org.in/MediaGallery/Documents/GridConnected_RSS.pdf"
     },
     {
-      "id": "hr-topup", "scope": "HR", "kind": "state", "fact": "hr-top-up", "apply": "https://hareda.gov.in",
-      "calc": {"type": "per_kw", "per_kw": 25000, "cap": 50000, "conditional": true},
-      "title": {"en": "Haryana: extra for Antyodaya families", "hi": "हरियाणा: अंत्योदय परिवारों के लिए अतिरिक्त"},
-      "amount": {"en": "Up to ₹25,000 per kW, at most ₹50,000.", "hi": "₹25,000 प्रति kW तक, अधिकतम ₹50,000।"},
-      "who": {"en": "Families with an income up to ₹1.8 lakh a year.", "hi": "सालाना ₹1.8 लाख तक आय वाले परिवार।"},
-      "how": {"en": "Ask HAREDA or your electricity company; the amount depends on income.", "hi": "HAREDA या अपनी बिजली कंपनी से पूछें; राशि आय पर निर्भर है।"}
+      "id": "hr-topup",
+      "scope": "HR",
+      "kind": "state",
+      "fact": "hr-top-up",
+      "apply": "https://hareda.gov.in",
+      "calc": {
+        "type": "per_kw",
+        "per_kw": 25000,
+        "cap": 50000,
+        "conditional": true
+      },
+      "title": {
+        "en": "Haryana: extra for Antyodaya families",
+        "hi": "हरियाणा: अंत्योदय परिवारों के लिए अतिरिक्त"
+      },
+      "amount": {
+        "en": "Up to ₹25,000 per kW, at most ₹50,000.",
+        "hi": "₹25,000 प्रति kW तक, अधिकतम ₹50,000।"
+      },
+      "who": {
+        "en": "Families with an income up to ₹1.8 lakh a year.",
+        "hi": "सालाना ₹1.8 लाख तक आय वाले परिवार।"
+      },
+      "how": {
+        "en": "Ask HAREDA or your electricity company; the amount depends on income.",
+        "hi": "HAREDA या अपनी बिजली कंपनी से पूछें; राशि आय पर निर्भर है।"
+      }
     },
     {
-      "id": "rj-topup", "scope": "RJ", "kind": "state", "fact": "rj-top-up", "apply": "https://energy.rajasthan.gov.in",
-      "calc": {"type": "flat", "amount": 17000, "conditional": true},
-      "title": {"en": "Rajasthan: ₹17,000 extra", "hi": "राजस्थान: ₹17,000 अतिरिक्त"},
-      "amount": {"en": "A flat ₹17,000 on top of the central subsidy.", "hi": "केंद्रीय सब्सिडी के ऊपर एकमुश्त ₹17,000।"},
-      "who": {"en": "Only homes enrolled in the state's Mukhyamantri Nishulk Bijli Yojana (free-electricity scheme).", "hi": "सिर्फ़ राज्य की मुख्यमंत्री निःशुल्क बिजली योजना में शामिल घर।"},
-      "how": {"en": "Check with RRECL or your electricity company whether your connection is enrolled.", "hi": "RRECL या अपनी बिजली कंपनी से पता करें कि आपका कनेक्शन शामिल है या नहीं।"}
+      "id": "rj-topup",
+      "scope": "RJ",
+      "kind": "state",
+      "fact": "rj-top-up",
+      "apply": "https://energy.rajasthan.gov.in",
+      "calc": {
+        "type": "flat",
+        "amount": 17000,
+        "conditional": true
+      },
+      "title": {
+        "en": "Rajasthan: ₹17,000 extra",
+        "hi": "राजस्थान: ₹17,000 अतिरिक्त"
+      },
+      "amount": {
+        "en": "A flat ₹17,000 on top of the central subsidy.",
+        "hi": "केंद्रीय सब्सिडी के ऊपर एकमुश्त ₹17,000।"
+      },
+      "who": {
+        "en": "Only homes enrolled in the state's Mukhyamantri Nishulk Bijli Yojana (free-electricity scheme).",
+        "hi": "सिर्फ़ राज्य की मुख्यमंत्री निःशुल्क बिजली योजना में शामिल घर।"
+      },
+      "how": {
+        "en": "Check with RRECL or your electricity company whether your connection is enrolled.",
+        "hi": "RRECL या अपनी बिजली कंपनी से पता करें कि आपका कनेक्शन शामिल है या नहीं।"
+      }
     },
     {
-      "id": "as-topup", "scope": "AS", "kind": "state", "fact": "as-top-up", "apply": "https://www.apdcl.org",
-      "calc": {"type": "per_kw", "per_kw": 15000, "cap": 45000},
-      "title": {"en": "Assam state top-up", "hi": "असम राज्य सब्सिडी"},
-      "amount": {"en": "₹15,000 per kW, up to ₹45,000.", "hi": "₹15,000 प्रति kW, अधिकतम ₹45,000।"},
-      "who": {"en": "Homes in Assam. Assam also gets the higher hill-state central rate (some sources say the standard one).", "hi": "असम के घर। असम को पहाड़ी राज्यों वाली ज़्यादा केंद्रीय दर भी मिलती है (कुछ स्रोत सामान्य दर बताते हैं)।"},
-      "how": {"en": "Ask APDCL during the net-meter and inspection step.", "hi": "नेट मीटर और जाँच वाले चरण में APDCL से पूछें।"}
+      "id": "as-topup",
+      "scope": "AS",
+      "kind": "state",
+      "fact": "as-top-up",
+      "apply": "https://www.apdcl.org",
+      "calc": {
+        "type": "per_kw",
+        "per_kw": 15000,
+        "cap": 45000,
+        "conditional": true
+      },
+      "title": {
+        "en": "Assam state top-up",
+        "hi": "असम राज्य सब्सिडी"
+      },
+      "amount": {
+        "en": "₹15,000 per kW, up to ₹45,000.",
+        "hi": "₹15,000 प्रति kW, अधिकतम ₹45,000।"
+      },
+      "who": {
+        "en": "APDCL residential consumers meeting the state scheme conditions. The official ULA document also identifies Assam’s higher special-category central rates.",
+        "hi": "राज्य योजना की शर्तें पूरी करने वाले APDCL घरेलू उपभोक्ता। आधिकारिक ULA दस्तावेज़ असम की विशेष श्रेणी वाली ऊँची केंद्रीय दर भी बताता है।"
+      },
+      "how": {
+        "en": "APDCL’s January 2025 ULA document cites the 14 March 2024 state notification. Confirm current availability, application route and eligibility with APDCL before budgeting it.",
+        "hi": "APDCL का जनवरी 2025 ULA दस्तावेज़ 14 मार्च 2024 की राज्य अधिसूचना बताता है। बजट में जोड़ने से पहले APDCL से मौजूदा उपलब्धता, आवेदन का रास्ता और पात्रता पूछें।"
+      },
+      "source": "https://apdcl.org/website/docs/tender_2024_25/BidDocumentRTSPMSGMBY.pdf"
     },
     {
-      "id": "mh-none", "scope": "MH", "kind": "none", "fact": "mh-top-up",
-      "title": {"en": "Maharashtra: no general top-up", "hi": "महाराष्ट्र: कोई सामान्य राज्य सब्सिडी नहीं"},
-      "amount": {"en": "Central subsidy only.", "hi": "सिर्फ़ केंद्रीय सब्सिडी।"},
-      "who": {"en": "Some sources mention extra help for BPL, SC and ST homes under MSEDCL's Swayampurna scheme; not confirmed.", "hi": "कुछ स्रोत MSEDCL की स्वयंपूर्ण योजना में BPL, SC और ST घरों के लिए अतिरिक्त मदद बताते हैं; पुष्टि नहीं।"},
-      "how": {"en": "Ask MSEDCL before believing a vendor's promise of state money.", "hi": "वेंडर के राज्य सब्सिडी के वादे से पहले MSEDCL से पूछें।"}
+      "id": "mh-none",
+      "scope": "MH",
+      "kind": "none",
+      "fact": "mh-top-up",
+      "title": {
+        "en": "Maharashtra: confirm additional state help",
+        "hi": "महाराष्ट्र: अतिरिक्त राज्य सहायता जाँचें"
+      },
+      "amount": {
+        "en": "Only central help is budgeted here; state support needs official confirmation.",
+        "hi": "यहाँ बजट में केवल केंद्रीय सहायता है; राज्य सहायता की आधिकारिक पुष्टि चाहिए।"
+      },
+      "who": {
+        "en": "Some sources mention extra help for BPL, SC and ST homes under MSEDCL's Swayampurna scheme; not confirmed.",
+        "hi": "कुछ स्रोत MSEDCL की स्वयंपूर्ण योजना में BPL, SC और ST घरों के लिए अतिरिक्त मदद बताते हैं; पुष्टि नहीं।"
+      },
+      "how": {
+        "en": "Ask MSEDCL before believing a vendor's promise of state money.",
+        "hi": "वेंडर के राज्य सब्सिडी के वादे से पहले MSEDCL से पूछें।"
+      }
     },
     {
-      "id": "gj-contested", "scope": "GJ", "kind": "none", "fact": "gj-top-up",
-      "title": {"en": "Gujarat: state top-up unclear", "hi": "गुजरात: राज्य सब्सिडी अस्पष्ट"},
-      "amount": {"en": "Assume central subsidy only.", "hi": "सिर्फ़ केंद्रीय सब्सिडी मानें।"},
-      "who": {"en": "The older SURYA Gujarat payments appear retired for homes; some vendors still advertise them.", "hi": "पुरानी सूर्य गुजरात सब्सिडी घरों के लिए बंद लगती है; कुछ वेंडर अब भी इसका विज्ञापन करते हैं।"},
-      "how": {"en": "Ask for the government order before believing a vendor's claim of extra state money.", "hi": "वेंडर के अतिरिक्त राज्य सब्सिडी के दावे पर सरकारी आदेश माँगें।"}
+      "id": "gj-contested",
+      "scope": "GJ",
+      "kind": "none",
+      "fact": "gj-top-up",
+      "title": {
+        "en": "Gujarat: state top-up unclear",
+        "hi": "गुजरात: राज्य सब्सिडी अस्पष्ट"
+      },
+      "amount": {
+        "en": "Assume central subsidy only.",
+        "hi": "सिर्फ़ केंद्रीय सब्सिडी मानें।"
+      },
+      "who": {
+        "en": "The older SURYA Gujarat payments appear retired for homes; some vendors still advertise them.",
+        "hi": "पुरानी सूर्य गुजरात सब्सिडी घरों के लिए बंद लगती है; कुछ वेंडर अब भी इसका विज्ञापन करते हैं।"
+      },
+      "how": {
+        "en": "Ask for the government order before believing a vendor's claim of extra state money.",
+        "hi": "वेंडर के अतिरिक्त राज्य सब्सिडी के दावे पर सरकारी आदेश माँगें।"
+      }
     },
     {
-      "id": "kl-none", "scope": "KL", "kind": "none", "fact": "kl-top-up",
-      "title": {"en": "Kerala: no state top-up in 2026", "hi": "केरल: 2026 में कोई राज्य सब्सिडी नहीं"},
-      "amount": {"en": "Central subsidy only.", "hi": "सिर्फ़ केंद्रीय सब्सिडी।"},
-      "who": {"en": "KSEB's Soura programme now runs inside the central scheme.", "hi": "KSEB का सौर कार्यक्रम अब केंद्रीय योजना के भीतर चलता है।"},
-      "how": {"en": "Apply on pmsuryaghar.gov.in; KSEB handles the net meter.", "hi": "pmsuryaghar.gov.in पर आवेदन करें; नेट मीटर KSEB लगाती है।"}
+      "id": "kl-none",
+      "scope": "KL",
+      "kind": "none",
+      "fact": "kl-top-up",
+      "title": {
+        "en": "Kerala: confirm additional state help",
+        "hi": "केरल: अतिरिक्त राज्य सहायता जाँचें"
+      },
+      "amount": {
+        "en": "Only central help is budgeted here; state support needs official confirmation.",
+        "hi": "यहाँ बजट में केवल केंद्रीय सहायता है; राज्य सहायता की आधिकारिक पुष्टि चाहिए।"
+      },
+      "who": {
+        "en": "KSEB's Soura programme now runs inside the central scheme.",
+        "hi": "KSEB का सौर कार्यक्रम अब केंद्रीय योजना के भीतर चलता है।"
+      },
+      "how": {
+        "en": "Apply on pmsuryaghar.gov.in; KSEB handles the net meter.",
+        "hi": "pmsuryaghar.gov.in पर आवेदन करें; नेट मीटर KSEB लगाती है।"
+      }
     }
   ]
 }

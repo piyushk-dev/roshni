@@ -7,7 +7,7 @@ import json
 from dataclasses import asdict
 from importlib import resources
 
-from . import doctor, knowledge, pipeline, quote
+from . import doctor, knowledge, market, pipeline, product, quote, scam
 from .format import BillProblem, bonus_text, explain, message
 
 
@@ -38,8 +38,50 @@ def _fact_action(fact: tuple[str, str], event: dict) -> dict:
     return _response(200, knowledge.report(fact_id, str(body["value"]), str(body.get("evidence", ""))))
 
 
-def lambda_handler(event: dict, context) -> dict:
+def _handle(event: dict, context) -> dict:
     route = f"{event['requestContext']['http']['method']} {event['rawPath']}"
+    params = event.get("queryStringParameters") or {}
+    body = json.loads(event.get("body") or "{}")
+    if route == "GET /vendors":
+        return _response(200, {"vendors": market.vendors_for(params.get("state", "DL"))})
+    if route == "GET /schemes":
+        return _response(200, product.schemes(params.get("state", "DL"), params.get("kw", 3), params.get("dcr", "yes")))
+    if route == "POST /finance/plan":
+        return _response(200, product.finance(body))
+    if route == "GET /care/checklists":
+        return _response(200, product.checklists())
+    if route == "POST /care/check":
+        return _response(200, product.care(body))
+    if route == "POST /care/bill":
+        return _response(200, product.bill_balance(body))
+    if route == "POST /scam-check":
+        text = body.get("text", "")
+        if not isinstance(text, str) or not text.strip() or len(text) > 10000:
+            raise ValueError("paste an offer of 1–10,000 characters")
+        flags = scam.check(text)
+        return _response(200, {"flags": flags, "views": {lang: scam.render(flags, lang) for lang in ("en", "hi")}})
+    if route == "POST /market/requests":
+        return _response(201, market.create_request(body))
+    if route == "POST /market/preview":
+        state = product.state_code(body.get("state", "DL"))
+        raw = body.get("quote")
+        if not isinstance(raw, dict):
+            raise ValueError("quote fields are required")
+        name = str(body.get("name", "Your quote"))[:80]
+        q = market.clean_quote(raw, name, state)
+        band = knowledge.price_band(state, q["system_kw"])
+        return _response(200, {"quote": q, "check": market.assess(q, band), "band": band})
+    parts = event["rawPath"].strip("/").split("/")
+    if len(parts) in (3, 4) and parts[:2] == ["market", "requests"]:
+        rid = parts[2]
+        method = event["requestContext"]["http"]["method"]
+        if method == "GET" and len(parts) == 3:
+            return _response(200, market.view(rid))
+        if method == "DELETE" and len(parts) == 3:
+            market.forget(rid)
+            return _response(200, {"deleted": True})
+        if method == "POST" and len(parts) == 4 and parts[3] == "choose":
+            return _response(200, market.choose(rid, str(body.get("vendor_id", ""))))
     if route == "GET /health":
         return _response(200, {"ok": True})
     if route == "GET /privacy":
@@ -107,3 +149,19 @@ def lambda_handler(event: dict, context) -> dict:
         found = pipeline.bill_checkup(reading, body)
         result["doctor"] = {"findings": doctor.to_dict(found), "views": {code: doctor.render(found, code) for code in ("en", "hi")}}
     return _response(200, result)
+
+
+def lambda_handler(event: dict, context) -> dict:
+    """Validate the envelope consistently, including the new deterministic routes."""
+    try:
+        raw = event.get("body") or "{}"
+        if event.get("isBase64Encoded"):
+            raw = base64.b64decode(raw, validate=True).decode("utf-8")
+        body = json.loads(raw)
+        if not isinstance(body, dict):
+            raise ValueError("body must be a JSON object")
+        return _handle({**event, "body": json.dumps(body), "isBase64Encoded": False}, context)
+    except KeyError:
+        return _response(404, {"error": "request not found or expired"})
+    except (ValueError, TypeError, OverflowError, UnicodeDecodeError) as e:
+        return _response(400, {"error": str(e)})

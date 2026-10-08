@@ -49,7 +49,7 @@ const T = {
     load: "Sanctioned load",
     months: "Months of usage",
     amount: "This month's charges",
-    conservative: "We use the lower of two sunlight datasets (PVGIS and NASA), so real savings should be at or above this.",
+    conservative: "Sunlight uses the lower estimate from PVGIS and NASA. Real output and savings still vary with weather, outages, shading, maintenance and your tariff.",
     again: "← Start again",
     error: "Something went wrong. Please try again.",
     tooBig: "That file is too big. Please send a photo or a PDF under 4 MB.",
@@ -104,7 +104,7 @@ const T = {
     load: "स्वीकृत लोड",
     months: "कितने महीनों की खपत",
     amount: "इस महीने का बिल",
-    conservative: "हम धूप के दो डेटा (PVGIS और NASA) में से कम वाला लेते हैं, इसलिए असली बचत इससे कम नहीं होनी चाहिए।",
+    conservative: "धूप के लिए PVGIS और NASA में से कम अनुमान लेते हैं। असली उत्पादन और बचत मौसम, कटौती, छाया, रखरखाव और बिजली दर से बदल सकते हैं।",
     again: "← फिर से शुरू करें",
     error: "कुछ गड़बड़ हो गई। कृपया फिर कोशिश करें।",
     tooBig: "फ़ाइल बहुत बड़ी है। कृपया 4 MB से छोटी फोटो या PDF भेजें।",
@@ -482,11 +482,12 @@ function applyLang() {
   if (state.last) render(state.last);
   if (state.lastQuote) renderQuote(state.lastQuote);
   if (typeof renderSteps === "function") { renderSteps(); renderFacts(); renderWhatsApp(); renderSociety(); renderAskExamples(); renderTimes(); }
+  if (window.renderProduct) window.renderProduct();
 }
 
 function show(id) {
-  for (const s of ["start", "busy", "problem", "result", "quote-result", "guide", "rules", "built"]) $(s).hidden = s !== id;
-  window.scrollTo({ top: 0 });
+  for (const s of ["start", "busy", "problem", "result", "quote-result", "guide", "rules", "built", "market", "schemes", "passport"]) if ($(s)) $(s).hidden = s !== id;
+  window.scrollTo({ top: 0, behavior: "instant" });
 }
 
 async function post(path, body) {
@@ -983,14 +984,16 @@ function route(hash, smooth) {
   const id = (hash || "").replace(/^#/, "");
   const target = id && id !== "top" ? document.getElementById(id) : null;
   const view = (target && target.closest("[data-view]")) || $("start");
-  if (view.hidden) { state.last = null; state.lastQuote = null; show(view.id); }
-  const behavior = smooth ? "smooth" : "auto";
+  const changedView = view.hidden;
+  if (changedView) { if (state.last) state.estimate = state.last; state.last = null; state.lastQuote = null; show(view.id); }
+  const behavior = changedView ? "instant" : smooth ? "smooth" : "auto";
   if (target && target !== view) target.scrollIntoView({ behavior });
   else window.scrollTo({ top: 0, behavior });
   document.querySelectorAll(".nav a").forEach((a) => {
     if (a.getAttribute("href") === "#" + view.id) a.setAttribute("aria-current", "page");
     else a.removeAttribute("aria-current");
   });
+  if (window.productRoute) window.productRoute(view.id);
 }
 
 document.addEventListener("click", (e) => {

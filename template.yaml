@@ -30,7 +30,7 @@ Resources:
     Properties:
       CorsConfiguration:
         AllowOrigins: ["*"]
-        AllowMethods: [GET, POST, OPTIONS]
+        AllowMethods: [GET, POST, DELETE, OPTIONS]
         AllowHeaders: [content-type]
 
   AnalyzeFunction:
@@ -42,8 +42,11 @@ Resources:
         Variables:
           YIELD_TABLE: !Ref YieldCache
           KNOWLEDGE_TABLE: !Ref KnowledgeTable
+          MARKET_TABLE: !Ref MarketTable
           BEDROCK_MODEL_ID: !Ref BedrockModelId
       Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref MarketTable
         - DynamoDBCrudPolicy:
             TableName: !Ref YieldCache
         - DynamoDBCrudPolicy:
@@ -91,6 +94,42 @@ Resources:
         FactReport:
           Type: HttpApi
           Properties: {ApiId: !Ref Api, Path: "/facts/{id}/report", Method: POST}
+        Vendors:
+          Type: HttpApi
+          Properties: {ApiId: !Ref Api, Path: /vendors, Method: GET}
+        Schemes:
+          Type: HttpApi
+          Properties: {ApiId: !Ref Api, Path: /schemes, Method: GET}
+        Finance:
+          Type: HttpApi
+          Properties: {ApiId: !Ref Api, Path: /finance/plan, Method: POST}
+        Checklists:
+          Type: HttpApi
+          Properties: {ApiId: !Ref Api, Path: /care/checklists, Method: GET}
+        Care:
+          Type: HttpApi
+          Properties: {ApiId: !Ref Api, Path: /care/check, Method: POST}
+        CareBill:
+          Type: HttpApi
+          Properties: {ApiId: !Ref Api, Path: /care/bill, Method: POST}
+        Scam:
+          Type: HttpApi
+          Properties: {ApiId: !Ref Api, Path: /scam-check, Method: POST}
+        MarketCreate:
+          Type: HttpApi
+          Properties: {ApiId: !Ref Api, Path: /market/requests, Method: POST}
+        MarketView:
+          Type: HttpApi
+          Properties: {ApiId: !Ref Api, Path: "/market/requests/{id}", Method: GET}
+        MarketChoose:
+          Type: HttpApi
+          Properties: {ApiId: !Ref Api, Path: "/market/requests/{id}/choose", Method: POST}
+        MarketDelete:
+          Type: HttpApi
+          Properties: {ApiId: !Ref Api, Path: "/market/requests/{id}", Method: DELETE}
+        MarketPreview:
+          Type: HttpApi
+          Properties: {ApiId: !Ref Api, Path: /market/preview, Method: POST}
 
   # Acknowledges Meta within milliseconds, then hands the message to the worker
   WhatsAppWebhookFunction:
@@ -131,6 +170,7 @@ Resources:
           SESSION_TABLE: !Ref SessionTable
           YIELD_TABLE: !Ref YieldCache
           KNOWLEDGE_TABLE: !Ref KnowledgeTable
+          MARKET_TABLE: !Ref MarketTable
           BEDROCK_MODEL_ID: !Ref BedrockModelId
           WA_PHONE_NUMBER_ID: !Ref WhatsAppPhoneNumberId
           GRAPH_VERSION: !Ref GraphApiVersion
@@ -154,6 +194,8 @@ Resources:
               Resource: "*"
         - DynamoDBCrudPolicy:
             TableName: !Ref SessionTable
+        - DynamoDBCrudPolicy:
+            TableName: !Ref MarketTable
         - DynamoDBCrudPolicy:
             TableName: !Ref YieldCache
         - DynamoDBCrudPolicy:
@@ -258,6 +300,20 @@ Resources:
             FunctionName: !Ref JourneyFunction
 
   # Self-updating knowledge: tariffs learned from bills, prices from quotes, community-checked facts, counters
+  MarketTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - {AttributeName: pk, AttributeType: S}
+        - {AttributeName: sk, AttributeType: S}
+      KeySchema:
+        - {AttributeName: pk, KeyType: HASH}
+        - {AttributeName: sk, KeyType: RANGE}
+      TimeToLiveSpecification:
+        AttributeName: expires
+        Enabled: true
+
   KnowledgeTable:
     Type: AWS::DynamoDB::Table
     Properties:

@@ -22,6 +22,15 @@ Delhi's newest deal goes unnoticed too. Homes using up to 400 units a month can 
 
 ## What it does
 
+This branch adds the purchase and ownership tools described in the [PM research brief](docs/product-research.md) and [three-minute demo guide](docs/hackathon-demo.md). The brief links Reddit discovery, enterprise workflows, official rules and the rollout priorities.
+
+- **Find & compare:** sourced real business profiles, sample comparisons, anonymous quote-risk examples, a manual quote preview with scope and payment terms, and a forwarded-offer warning check. Sample replies are explicitly simulated. Saving a preference does not contact an installer or share a number; no real business is ranked on fabricated terms.
+- **Schemes & budget:** all 36 states and union territories, conditional DCR assistance, sourced state help, and a cash/EMI calculation for a 0–12 month subsidy wait. State top-ups are excluded from the budget. Reduced EMI is an illustration conditional on lender recasting. A checked quote can populate this budget.
+- **Solar passport:** signing and handover evidence checks, the on-grid outage limitation, comparable monthly promise versus actual generation, a service-note draft, and first-bill import/export reconciliation. Explicit browser saving, text export and clearing are available in Hindi and English.
+- **WhatsApp:** `QUOTES`, `CHOOSE 1`, `SCAM <offer>`, `PASSPORT`, and `SCHEMES AS` connect to the same deterministic checks. Existing bill, voice and application flows remain available on the cloud backend.
+
+Delhi's state top-up now uses the official per-kW cap rather than automatically matching the central subsidy. Assam's assistance entry links APDCL's official ULA document. Secondary state-policy sources remain labelled for official confirmation. Supporting every national assistance region does not imply audited tariffs, settlement rules or local installer coverage in every region.
+
 | Stage | What Surya Saathi does |
 |---|---|
 | **Decide** | **Bill photo → right size, cost after subsidy, EMI, payback, CO₂**, or an honest "skip". Months missing from the bill are estimated from local temperature. A smaller system wins when it gets within 10% of the best 25-year value. Delhi's ₹0-upfront and state top-up are flagged when they apply |
@@ -74,30 +83,41 @@ flowchart LR
 
 - **Bills:** the reader never asks for name, address, phone or consumer number, and bill images aren't stored.
 - **Voice:** voice notes are deleted after a day.
-- **What we keep:** the WhatsApp number, language, last estimate and journey stage, deleted automatically after 90 days.
-- **Deleting:** **DELETE MY DATA** erases everything immediately.
+- **What we keep:** the WhatsApp number, language, last estimate and journey stage, deleted automatically after 90 days. Sample comparisons expire after 30 days and are excluded from real impact counters and price learning.
+- **Deleting:** **DELETE MY DATA** deletes the WhatsApp-linked comparison as well as the session. Website comparisons have a delete control. Passport records stay in browser storage only when explicitly saved; use its clear control and delete exported copies separately.
 
 ## Run it
 
 ```bash
 python -m venv .venv && .venv/Scripts/pip install pytest boto3 aws-sam-cli
-.venv/Scripts/python -m pytest            # 108 tests, offline
+.venv/Scripts/python -m pytest            # 150 tests, offline
 sam build && sam deploy --guided          # the whole backend
 python scripts/deploy_web.py              # the website, to Amplify
 ```
+
+For a local review without cloud credentials:
+
+```bash
+python scripts/serve_local.py --port 8765
+# Open http://127.0.0.1:8765
+```
+
+The local server runs the deterministic tools and uses captured Delhi sunlight for the sample estimate. Bill/quote image reading and AI answers return a clear cloud-backend requirement. It binds to localhost; production URLs and deployments are separate. Run `sam validate --lint --region ap-south-1` to validate the new API routes, market table, TTL and IAM policy before deploying.
 
 ## Honest limits
 
 - **The PM Surya Ghar portal has no API.** The journey guides and tracks the application; the household submits it.
 - **WhatsApp:** Meta's Cloud API integration is built, but Meta only lets verified businesses reply, so the demo runs on Twilio's sandbox.
 - **Nudges days apart** would need an approved WhatsApp template in production. Demo mode (`APPLY DEMO`) shortens a day to 4 seconds.
-- **State top-ups outside Delhi** come from the community-verified facts board, which starts small.
+- **State assistance needs local confirmation.** The schemes selector covers central rules for all 36 states and union territories. Delhi, Uttar Pradesh and Assam have government source links; other reviewed entries distinguish secondary reports from official guidance. Unreviewed local support is shown as unknown.
+- **Installer profiles are research, not registration verification.** Confirm your PIN code, DISCOM list, written scope and contract with the actual business. Instant quotes and group discounts are samples.
+- **Ownership checks are evidence aids.** They do not certify equipment safety, DCR compliance, warranty liability or a monetary bill settlement. Generation review is manual and uses a completed month; low output alone does not diagnose dust.
 
 ## Built with
 
 **AWS**, as above.
 
-**AI tools:** Claude Code (Anthropic) helped with research, code and writing. Amazon Bedrock (Nova 2 Lite) runs inside the product.
+**AI tools:** Claude Code (Anthropic) and Codex (OpenAI) helped with research, code and writing. Amazon Bedrock (Nova 2 Lite) runs inside the product.
 
 **Data sources:**
 - Sunlight: [PVGIS](https://re.jrc.ec.europa.eu/pvg_tools/en/) and [NASA POWER](https://power.larc.nasa.gov/)

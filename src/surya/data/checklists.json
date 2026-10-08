@@ -1,0 +1,108 @@
+{
+  "source": "https://mnre.gov.in/en/notice/solar-dcr-verification-portal-reg/",
+  "checked_on": "2026-10-08",
+  "groups": [
+    {
+      "id": "sign",
+      "title": {
+        "en": "Before signing",
+        "hi": "साइन करने से पहले"
+      },
+      "items": [
+        {
+          "id": "survey",
+          "text": {
+            "en": "Written site survey with shadows, roof rights and structure design",
+            "hi": "छाया, छत के अधिकार और स्ट्रक्चर डिज़ाइन वाला लिखित साइट सर्वे"
+          }
+        },
+        {
+          "id": "backup",
+          "text": {
+            "en": "Understand that ordinary on-grid solar stops during outages; price any backup separately",
+            "hi": "साधारण ऑन-ग्रिड सोलर बिजली कटने पर बंद होता है; बैकअप की कीमत अलग लें"
+          }
+        },
+        {
+          "id": "registered",
+          "text": {
+            "en": "Match legal vendor name and registration with your DISCOM’s national-portal list",
+            "hi": "वेंडर का कानूनी नाम और रजिस्ट्रेशन बिजली कंपनी की पोर्टल सूची से मिलाएँ"
+          }
+        },
+        {
+          "id": "scope",
+          "text": {
+            "en": "Written GST-inclusive scope: panels, inverter, structure, earthing, protections, meter and civil work",
+            "hi": "GST सहित लिखित विवरण: पैनल, इन्वर्टर, स्ट्रक्चर, अर्थिंग, सुरक्षा, मीटर और निर्माण"
+          }
+        },
+        {
+          "id": "milestones",
+          "text": {
+            "en": "Agree payments against delivery, installation and commissioning evidence",
+            "hi": "डिलीवरी, इंस्टॉलेशन और कमीशनिंग के प्रमाण से भुगतान जोड़ें"
+          }
+        },
+        {
+          "id": "service",
+          "text": {
+            "en": "Write down cleaning visits, response times, exclusions and monthly generation estimate",
+            "hi": "सफ़ाई की विज़िट, जवाब का समय, अपवाद और मासिक उत्पादन अनुमान लिखवाएँ"
+          }
+        }
+      ]
+    },
+    {
+      "id": "handover",
+      "title": {
+        "en": "Before final payment",
+        "hi": "आख़िरी भुगतान से पहले"
+      },
+      "items": [
+        {
+          "id": "serials",
+          "text": {
+            "en": "Photograph panel make, model and serials; match invoice and DCR evidence for cells AND modules",
+            "hi": "पैनल के ब्रांड, मॉडल और सीरियल की फोटो लें; बिल और सेल तथा मॉड्यूल के DCR प्रमाण मिलाएँ"
+          }
+        },
+        {
+          "id": "dcr",
+          "text": {
+            "en": "Ask installer for serial-number DCR verification; a label photo or ALMM entry alone is insufficient",
+            "hi": "वेंडर से सीरियल नंबर वाला DCR प्रमाण माँगें; केवल लेबल या ALMM सूची पर्याप्त नहीं"
+          }
+        },
+        {
+          "id": "safety",
+          "text": {
+            "en": "Installer signs earthing, protection and structure safety checks; do not inspect live wiring yourself",
+            "hi": "वेंडर अर्थिंग, सुरक्षा और स्ट्रक्चर की जाँच पर हस्ताक्षर करे; चालू तार खुद न जाँचें"
+          }
+        },
+        {
+          "id": "commission",
+          "text": {
+            "en": "Keep commissioning certificate, net-meter details and application reference",
+            "hi": "कमीशनिंग सर्टिफ़िकेट, नेट मीटर विवरण और आवेदन नंबर रखें"
+          }
+        },
+        {
+          "id": "warranty",
+          "text": {
+            "en": "Keep itemised GST invoice, warranties, service contact and monitoring-app access",
+            "hi": "GST बिल, वारंटी, सर्विस संपर्क और निगरानी ऐप का एक्सेस रखें"
+          }
+        },
+        {
+          "id": "firstbill",
+          "text": {
+            "en": "Compare import/export meter readings with the first post-solar bill",
+            "hi": "सोलर के बाद पहले बिल से आयात और निर्यात की मीटर रीडिंग मिलाएँ"
+          }
+        }
+      ]
+    }
+  ]
+}

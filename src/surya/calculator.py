@@ -210,8 +210,9 @@ def state_bonus(h: Household, units: list[float], sy: SolarYield, tariff: Tariff
         o = evaluate(kw, h, units, sy, tariff, bill_now, calib, extra_subsidy=system_cost(kw))
         out["zero_upfront"] = {"kw": kw, "savings_rs": o.savings_rs, "savings_25y_rs": o.savings_25y_rs,
                                "free_maintenance_years": zero["free_maintenance_years"], "needs_load_increase": kw > h.sanctioned_kw}
-    elif recommended and scheme.get("top_up_matches_central_subsidy"):
-        o = evaluate(recommended.kw, h, units, sy, tariff, bill_now, calib, extra_subsidy=central_subsidy(recommended.kw, tariff.state))
+    elif recommended and scheme.get("top_up_per_kw"):
+        extra = min(recommended.kw * scheme["top_up_per_kw"], scheme["top_up_cap"], recommended.net_cost)
+        o = evaluate(recommended.kw, h, units, sy, tariff, bill_now, calib, extra_subsidy=extra)
         out["top_up"] = {"kw": o.kw, "net_cost": o.net_cost, "net_cost_central_only": recommended.net_cost,
                          "payback_years": o.payback_years, "extra_subsidy": o.subsidy - recommended.subsidy}
     return out if ("zero_upfront" in out or "top_up" in out) else None

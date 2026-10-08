@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import re
 
-from . import doctor, journey, performance, qa, quote, rwa, voice
+from . import doctor, journey, market, performance, product, qa, quote, rwa, scam, voice
 from .format import BillProblem, message
 
 DEVANAGARI = re.compile(r"[ऀ-ॿ]")
@@ -17,6 +17,8 @@ TEXT = {
             "Send a photo or PDF of your electricity bill and find out, honestly, whether rooftop solar is worth it "
             "for your home: the right size, the PM Surya Ghar subsidy, the loan EMI and the payback.\n\n"
             "📍 Share your location for sunlight at your exact address.\n"
+            "QUOTES compares sample terms after your estimate. SCAM checks a forwarded offer. "
+            "PASSPORT shows signing checks. SCHEMES DL shows sourced support (use your state code).\n\n"
             "Reply हिंदी for Hindi."
         ),
         "hi": (
@@ -24,6 +26,8 @@ TEXT = {
             "अपने बिजली बिल की फोटो या PDF भेजें, और जानें कि आपके घर के लिए रूफ़टॉप सोलर फ़ायदेमंद है या नहीं: "
             "सही साइज़, PM सूर्य घर सब्सिडी, लोन की EMI और कितने साल में लागत वसूल होगी।\n\n"
             "📍 अपनी लोकेशन भेजें, ताकि आपके पते की धूप से अनुमान लगे।\n"
+            "अनुमान के बाद QUOTES से सैंपल तुलना, SCAM से ऑफ़र जाँच, PASSPORT से साइन की जाँच "
+            "और SCHEMES DL से योजनाएँ देखें (अपने राज्य का कोड दें)।\n\n"
             "Reply ENGLISH for English."
         ),
     },
@@ -122,6 +126,7 @@ def handle(msg: dict, user: dict, wa, pipeline) -> dict | None:
     if kind == "text":
         text = msg["text"]["body"].strip()
         if text.lower() in DELETE_WORDS:
+            market.forget_user(to)
             wa.send_text(to, TEXT["deleted"][user.get("lang", DEFAULT_LANG)])
             return None
         if text.lower() in ENGLISH_WORDS or text in HINDI_WORDS or text.lower() in HINDI_WORDS:
@@ -129,6 +134,56 @@ def handle(msg: dict, user: dict, wa, pipeline) -> dict | None:
             wa.send_text(to, TEXT["lang_set"][user["lang"]])
             return user
         user.setdefault("lang", "hi" if DEVANAGARI.search(text) else "en")
+        lang = user["lang"]
+        low = text.lower().strip()
+        if low in ("quotes", "कोटेशन") or (user.get("asking_pin") and re.fullmatch(r"[1-9]\d{5}", text)):
+            last = user.get("last") or {}
+            if not last.get("kw"):
+                wa.send_text(to, market.TEXT[lang]["no_request"])
+                return user
+            if re.fullmatch(r"[1-9]\d{5}", text):
+                state = last.get("state", "DL")
+                view = market.create_request({"kw": last["kw"], "state": state, "discom": last.get("discom", ""), "pincode": text, "source": "whatsapp"}, wa_id=to)
+                user["market_request"] = view["request"]["id"]
+                user.pop("asking_pin", None)
+                wa.send_text(to, market.wa_started(view, lang))
+            elif user.get("market_request"):
+                try:
+                    wa.send_text(to, market.wa_compare(market.view(user["market_request"]), lang))
+                except KeyError:
+                    user.pop("market_request", None)
+                    user["asking_pin"] = True
+                    wa.send_text(to, market.TEXT[lang]["ask_pin"])
+            else:
+                user["asking_pin"] = True
+                wa.send_text(to, market.TEXT[lang]["ask_pin"])
+            return user
+        if low.startswith("choose"):
+            try:
+                view = market.view(user["market_request"])
+                match = re.fullmatch(r"choose\s+([1-9]\d*)", low)
+                if not match or int(match[1]) > len(view["quotes"]):
+                    raise ValueError("bad choice")
+                chosen = market.choose(view["request"]["id"], view["quotes"][int(match[1])-1]["vendor_id"])
+                wa.send_text(to, market.wa_chosen(chosen, lang))
+            except (KeyError, ValueError):
+                wa.send_text(to, market.TEXT[lang]["bad_choice"])
+            return user
+        if low.startswith("scam ") or low.startswith("check offer ") or scam.looks_like_offer(text):
+            wa.send_text(to, scam.message(text, lang))
+            return user
+        if low in ("passport", "handover", "checklist", "पासपोर्ट"):
+            groups = product.checklists()["groups"]
+            wa.send_text(to, "\n\n".join(g["title"][lang]+"\n"+"\n".join("☐ "+i["text"][lang] for i in g["items"]) for g in groups))
+            return user
+        if low == "schemes" or low.startswith("schemes "):
+            try:
+                code = low.split()[1].upper() if len(low.split()) > 1 else (user.get("last") or {}).get("state", "DL")
+                catalog = product.schemes(code, (user.get("last") or {}).get("kw") or 3)
+                wa.send_text(to, "\n\n".join(s["title"][lang]+"\n"+s["amount"][lang]+"\n"+s["source"] for s in catalog["schemes"] if s["kind"] in ("central", "state")))
+            except ValueError:
+                wa.send_text(to, "Use SCHEMES and a state code, for example SCHEMES UP or SCHEMES AS.")
+            return user
         cmd = _command(text)
         if cmd:
             wa.send_text(to, journey_reply(cmd, text, user, to, user["lang"]))
@@ -180,7 +235,8 @@ def handle(msg: dict, user: dict, wa, pipeline) -> dict | None:
         if a.verdict == "go" and not (user.get("journey") and not user["journey"].get("done")):
             wa.send_text(to, journey.TEXT[lang if lang in journey.TEXT else "en"]["cta"])
         o = a.recommended
-        user["last"] = {"verdict": a.verdict, "kw": o.kw if o else None, "discom": request["discom"], "provider": a.discom_name}
+        user["last"] = {"verdict": a.verdict, "kw": o.kw if o else None, "discom": request["discom"], "provider": a.discom_name,
+                        "state": reading.state or "DL"}
     elif kind == "audio":
         data, media_type = wa.download_media(msg["audio"]["id"])
         text, heard_lang = voice.transcribe(data, media_type)

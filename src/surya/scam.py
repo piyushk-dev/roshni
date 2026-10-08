@@ -18,8 +18,8 @@ TEXT = {
         "fee": "It asks for a fee to register or process your subsidy. Applying on pmsuryaghar.gov.in is free; no one needs a fee for it.",
         "otp": "It asks for an OTP, Aadhaar or bank details. The scheme never collects these over a call or message.",
         "subsidy_high": "It promises {amount} of subsidy. The central subsidy is at most ₹78,000 (₹85,800 in hill and North-East states); only a few states add more. Ask which scheme pays the rest, in writing.",
-        "subsidy_impossible": "It promises {amount} of subsidy, more than any home can get, even with a state top-up.",
-        "free": "It offers 'free' solar. The subsidy is paid only after installation, and only Delhi currently offers ₹0 upfront, through registered vendors.",
+        "subsidy_impossible": "It promises {amount} of subsidy, above the central cap and the common top-ups in our reviewed data. Ask for the applicable government order and eligibility; do not budget this claim yet.",
+        "free": "It offers 'free' solar. A subsidy, loan, or utility-led scheme may reduce upfront payment, but has different conditions. Ask who owns the plant, who pays, and whether an EMI remains.",
         "urgency": "It pushes you to decide fast. That's the commonest scam tactic; the scheme runs till March 2027.",
         "advance": "It asks for {pct}% upfront. Pay at most 20–30% before the panels arrive, and tie the rest to delivery and commissioning.",
         "cash": "It asks for cash or a payment to a personal account. Pay only by bank transfer to the company, against a GST invoice.",
@@ -27,9 +27,9 @@ TEXT = {
         "check_site": "It points to {domain}. The only official website is pmsuryaghar.gov.in.",
         "authorised": "It claims to be government-authorised. The ministry doesn't appoint sales agents; check the vendor's name in the registered list on pmsuryaghar.gov.in.",
         "non_dcr": "It offers imported or non-DCR panels with the subsidy. Imported panels don't get the subsidy.",
-        "red": "🔴 This looks like a scam. Don't pay or share anything yet.",
+        "red": "🔴 Serious warning signs. Verify the offer before paying or sharing sensitive information.",
         "amber": "🟠 Be careful with this offer.",
-        "ok": "✅ No common scam signs found.",
+        "ok": "No common warning signs found. This does not verify the sender or the offer.",
         "always": "Always: check the vendor on pmsuryaghar.gov.in, never pay a 'processing fee', and pay in stages against a GST invoice.",
         "empty": "Paste or forward the message, ad or call details you want checked.",
     },
@@ -37,8 +37,8 @@ TEXT = {
         "fee": "यह सब्सिडी के पंजीकरण या प्रोसेसिंग की फ़ीस माँग रहा है। pmsuryaghar.gov.in पर आवेदन मुफ़्त है; इसके लिए किसी फ़ीस की ज़रूरत नहीं।",
         "otp": "यह OTP, आधार या बैंक की जानकारी माँग रहा है। योजना कभी कॉल या मैसेज पर ये नहीं माँगती।",
         "subsidy_high": "यह {amount} सब्सिडी का वादा कर रहा है। केंद्रीय सब्सिडी अधिकतम ₹78,000 है (पहाड़ी और पूर्वोत्तर राज्यों में ₹85,800); सिर्फ़ कुछ राज्य ही और देते हैं। बाकी पैसा कौन-सी योजना देगी, लिखित में पूछें।",
-        "subsidy_impossible": "यह {amount} सब्सिडी का वादा कर रहा है, जो राज्य की अतिरिक्त सब्सिडी जोड़कर भी किसी घर को नहीं मिलती।",
-        "free": "यह 'मुफ़्त' सोलर का ऑफ़र है। सब्सिडी इंस्टॉलेशन के बाद ही मिलती है, और अभी सिर्फ़ दिल्ली में रजिस्टर्ड वेंडर के ज़रिए ₹0 शुरुआती खर्च वाली योजना है।",
+        "subsidy_impossible": "यह {amount} सब्सिडी का दावा है, जो केंद्रीय सीमा और हमारी जाँची सामान्य राज्य सहायता से अधिक है। लागू सरकारी आदेश और पात्रता माँगें; अभी बजट में न जोड़ें।",
+        "free": "यह 'मुफ़्त' सोलर का ऑफ़र है। सब्सिडी, लोन या बिजली कंपनी वाली योजना की अलग शर्तें होती हैं। मालिक कौन होगा, भुगतान कौन करेगा और EMI बचेगी या नहीं, पूछें।",
         "urgency": "यह जल्दी फ़ैसला करने का दबाव डाल रहा है। यह सबसे आम धोखा है; योजना मार्च 2027 तक चलेगी।",
         "advance": "यह {pct}% एडवांस माँग रहा है। पैनल आने से पहले 20–30% से ज़्यादा न दें, बाकी डिलीवरी और चालू होने से जोड़ें।",
         "cash": "यह नकद या निजी खाते में पैसे माँग रहा है। सिर्फ़ कंपनी के खाते में बैंक ट्रांसफ़र से, GST बिल के साथ भुगतान करें।",
@@ -46,9 +46,9 @@ TEXT = {
         "check_site": "यह {domain} की तरफ़ भेज रहा है। आधिकारिक वेबसाइट सिर्फ़ pmsuryaghar.gov.in है।",
         "authorised": "यह सरकार से अधिकृत होने का दावा कर रहा है। मंत्रालय बिक्री एजेंट नियुक्त नहीं करता; pmsuryaghar.gov.in की रजिस्टर्ड सूची में वेंडर का नाम देखें।",
         "non_dcr": "यह सब्सिडी के साथ विदेशी या बिना DCR वाले पैनल दे रहा है। विदेशी पैनल पर सब्सिडी नहीं मिलती।",
-        "red": "🔴 यह धोखा लग रहा है। अभी कोई पैसा या जानकारी न दें।",
+        "red": "🔴 गंभीर चेतावनी के संकेत। पैसा या संवेदनशील जानकारी देने से पहले पुष्टि करें।",
         "amber": "🟠 इस ऑफ़र से सावधान रहें।",
-        "ok": "✅ धोखे के आम संकेत नहीं मिले।",
+        "ok": "आम चेतावनी के संकेत नहीं मिले। इससे भेजने वाले या ऑफ़र की पुष्टि नहीं होती।",
         "always": "हमेशा: pmsuryaghar.gov.in पर वेंडर जाँचें, 'प्रोसेसिंग फ़ीस' कभी न दें, और GST बिल के साथ किस्तों में भुगतान करें।",
         "empty": "जिस मैसेज, विज्ञापन या कॉल की जाँच करनी है, उसे यहाँ चिपकाएँ या फ़ॉरवर्ड करें।",
     },
@@ -102,7 +102,18 @@ def check(text: str) -> list[dict]:
     found: list[dict] = []
     low = text.lower()
     for code, pattern in PATTERNS.items():
-        if re.search(pattern, low, re.I):
+        matches = list(re.finditer(pattern, low, re.I))
+        positive = []
+        for m in matches:
+            before = low[max(0, m.start()-45):m.start()]
+            after = low[m.end():m.end()+25]
+            if code in ("fee", "otp", "cash", "non_dcr"):
+                if re.search(r"(?:no|nil|zero|never|avoid|do not|don't)\s+(?:\w+\s+){0,4}$", before):
+                    continue
+                if re.search(r"(?:न दें|न भेजें|न बताएँ|नहीं|मत भेज)", after):
+                    continue
+            positive.append(m)
+        if positive:
             found.append({"code": code, "values": {}})
     claims = _subsidy_claims(text)
     if claims:
