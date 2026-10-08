@@ -67,12 +67,14 @@ def webhook(event: dict, context) -> dict:
 def worker(event: dict, context) -> None:
     if event.get("channel") == "twilio":
         msgs, client = [twilio_wa.to_message(event["params"])], twilio_wa.Client(event["params"]["To"])
+        channel = {"kind": "twilio", "from": event["params"]["To"]}
     else:
-        msgs, client = list(whatsapp.messages(event)), whatsapp
+        msgs, client, channel = list(whatsapp.messages(event)), whatsapp, {"kind": "meta"}
     for msg in msgs:
         if not store.claim_message(msg["id"]):
             continue
         user = store.get_user(msg["from"])
+        user["channel"] = channel  # so journey reminders go back the way the household came in
         try:
             user = bot.handle(msg, user, client, pipeline)
         except Exception:

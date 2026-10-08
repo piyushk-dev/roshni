@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import re
 
-from . import quote
+from . import journey, quote
 from .format import BillProblem, message
 
 DEVANAGARI = re.compile(r"[ऀ-ॿ]")
@@ -50,6 +50,43 @@ TEXT = {
 ENGLISH_WORDS = {"english", "eng", "en"}
 HINDI_WORDS = {"hindi", "हिंदी", "हिन्दी"}
 DELETE_WORDS = {"delete my data", "delete", "मेरा डेटा मिटाओ"}
+COMMANDS = {
+    "apply": {"apply", "start", "apply demo", "आवेदन", "aavedan"},
+    "done": {"done", "हो गया", "ho gaya", "हो गया है"},
+    "stuck": {"stuck", "help", "अटका", "अटक गया", "atka"},
+    "status": {"status", "स्थिति", "sthiti"},
+}
+
+
+def _command(text: str) -> str | None:
+    low = text.lower().strip(" .!")
+    return next((name for name, words in COMMANDS.items() if low in words), None)
+
+
+def journey_reply(cmd: str, text: str, user: dict, to: str, lang: str) -> str:
+    """APPLY starts the Step Functions journey; DONE moves it on; STUCK drafts a complaint; STATUS says where."""
+    t = journey.TEXT[lang if lang in journey.TEXT else "en"]
+    j = user.get("journey")
+    active = j and not j.get("done")
+    if cmd == "apply":
+        if active:
+            return journey.stage_text(j["stage"], lang)
+        user["journey"] = journey.start(to, user.get("channel", {}), lang, demo="demo" in text.lower())
+        return t["start"].format(total=len(journey.STAGES))
+    if not active:
+        return t["not_started"]
+    if cmd == "status":
+        st = journey.STAGES[j["stage"]]
+        return t["status"].format(n=j["stage"] + 1, total=len(journey.STAGES), title=st["title"].get(lang, st["title"]["en"]),
+                                  days=round(journey.days_since(j)), usual=st["days"])
+    if cmd == "stuck":
+        return journey.draft(j["stage"], lang, max(journey.days_since(j), journey.STAGES[j["stage"]]["days"] * 1.2))
+    if not j.get("token"):
+        return t["wait_a_moment"]
+    journey.advance(j)
+    st = journey.STAGES[j["stage"]]
+    j["token"] = None
+    return t["done"].format(n=j["stage"] + 1, title=st["title"].get(lang, st["title"]["en"]))
 
 
 def handle(msg: dict, user: dict, wa, pipeline) -> dict | None:
@@ -67,6 +104,10 @@ def handle(msg: dict, user: dict, wa, pipeline) -> dict | None:
             wa.send_text(to, TEXT["lang_set"][user["lang"]])
             return user
         user.setdefault("lang", "hi" if DEVANAGARI.search(text) else "en")
+        cmd = _command(text)
+        if cmd:
+            wa.send_text(to, journey_reply(cmd, text, user, to, user["lang"]))
+            return user
         wa.send_text(to, TEXT["welcome"][user["lang"]])
         return user
 
@@ -89,6 +130,8 @@ def handle(msg: dict, user: dict, wa, pipeline) -> dict | None:
             return user
         pipeline.count_analysis(a)
         wa.send_text(to, message(a, lang))
+        if a.verdict == "go" and not (user.get("journey") and not user["journey"].get("done")):
+            wa.send_text(to, journey.TEXT[lang if lang in journey.TEXT else "en"]["cta"])
         o = a.recommended
         user["last"] = {"verdict": a.verdict, "kw": o.kw if o else None, "discom": request["discom"]}
     elif kind == "audio":

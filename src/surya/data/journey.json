@@ -1,0 +1,63 @@
+{
+  "stages": [
+    {"id": "check", "who": "you", "days": 1,
+     "title": {"en": "Pre-flight check", "hi": "आवेदन से पहले जाँच"},
+     "do": {"en": ["Your name is spelled the same on the electricity bill, Aadhaar and bank account", "Aadhaar is linked (seeded) to that bank account", "Latest bill is paid and less than 90 days old", "You own the roof, or have the owner's written NOC", "About 100 sq ft of shade-free roof per kW", "The system fits your sanctioned load, or you apply to raise it"],
+            "hi": ["बिजली बिल, आधार और बैंक खाते पर नाम की स्पेलिंग एक जैसी हो", "आधार उसी बैंक खाते से जुड़ा (सीडेड) हो", "पिछला बिल भरा हुआ हो और 90 दिन से पुराना न हो", "छत आपकी हो, या मालिक की लिखित NOC हो", "हर kW के लिए लगभग 100 वर्ग फुट छाया-रहित छत", "सिस्टम आपके स्वीकृत लोड में आए, या लोड बढ़वाने का आवेदन करें"]},
+     "why": {"en": "Name mismatches and unlinked Aadhaar are the most common reasons subsidies get rejected.", "hi": "नाम में फ़र्क और आधार का बैंक से न जुड़ा होना, सब्सिडी रुकने की सबसे आम वजहें हैं।"}},
+    {"id": "register", "who": "you", "days": 2,
+     "title": {"en": "Register on the national portal", "hi": "राष्ट्रीय पोर्टल पर रजिस्ट्रेशन"},
+     "do": {"en": ["Go to pmsuryaghar.gov.in → Apply for rooftop solar", "Choose your state and electricity provider, enter your consumer number", "Verify with the OTP on your mobile"],
+            "hi": ["pmsuryaghar.gov.in पर जाएँ → Apply for rooftop solar", "राज्य और बिजली कंपनी चुनें, कंज़्यूमर नंबर डालें", "मोबाइल पर आए OTP से पुष्टि करें"]},
+     "why": {"en": "Applying yourself keeps the subsidy in your name. A vendor can help, but never pay anyone to register.", "hi": "खुद आवेदन करने से सब्सिडी आपके नाम रहती है। वेंडर मदद कर सकता है, पर रजिस्ट्रेशन के पैसे किसी को न दें।"}},
+    {"id": "vendor", "who": "you", "days": 5,
+     "title": {"en": "Choose a registered vendor", "hi": "रजिस्टर्ड वेंडर चुनें"},
+     "do": {"en": ["Pick a vendor from the portal's list for your provider", "Get two quotes and send them here to check", "Pay only through the portal or bank transfer, never cash"],
+            "hi": ["पोर्टल की लिस्ट से अपनी बिजली कंपनी का वेंडर चुनें", "दो कोटेशन लें और जाँच के लिए यहाँ भेजें", "भुगतान सिर्फ़ पोर्टल या बैंक ट्रांसफ़र से करें, कभी नकद नहीं"]},
+     "why": {"en": "Non-DCR panels, inflated subsidy promises and cash deals are how households lose money.", "hi": "बिना DCR पैनल, बढ़ा-चढ़ाकर सब्सिडी का वादा और नकद सौदे, इन्हीं से लोगों का पैसा डूबता है।"}},
+    {"id": "feasibility", "who": "discom", "days": 15,
+     "title": {"en": "Feasibility approval", "hi": "फ़ीज़िबिलिटी मंज़ूरी"},
+     "do": {"en": ["Your electricity provider checks your load and the local transformer", "Wait for written approval on the portal before anything is installed"],
+            "hi": ["बिजली कंपनी आपका लोड और पास का ट्रांसफ़ॉर्मर जाँचती है", "कुछ भी लगवाने से पहले पोर्टल पर लिखित मंज़ूरी का इंतज़ार करें"]},
+     "why": {"en": "Installing before approval risks a system that can't be connected.", "hi": "मंज़ूरी से पहले लगवाने पर सिस्टम ग्रिड से न जुड़ पाने का खतरा है।"}},
+    {"id": "install", "who": "vendor", "days": 10,
+     "title": {"en": "Installation", "hi": "इंस्टॉलेशन"},
+     "do": {"en": ["Check the panels' DCR label and keep the DCR certificate", "Keep the invoice, warranty cards and photos of the system"],
+            "hi": ["पैनल पर DCR लेबल देखें और DCR सर्टिफ़िकेट रखें", "बिल, वारंटी कार्ड और सिस्टम की फोटो संभाल कर रखें"]},
+     "why": {"en": "Inspection fails without DCR panels and their paperwork.", "hi": "DCR पैनल और उनके कागज़ों के बिना जाँच फ़ेल हो जाती है।"}},
+    {"id": "net_meter", "who": "discom", "days": 25,
+     "title": {"en": "Net meter and inspection", "hi": "नेट मीटर और जाँच"},
+     "do": {"en": ["Your vendor uploads the plant details and photos", "The provider installs the net meter, inspects, and issues the commissioning certificate"],
+            "hi": ["वेंडर प्लांट की जानकारी और फोटो अपलोड करता है", "बिजली कंपनी नेट मीटर लगाती है, जाँच करती है और कमीशनिंग सर्टिफ़िकेट जारी करती है"]},
+     "why": {"en": "This is the slowest step. Delhi's 2026 rule targets 25 days.", "hi": "यह सबसे धीमा कदम है। दिल्ली के 2026 नियम में 25 दिन का लक्ष्य है।"}},
+    {"id": "bank", "who": "you", "days": 3,
+     "title": {"en": "Bank details and e-token", "hi": "बैंक जानकारी और ई-टोकन"},
+     "do": {"en": ["Upload a clear cancelled cheque or passbook page on the portal", "Redeem the e-token in your portal login when it appears"],
+            "hi": ["पोर्टल पर साफ़ कैंसिल चेक या पासबुक का पन्ना अपलोड करें", "पोर्टल लॉगिन में ई-टोकन दिखे तो उसे रिडीम करें"]},
+     "why": {"en": "The subsidy is only released after you redeem the e-token.", "hi": "ई-टोकन रिडीम करने के बाद ही सब्सिडी जारी होती है।"}},
+    {"id": "subsidy", "who": "mnre", "days": 30,
+     "title": {"en": "Subsidy in your account", "hi": "सब्सिडी आपके खाते में"},
+     "do": {"en": ["Usually 15–30 days after redemption", "Phase II claims must reach MNRE by 30 November 2026"],
+            "hi": ["आम तौर पर रिडीम करने के 15–30 दिन बाद", "फ़ेज़ II के क्लेम 30 नवंबर 2026 तक MNRE तक पहुँचने चाहिए"]},
+     "why": {"en": "If it's late, the drafted complaint below goes to the right office.", "hi": "देर हो तो नीचे लिखी शिकायत सही दफ़्तर तक भेजें।"}}
+  ],
+  "escalation": {
+    "you": [],
+    "vendor": [
+      {"to": {"en": "your vendor, in writing", "hi": "अपने वेंडर को, लिखित में"}, "how": "email or WhatsApp"},
+      {"to": {"en": "PM Surya Ghar grievance portal (vendor complaints)", "hi": "PM सूर्य घर शिकायत पोर्टल (वेंडर शिकायत)"}, "how": "pmsuryaghar.gov.in → Grievance"},
+      {"to": {"en": "PM Surya Ghar helpline", "hi": "PM सूर्य घर हेल्पलाइन"}, "how": "call 15555"}
+    ],
+    "discom": [
+      {"to": {"en": "your electricity provider's solar helpline", "hi": "बिजली कंपनी की सोलर हेल्पलाइन"}, "how": "call, with your application number"},
+      {"to": {"en": "the provider's nodal officer for rooftop solar, in writing", "hi": "बिजली कंपनी के रूफ़टॉप सोलर नोडल ऑफ़िसर को, लिखित में"}, "how": "email"},
+      {"to": {"en": "PM Surya Ghar grievance portal", "hi": "PM सूर्य घर शिकायत पोर्टल"}, "how": "pmsuryaghar.gov.in → Grievance"},
+      {"to": {"en": "an RTI application to the provider", "hi": "बिजली कंपनी को RTI आवेदन"}, "how": "rtionline.gov.in or by post"}
+    ],
+    "mnre": [
+      {"to": {"en": "PM Surya Ghar grievance portal", "hi": "PM सूर्य घर शिकायत पोर्टल"}, "how": "pmsuryaghar.gov.in → Grievance"},
+      {"to": {"en": "PM Surya Ghar helpline", "hi": "PM सूर्य घर हेल्पलाइन"}, "how": "call 15555"},
+      {"to": {"en": "CPGRAMS, the central grievance portal", "hi": "CPGRAMS, केंद्रीय शिकायत पोर्टल"}, "how": "pgportal.gov.in"}
+    ]
+  }
+}

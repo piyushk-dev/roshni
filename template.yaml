@@ -125,9 +125,17 @@ Resources:
           BEDROCK_MODEL_ID: !Ref BedrockModelId
           WA_PHONE_NUMBER_ID: !Ref WhatsAppPhoneNumberId
           GRAPH_VERSION: !Ref GraphApiVersion
+          JOURNEY_STATE_MACHINE: !Ref JourneyStateMachine
       Policies:
         - SSMParameterReadPolicy:
             ParameterName: surya-saathi/whatsapp/*
+        - Statement:
+            - Effect: Allow
+              Action: [states:StartExecution]
+              Resource: !Ref JourneyStateMachine
+            - Effect: Allow
+              Action: [states:SendTaskSuccess]
+              Resource: "*"
         - DynamoDBCrudPolicy:
             TableName: !Ref SessionTable
         - DynamoDBCrudPolicy:
@@ -181,6 +189,42 @@ Resources:
         - {AttributeName: pk, AttributeType: S}
       KeySchema:
         - {AttributeName: pk, KeyType: HASH}
+
+  # Application journey: one Step Functions execution per household, a task token per stage
+  JourneyFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/
+      Handler: surya.journey.task_handler
+      Timeout: 30
+      Environment:
+        Variables:
+          SSM_PREFIX: /surya-saathi/whatsapp
+          SESSION_TABLE: !Ref SessionTable
+          WA_PHONE_NUMBER_ID: !Ref WhatsAppPhoneNumberId
+          GRAPH_VERSION: !Ref GraphApiVersion
+      Policies:
+        - SSMParameterReadPolicy:
+            ParameterName: surya-saathi/whatsapp/*
+        - DynamoDBCrudPolicy:
+            TableName: !Ref SessionTable
+
+  JourneyLogs:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${JourneyFunction}
+      RetentionInDays: 14
+
+  JourneyStateMachine:
+    Type: AWS::Serverless::StateMachine
+    Properties:
+      Type: STANDARD
+      DefinitionUri: statemachine/journey.asl.json
+      DefinitionSubstitutions:
+        JourneyFunctionArn: !GetAtt JourneyFunction.Arn
+      Policies:
+        - LambdaInvokePolicy:
+            FunctionName: !Ref JourneyFunction
 
   # Self-updating knowledge: tariffs learned from bills, prices from quotes, community-checked facts, counters
   KnowledgeTable:

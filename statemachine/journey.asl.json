@@ -1,0 +1,49 @@
+{
+  "Comment": "Surya Saathi application journey: one wait per stage, a nudge whenever a stage runs past its usual length",
+  "StartAt": "Wait for stage",
+  "States": {
+    "Wait for stage": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke.waitForTaskToken",
+      "Parameters": {
+        "FunctionName": "${JourneyFunctionArn}",
+        "Payload": {"action": "wait", "token.$": "$$.Task.Token", "execution.$": "$$.Execution.Id", "journey.$": "$"}
+      },
+      "TimeoutSecondsPath": "$.timeout_s",
+      "ResultPath": null,
+      "Catch": [{"ErrorEquals": ["States.Timeout"], "ResultPath": null, "Next": "Count a nudge"}],
+      "Next": "Was that the last stage?"
+    },
+    "Count a nudge": {
+      "Type": "Pass",
+      "Parameters": {
+        "wa_id.$": "$.wa_id", "channel.$": "$.channel", "lang.$": "$.lang", "stage.$": "$.stage",
+        "seconds_per_day.$": "$.seconds_per_day", "timeouts.$": "$.timeouts", "timeout_s.$": "$.timeout_s",
+        "nudges.$": "States.MathAdd($.nudges, 1)"
+      },
+      "Next": "Wait for stage"
+    },
+    "Was that the last stage?": {
+      "Type": "Choice",
+      "Choices": [{"Variable": "$.stage", "NumericGreaterThanEquals": 7, "Next": "Finish"}],
+      "Default": "Next stage"
+    },
+    "Next stage": {
+      "Type": "Pass",
+      "Parameters": {
+        "wa_id.$": "$.wa_id", "channel.$": "$.channel", "lang.$": "$.lang",
+        "stage.$": "States.MathAdd($.stage, 1)",
+        "seconds_per_day.$": "$.seconds_per_day", "timeouts.$": "$.timeouts",
+        "timeout_s.$": "States.ArrayGetItem($.timeouts, States.MathAdd($.stage, 1))",
+        "nudges": 0
+      },
+      "Next": "Wait for stage"
+    },
+    "Finish": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {"FunctionName": "${JourneyFunctionArn}", "Payload": {"action": "finish", "journey.$": "$"}},
+      "End": true
+    }
+  }
+}

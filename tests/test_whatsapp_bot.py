@@ -77,7 +77,9 @@ def test_bill_from_elsewhere_with_rates_is_answered_from_its_own_tariff(wa, monk
              "fixed_charge_rs": 600}
     monkeypatch.setattr(FakeBedrock, "converse", lambda self, modelId, **r: {"output": {"message": {"content": [{"toolUse": {"input": dict(other)}}]}}})
     bot.handle(_msg("image", image={"id": "media1"}), {"lang": "en"}, wa, pipeline)
-    assert "UPPCL" in wa.sent[-1] and "rates printed on your bill" in wa.sent[-1]
+    estimate = next(m for m in wa.sent if "Solar estimate" in m)
+    assert "UPPCL" in estimate and "rates printed on your bill" in estimate
+    assert "APPLY" in wa.sent[-1]  # a "go" answer offers the application plan
 
 
 def test_signature_check(monkeypatch):
