@@ -125,3 +125,18 @@ def test_privacy_page_is_served():
     out = handler.lambda_handler({"requestContext": {"http": {"method": "GET"}}, "rawPath": "/privacy"}, None)
     assert out["statusCode"] == 200 and "text/html" in out["headers"]["content-type"]
     assert "DELETE MY DATA" in out["body"]
+
+
+def test_secret_is_fetched_on_first_use_even_right_after_boot(monkeypatch):
+    """Regression: a fresh Lambda's monotonic clock can start near 0, which once skipped the first fetch."""
+    import boto3
+
+    class FakeSSM:
+        def get_parameter(self, Name, WithDecryption):
+            return {"Parameter": {"Value": f"value-of-{Name}"}}
+
+    monkeypatch.setattr(whatsapp, "_secrets", {})
+    monkeypatch.setattr(whatsapp.time, "monotonic", lambda: 1.0)
+    monkeypatch.setenv("SSM_PREFIX", "/p")
+    monkeypatch.setattr(boto3, "client", lambda name: FakeSSM())
+    assert whatsapp.secret("app-secret") == "value-of-/p/app-secret"

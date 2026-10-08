@@ -27,8 +27,13 @@ def webhook(event: dict, context) -> dict:
         log.warning("rejected a webhook with a bad signature")
         return {"statusCode": 401, "body": "bad signature"}
 
+    payload = json.loads(body)
+    for s in whatsapp.statuses(payload):
+        errors = [f"{e.get('code')} {e.get('title')}: {e.get('error_data', {}).get('details', '')}" for e in s.get("errors", [])]
+        log.log(logging.WARNING if errors else logging.INFO, "delivery %s for %s %s", s.get("status"), s.get("id"), "; ".join(errors))
+
     # Meta wants a 200 within seconds and retries otherwise; reading a bill takes longer
-    if any(True for _ in whatsapp.messages(json.loads(body))):
+    if any(True for _ in whatsapp.messages(payload)):
         import boto3
 
         boto3.client("lambda").invoke(FunctionName=os.environ["WORKER_FUNCTION"], InvocationType="Event", Payload=body)
