@@ -121,6 +121,123 @@ const T = {
   },
 };
 
+
+// Landing-page copy. Kept apart from the result copy above so each stays readable.
+Object.assign(T.en, {
+  skip: "Skip to content",
+  navHow: "How it works", navQuote: "Check a quote", navApply: "Apply", navRules: "Rates & rules", navAws: "Built on AWS",
+  eyebrow: "PM Surya Ghar · rooftop solar, from bill to subsidy",
+  title: "Your electricity bill already knows if solar pays.",
+  sub: "Send a photo of it. In about ten seconds you get the right size, the subsidy, your EMI and the payback, or an honest skip. Then help with the vendor, the paperwork and the subsidy.",
+  upload: "Upload your bill",
+  uploadHint: "Photo or PDF. Any Indian electricity provider; Delhi has the most detail.",
+  slipSlab: "Slab", slipUnits: "Units this month", slipSun: "Sunlight here",
+  answerTag: "The answer", answerBig: "Go solar: 2 kW", answerSub: "₹70,000 after subsidy · pays back in 4.9 years",
+  sBills: "bills read", sKw: "kW of rooftop solar recommended", sCo2: "tonnes of CO₂ a year those systems avoid", sFlags: "red flags caught in vendor quotes",
+  sNote: "Live, counted since 8 October 2026. Sample homes and sample quotes aren't counted.",
+  howTitle: "From bill to subsidy, and after",
+  howSub: "Most households stop before they apply: they can't tell if it pays, who to trust, or what to do next. Surya Saathi walks the whole way with them.",
+  st1: "Decide", st1d: "Bill photo → the right size, subsidy, EMI and payback. An honest skip when solar won't pay.",
+  st2: "Choose", st2d: "Quote check: non-DCR panels, inflated subsidy promises, overpricing, weak warranties.",
+  st3: "Apply", st3d: "A pre-flight check for the usual rejections, then the portal's steps one at a time.",
+  st4: "Get paid", st4d: "Reminders when a step stalls, and a complaint drafted for whoever is holding it up.",
+  st5: "Keep it running", st5d: "Check your first bills after solar, and the panels' output against what they should make.",
+  dlEyebrow: "New in Delhi · September 2026",
+  dlTitle: "Using up to 400 units a month? You may get 3 kW at ₹0 upfront.",
+  dlSub: "Delhi's new policy also adds up to ₹78,000 on top of the central subsidy for everyone else. Send your bill to see which applies to you.",
+  dlCta: "Check my bill",
+  trap1: "Panels without DCR (made-in-India cells): the whole subsidy is lost.",
+  trap2: "A subsidy promise above the scheme's maximum.",
+  trap3: "A price per kW far above what nearby households were quoted.",
+  trap4: "Fewer panels than the size you're paying for, a small inverter, short warranties, a big advance.",
+  applyTitle: "The 8 steps to your subsidy",
+  applySub: "On WhatsApp, Surya Saathi keeps your place, nudges you when a step runs long, and writes the complaint when someone else is holding it up. You send it.",
+  who: { you: "you", vendor: "vendor", discom: "electricity provider", mnre: "ministry" },
+  usual: (d) => `usually ${d} day${d === 1 ? "" : "s"}`,
+  chatHead: "Here's a message to send to the provider's nodal officer (email):",
+  chatBody: "Subject: rooftop solar application pending at \"Net meter and inspection\" for 41 days. Please tell me what is pending and by when it will be completed…",
+  chatNext: "No reply within 7 days? Next: the PM Surya Ghar grievance portal.",
+  rulesTitle: "Rates and rules, checked by people",
+  rulesSub: "Fuel surcharges, state top-ups and prices change every few months. Instead of a table that quietly goes stale, every fact shows its source, when it was last confirmed, and whether anyone has reported a change.",
+  l1: "Bills teach tariffs", l1d: "Every bill prints its slab rates. Each one read updates that provider's tariff, which is how bills from any state work.",
+  l2: "Quotes teach prices", l2d: "Every quote checked adds a price per kW for its state. The fair range comes from real local quotes.",
+  l3: "People confirm facts", l3d: "Confirm what's still true, or report a change with evidence. Three reports flag a fact for review.",
+  l4: "Watchers check sources", l4d: "Every week, official pages are re-read. If one changes, its facts are marked for review.",
+  fAll: "All India", factsLoading: "Loading the latest facts…", factsError: "Couldn't load the facts right now.",
+  factStill: "Still true", factChange: "Report a change", factThanks: "Thanks, confirmed.",
+  factNew: "What is it now?", factEvidence: "Evidence: a link, or where you saw it", factSend: "Send report",
+  factSent: "Thanks. Three matching reports flag it for review.",
+  factMeta: (n, d) => `${n} confirmation${n === 1 ? "" : "s"} · last confirmed ${d}`,
+  factReports: (n) => `${n} change report${n === 1 ? "" : "s"}`,
+  factSource: "source",
+  status: { current: "current", reported_changed: "change reported", source_changed: "source page changed" },
+  scope: { IN: "All India", DL: "Delhi", UP: "Uttar Pradesh", HR: "Haryana" },
+  waTitle: "Use it on WhatsApp",
+  waSub: "Send a bill or quote photo, in Hindi or English. During the hackathon the bot runs on Twilio's WhatsApp sandbox, so message the number below with the join code first.",
+  waJoin: (code) => `Send “${code}” first`,
+  c1: "Bill photo", c1d: "the full solar answer", c2: "Quote photo", c2d: "red flags and questions to ask",
+  c3d: "start the 8-step application plan", c4d: "finish the current step", c5d: "get a complaint drafted for whoever is holding things up",
+  c6d: "switch language", c7d: "erase everything stored about you",
+  applyCta: "📋 Start the application plan on WhatsApp →",
+});
+Object.assign(T.hi, {
+  skip: "सीधे सामग्री पर जाएँ",
+  navHow: "कैसे काम करता है", navQuote: "कोटेशन जाँचें", navApply: "आवेदन", navRules: "रेट और नियम", navAws: "AWS पर बना",
+  eyebrow: "PM सूर्य घर · रूफ़टॉप सोलर, बिल से सब्सिडी तक",
+  title: "आपका बिजली बिल पहले से जानता है कि सोलर फ़ायदेमंद है या नहीं।",
+  sub: "उसकी फोटो भेजें। लगभग दस सेकंड में सही साइज़, सब्सिडी, EMI और लागत वसूली का समय पता चलेगा, या साफ़ बताया जाएगा कि अभी न लगाएँ। फिर वेंडर, कागज़ात और सब्सिडी में भी मदद।",
+  upload: "अपना बिल अपलोड करें",
+  uploadHint: "फोटो या PDF। भारत की किसी भी बिजली कंपनी का बिल; दिल्ली के लिए सबसे ज़्यादा जानकारी।",
+  slipSlab: "स्लैब", slipUnits: "इस महीने की यूनिट", slipSun: "यहाँ की धूप",
+  answerTag: "जवाब", answerBig: "सोलर लगाएँ: 2 kW", answerSub: "सब्सिडी के बाद ₹70,000 · 4.9 साल में वसूल",
+  sBills: "बिल पढ़े गए", sKw: "kW रूफ़टॉप सोलर सुझाया गया", sCo2: "टन CO₂ हर साल कम", sFlags: "वेंडर कोटेशन में पकड़ी गई गड़बड़ियाँ",
+  sNote: "लाइव, 8 अक्टूबर 2026 से गिनती। सैंपल घर और सैंपल कोटेशन नहीं गिने जाते।",
+  howTitle: "बिल से सब्सिडी तक, और उसके बाद भी",
+  howSub: "ज़्यादातर लोग आवेदन से पहले ही रुक जाते हैं: पता नहीं होता कि फ़ायदा होगा या नहीं, किस पर भरोसा करें, आगे क्या करें। सूर्य साथी पूरे रास्ते साथ चलता है।",
+  st1: "फ़ैसला", st1d: "बिल की फोटो → सही साइज़, सब्सिडी, EMI और लागत वसूली। फ़ायदा न हो तो साफ़ मना।",
+  st2: "वेंडर चुनें", st2d: "कोटेशन जाँच: बिना DCR पैनल, बढ़ा-चढ़ाकर सब्सिडी का वादा, ज़्यादा कीमत, कमज़ोर वारंटी।",
+  st3: "आवेदन", st3d: "आम गलतियों से बचने की जाँच, फिर पोर्टल के कदम एक-एक करके।",
+  st4: "सब्सिडी पाएँ", st4d: "कोई कदम अटके तो याद दिलाना, और ज़िम्मेदार दफ़्तर के लिए तैयार शिकायत।",
+  st5: "चलता रहे", st5d: "सोलर के बाद के बिल जाँचें, और पैनल की बिजली को अनुमान से मिलाएँ।",
+  dlEyebrow: "दिल्ली में नया · सितंबर 2026",
+  dlTitle: "महीने में 400 यूनिट तक खपत? आपको 3 kW बिना शुरुआती खर्च के मिल सकता है।",
+  dlSub: "बाकी सबके लिए दिल्ली की नई नीति केंद्र की सब्सिडी के ऊपर ₹78,000 तक और देती है। बिल भेजें, पता चलेगा कि आप पर क्या लागू होता है।",
+  dlCta: "मेरा बिल जाँचें",
+  trap1: "बिना DCR (भारत में बने सेल) के पैनल: पूरी सब्सिडी डूब जाती है।",
+  trap2: "योजना की सीमा से ज़्यादा सब्सिडी का वादा।",
+  trap3: "आसपास के घरों को मिले रेट से बहुत ज़्यादा कीमत प्रति kW।",
+  trap4: "जितने का पैसा उतने से कम पैनल, छोटा इन्वर्टर, कम वारंटी, बड़ा एडवांस।",
+  applyTitle: "सब्सिडी तक के 8 कदम",
+  applySub: "WhatsApp पर सूर्य साथी याद रखता है कि आप कहाँ हैं, कोई कदम लंबा खिंचे तो याद दिलाता है, और देरी किसी और की हो तो शिकायत लिख देता है। भेजते आप हैं।",
+  who: { you: "आप", vendor: "वेंडर", discom: "बिजली कंपनी", mnre: "मंत्रालय" },
+  usual: (d) => `आम तौर पर ${d} दिन`,
+  chatHead: "बिजली कंपनी के नोडल ऑफ़िसर को भेजने के लिए मैसेज (ईमेल):",
+  chatBody: "विषय: रूफ़टॉप सोलर आवेदन \"नेट मीटर और जाँच\" पर 41 दिन से लंबित। कृपया बताएँ कि क्या बाकी है और कब तक पूरा होगा…",
+  chatNext: "7 दिन में जवाब न आए? अगला: PM सूर्य घर शिकायत पोर्टल।",
+  rulesTitle: "रेट और नियम, लोगों द्वारा जाँचे गए",
+  rulesSub: "फ़्यूल सरचार्ज, राज्य की सब्सिडी और कीमतें कुछ महीनों में बदल जाती हैं। चुपचाप पुरानी पड़ने वाली टेबल की जगह, हर जानकारी के साथ उसका स्रोत, आखिरी पुष्टि की तारीख और बदलाव की रिपोर्ट दिखती है।",
+  l1: "बिल से टैरिफ", l1d: "हर बिल पर स्लैब रेट छपे होते हैं। हर पढ़ा गया बिल उस कंपनी का टैरिफ अपडेट करता है, इसी से किसी भी राज्य का बिल चलता है।",
+  l2: "कोटेशन से कीमतें", l2d: "हर जाँचा गया कोटेशन उस राज्य की प्रति kW कीमत जोड़ता है। सही रेंज असली स्थानीय कोटेशन से बनती है।",
+  l3: "लोग पुष्टि करते हैं", l3d: "जो सही है उसकी पुष्टि करें, या सबूत के साथ बदलाव बताएँ। तीन रिपोर्ट पर जानकारी जाँच के लिए चिह्नित होती है।",
+  l4: "स्रोतों पर नज़र", l4d: "हर हफ़्ते सरकारी पेज दोबारा पढ़े जाते हैं। कोई बदले तो उससे जुड़ी जानकारी जाँच के लिए चिह्नित होती है।",
+  fAll: "पूरा भारत", factsLoading: "ताज़ा जानकारी आ रही है…", factsError: "अभी जानकारी लोड नहीं हो सकी।",
+  factStill: "अब भी सही", factChange: "बदलाव बताएँ", factThanks: "धन्यवाद, पुष्टि हो गई।",
+  factNew: "अब क्या है?", factEvidence: "सबूत: लिंक, या कहाँ देखा", factSend: "रिपोर्ट भेजें",
+  factSent: "धन्यवाद। तीन मिलती-जुलती रिपोर्ट पर इसे जाँच के लिए चिह्नित किया जाता है।",
+  factMeta: (n, d) => `${n} पुष्टि · आखिरी पुष्टि ${d}`,
+  factReports: (n) => `${n} बदलाव रिपोर्ट`,
+  factSource: "स्रोत",
+  status: { current: "मौजूदा", reported_changed: "बदलाव रिपोर्ट", source_changed: "स्रोत पेज बदला" },
+  scope: { IN: "पूरा भारत", DL: "दिल्ली", UP: "उत्तर प्रदेश", HR: "हरियाणा" },
+  waTitle: "WhatsApp पर इस्तेमाल करें",
+  waSub: "हिंदी या अंग्रेज़ी में बिल या कोटेशन की फोटो भेजें। हैकथॉन के दौरान बॉट Twilio के WhatsApp सैंडबॉक्स पर चलता है, इसलिए पहले नीचे दिए नंबर पर जॉइन कोड भेजें।",
+  waJoin: (code) => `पहले “${code}” भेजें`,
+  c1: "बिल की फोटो", c1d: "पूरा सोलर जवाब", c2: "कोटेशन की फोटो", c2d: "गड़बड़ियाँ और पूछने लायक सवाल",
+  c3d: "8 कदम का आवेदन प्लान शुरू", c4d: "मौजूदा कदम पूरा", c5d: "देरी करने वाले के लिए तैयार शिकायत",
+  c6d: "भाषा बदलें", c7d: "आपकी सारी जानकारी मिटाएँ",
+  applyCta: "📋 WhatsApp पर आवेदन प्लान शुरू करें →",
+});
+
 const $ = (id) => document.getElementById(id);
 const state = { lang: initialLang(), lat: null, lon: null, last: null, lastBody: null, lastQuote: null };
 
@@ -146,6 +263,7 @@ function applyLang() {
   if (state.lat !== null) $("locate").textContent = t("locationOn");
   if (state.last) render(state.last);
   if (state.lastQuote) renderQuote(state.lastQuote);
+  if (typeof renderSteps === "function") { renderSteps(); renderFacts(); renderWhatsApp(); }
 }
 
 function show(id) {
@@ -293,6 +411,8 @@ function render(data) {
 
   optionsTable(a);
   billRead(data.bill);
+  $("bonus").hidden = !data.bonus;
+  $("bonus").textContent = data.bonus || "";
 }
 
 function tile(label, value, sub) {
@@ -390,7 +510,7 @@ $("quote-file").addEventListener("change", (e) => {
 
 $("sample-quote").addEventListener("click", () => runQuote(async () => {
   const blob = await (await fetch("sample-quote.png")).blob();
-  return post("/quote", { file_base64: await toBase64(blob), media_type: "image/png" });
+  return post("/quote", { file_base64: await toBase64(blob), media_type: "image/png", sample: true });
 }, true));
 
 $("to-quote").addEventListener("click", () => {
@@ -430,5 +550,196 @@ $("lang").addEventListener("click", () => {
 });
 
 document.querySelectorAll(".again").forEach((b) => b.addEventListener("click", () => { state.last = null; state.lastQuote = null; show("start"); }));
+
+// --- landing page: live counters, the 8 steps, the facts board, WhatsApp details ---------
+const landing = { journey: null, facts: null, scope: "" };
+const num = (x, digits = 0) => Number(x || 0).toLocaleString("en-IN", { maximumFractionDigits: digits });
+
+async function getJSON(path) {
+  const r = await fetch(API + path);
+  if (!r.ok) throw new Error(String(r.status));
+  return r.json();
+}
+
+async function loadStats() {
+  try {
+    const s = await getJSON("/stats");
+    $("s-bills").textContent = num(s.bills_read);
+    $("s-kw").textContent = num(s.kw_recommended);
+    $("s-co2").textContent = num(s.co2_t_per_year, 1);
+    $("s-flags").textContent = num(s.red_flags);
+  } catch (_) { /* counters stay at their resting zeros */ }
+}
+
+function renderSteps() {
+  const list = $("steps");
+  if (!landing.journey) return;
+  list.innerHTML = "";
+  for (const st of landing.journey.stages) {
+    const li = document.createElement("li");
+    const title = document.createElement("span");
+    title.textContent = st.title[state.lang] || st.title.en;
+    const who = document.createElement("span");
+    who.className = "who";
+    const b = document.createElement("b");
+    b.textContent = t("who")[st.who];
+    who.append(b, " · " + t("usual", st.days));
+    li.append(title, who);
+    list.append(li);
+  }
+}
+
+async function loadJourney() {
+  try { landing.journey = await getJSON("/journey"); renderSteps(); } catch (_) { /* the list stays empty */ }
+}
+
+function pill(cls, text) {
+  const p = document.createElement("span");
+  p.className = "pill " + cls;
+  p.textContent = text;
+  return p;
+}
+
+function renderFacts() {
+  const list = $("facts");
+  list.innerHTML = "";
+  if (!landing.facts) {
+    const li = document.createElement("li");
+    li.className = "fact-empty";
+    li.textContent = t("factsLoading");
+    list.append(li);
+    return;
+  }
+  for (const f of landing.facts) {
+    const li = document.createElement("li");
+    li.className = "fact";
+    const top = document.createElement("div");
+    top.className = "fact-top";
+    const statusCls = f.status === "current" ? "ok" : "warn";
+    top.append(pill("", t("scope")[f.scope] || f.scope), pill(statusCls, t("status")[f.status] || f.status));
+    const title = document.createElement("span");
+    title.className = "fact-title";
+    title.textContent = f.title;
+    top.append(title);
+    const value = document.createElement("p");
+    value.className = "fact-value";
+    value.textContent = f.value;
+    const meta = document.createElement("p");
+    meta.className = "fact-meta";
+    const conf = document.createElement("span");
+    conf.textContent = t("factMeta", f.confirmations, f.last_confirmed);
+    const src = document.createElement("a");
+    src.href = f.source;
+    src.target = "_blank";
+    src.rel = "noopener";
+    src.textContent = `${t("factSource")}: ${new URL(f.source).hostname.replace(/^www\./, "")}`;
+    meta.append(conf, src);
+    if (f.report_count) {
+      const rep = document.createElement("span");
+      rep.textContent = t("factReports", f.report_count);
+      meta.append(rep);
+    }
+    const actions = document.createElement("div");
+    actions.className = "fact-actions";
+    const yes = document.createElement("button");
+    yes.className = "chip";
+    yes.type = "button";
+    yes.textContent = t("factStill");
+    yes.addEventListener("click", async () => {
+      yes.disabled = true;
+      try {
+        const r = await fetch(`${API}/facts/${f.id}/confirm`, { method: "POST" });
+        const st = await r.json();
+        f.confirmations = st.confirmations;
+        f.last_confirmed = st.last_confirmed;
+        conf.textContent = `${t("factMeta", f.confirmations, f.last_confirmed)} · ${t("factThanks")}`;
+      } catch (_) { yes.disabled = false; }
+    });
+    const change = document.createElement("button");
+    change.className = "chip";
+    change.type = "button";
+    change.textContent = t("factChange");
+    change.addEventListener("click", () => {
+      change.disabled = true;
+      li.append(reportForm(f));
+    });
+    actions.append(yes, change);
+    li.append(top, value, meta, actions);
+    list.append(li);
+  }
+}
+
+function reportForm(f) {
+  const form = document.createElement("form");
+  form.className = "fact-form";
+  const value = document.createElement("input");
+  value.id = `report-${f.id}-value`;
+  value.required = true;
+  value.placeholder = t("factNew");
+  value.setAttribute("aria-label", t("factNew"));
+  const evidence = document.createElement("input");
+  evidence.id = `report-${f.id}-evidence`;
+  evidence.placeholder = t("factEvidence");
+  evidence.setAttribute("aria-label", t("factEvidence"));
+  const send = document.createElement("button");
+  send.className = "chip";
+  send.type = "submit";
+  send.textContent = t("factSend");
+  const done = document.createElement("p");
+  done.className = "small";
+  form.append(value, evidence, send, done);
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    send.disabled = true;
+    try {
+      await fetch(`${API}/facts/${f.id}/report`, { method: "POST", headers: { "content-type": "application/json" },
+        body: JSON.stringify({ value: value.value, evidence: evidence.value }) });
+      done.textContent = t("factSent");
+    } catch (_) { send.disabled = false; }
+  });
+  return form;
+}
+
+async function loadFacts() {
+  landing.facts = null;
+  renderFacts();
+  try {
+    landing.facts = (await getJSON("/facts" + (landing.scope ? `?scope=${landing.scope}` : ""))).facts
+      .filter((f) => !landing.scope || f.scope === landing.scope || f.scope === "IN");
+  } catch (_) {
+    landing.facts = [];
+    $("facts").innerHTML = `<li class="fact-empty">${t("factsError")}</li>`;
+    return;
+  }
+  renderFacts();
+}
+
+document.querySelectorAll(".filters .chip").forEach((b) => b.addEventListener("click", () => {
+  document.querySelectorAll(".filters .chip").forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+  landing.scope = b.dataset.scope;
+  loadFacts();
+}));
+
+function renderWhatsApp() {
+  const wa = window.SURYA_WA || {};
+  $("wa-number").textContent = wa.number || "";
+  $("wa-join").hidden = !wa.join;
+  if (wa.join) $("wa-join").textContent = t("waJoin", wa.join);
+}
+
+// in-page links work from the result views too
+document.querySelectorAll('a[href^="#"]').forEach((a) => a.addEventListener("click", (e) => {
+  if (!$("start").hidden) return;
+  e.preventDefault();
+  state.last = null;
+  state.lastQuote = null;
+  show("start");
+  const target = document.querySelector(a.getAttribute("href"));
+  if (target) target.scrollIntoView();
+}));
+
 $("privacy-link").href = API + "/privacy";
 applyLang();
+loadStats();
+loadJourney();
+loadFacts();

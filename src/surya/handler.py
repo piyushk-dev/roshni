@@ -47,6 +47,10 @@ def lambda_handler(event: dict, context) -> dict:
         return {"statusCode": 200, "headers": {"content-type": "text/html; charset=utf-8"}, "body": page}
     if route == "GET /stats":
         return _response(200, knowledge.stats())
+    if route == "GET /journey":
+        from .journey import J
+
+        return _response(200, J)
     if route == "GET /facts":
         scope = (event.get("queryStringParameters") or {}).get("scope")
         return _response(200, {"facts": knowledge.facts(scope)})

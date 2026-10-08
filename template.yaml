@@ -73,6 +73,9 @@ Resources:
         Stats:
           Type: HttpApi
           Properties: {ApiId: !Ref Api, Path: /stats, Method: GET}
+        Journey:
+          Type: HttpApi
+          Properties: {ApiId: !Ref Api, Path: /journey, Method: GET}
         Facts:
           Type: HttpApi
           Properties: {ApiId: !Ref Api, Path: /facts, Method: GET}
