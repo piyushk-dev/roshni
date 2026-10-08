@@ -7,7 +7,7 @@
 (function () {
   const PALETTES = {
     day: {
-      sky: ["#5aaee9", "#76bdee", "#93cbf2", "#b3dbf6", "#d2e9f8", "#eaf5fb"],
+      sky: ["#8cc8f2", "#a2d3f5", "#b6ddf7", "#c9e6f9", "#dbeefa", "#ecf6fc"],
       sun: "#ffd23f", sunRim: "#ffb21e", cloud: "#ffffff", cloudShade: "#dbe9f5",
       far: "#a8c4df", farDark: "#93b3d3", track: "#8aa3bd", train: "#e8edf2", trainStripe: "#2f6bc0", trainWindow: "#5b7fa6",
       walls: ["#f2dcb8", "#e9bf91", "#f6f1e7", "#d8e6c9", "#f0cfc0", "#e2d6c5"], wallShade: "rgba(0,0,0,0.10)",
@@ -58,35 +58,44 @@
 
   Scene.prototype.layout = function () {
     const box = this.canvas.getBoundingClientRect();
+    if (!box.width || !box.height) return;
     const px = Math.max(3, Math.round(box.width / 340));
     this.W = Math.max(120, Math.ceil(box.width / px));
     this.H = Math.max(60, Math.ceil(box.height / px));
     this.canvas.width = this.W;
     this.canvas.height = this.H;
+    this.skyFor = null;
     const r = rng(20261008);
     const W = this.W, H = this.H;
-    this.ground = H - Math.max(4, Math.round(H * 0.08));
-    this.clouds = Array.from({ length: Math.ceil(W / 70) + 2 }, (_, i) => ({
-      x: (i * 70 + r() * 40) % (W + 60) - 30, y: 4 + r() * H * 0.28, w: 16 + r() * 22, h: 5 + r() * 4, speed: 0.04 + r() * 0.05,
+    // The city lives in a band along the bottom; above it is open sky for the page's content.
+    // mirrors .hero's --band in style.css: clamp(170px, 26vh, 280px), or 190px on narrow screens
+    const wide = window.innerWidth > 900;
+    const bandPx = wide ? Math.max(170, Math.min(280, window.innerHeight * 0.26)) : 190;
+    const S = this.S = Math.min(H, Math.round(bandPx / px));
+    this.ground = H - Math.max(4, Math.round(S * 0.08));
+    const skyTop = H - S;
+    this.clouds = Array.from({ length: Math.ceil(W / 60) + 2 }, (_, i) => ({
+      x: (i * 60 + r() * 40) % (W + 60) - 30, y: 4 + r() * Math.max(10, skyTop + S * 0.2) * 0.8, w: 16 + r() * 22, h: 5 + r() * 4, speed: 0.04 + r() * 0.05,
     }));
-    this.stars = Array.from({ length: Math.round(W * H / 220) }, () => ({ x: Math.floor(r() * W), y: Math.floor(r() * H * 0.5), tw: r() * 6.28 }));
+    this.stars = Array.from({ length: Math.round(W * H / 220) }, () => ({ x: Math.floor(r() * W), y: Math.floor(r() * (skyTop + S * 0.5)), tw: r() * 6.28 }));
+    this.sunAt = wide ? [Math.round(W * 0.575), Math.round(Math.max(skyTop * 0.16, S * 0.2))] : [Math.round(W * 0.86), Math.round(Math.max(10, S * 0.18))];
     this.far = [];
     for (let x = -4; x < W + 8;) {
-      const w = 6 + Math.floor(r() * 12), h = Math.round(H * (0.14 + r() * 0.2));
+      const w = 6 + Math.floor(r() * 12), h = Math.round(S * (0.14 + r() * 0.2));
       this.far.push({ x, w, h, shade: r() < 0.35 });
       x += w + Math.floor(r() * 3);
     }
-    // landmarks stand on open ground; houses fill the rest of the street
-    this.gateW = Math.round(H * 0.36);
-    this.gate = Math.round(W * 0.25 - this.gateW / 2);
-    this.minar = Math.round(W * 0.63);
-    this.lotusW = W >= 200 ? Math.round(H * 0.36) : 0;
-    this.lotus = Math.round(W * 0.445);
+    // landmarks stand on open ground under the page's text; houses fill the rest of the street
+    this.gateW = Math.round(S * 0.36);
+    this.gate = Math.round(W * (wide ? 0.13 : 0.2) - this.gateW / 2);
+    this.minar = Math.round(W * (wide ? 0.47 : 0.8));
+    this.lotusW = W >= 200 ? Math.round(S * 0.36) : 0;
+    this.lotus = Math.round(W * (wide ? 0.3 : 0.5));
     const open = [[this.gate - 4, this.gate + this.gateW + 4], [this.minar - 9, this.minar + 9]];
     if (this.lotusW) open.push([this.lotus - this.lotusW / 2 - 4, this.lotus + this.lotusW / 2 + 4]);
     this.houses = [];
     for (let x = -6; x < W + 10;) {
-      const w = 14 + Math.floor(r() * 18), h = Math.round(H * (0.16 + r() * 0.18));
+      const w = 14 + Math.floor(r() * 18), h = Math.round(S * (0.16 + r() * 0.18));
       const house = {
         x, w, h, wall: Math.floor(r() * 6), panel: r() < 0.62, tank: r() < 0.55, tankX: r(), floors: 1 + Math.floor(h / 9),
         lit: Array.from({ length: 24 }, () => r() < 0.45), glint: Math.floor(r() * 40),
@@ -95,7 +104,7 @@
       x += w + Math.floor(r() * 3);
     }
     this.trees = Array.from({ length: Math.ceil(W / 26) }, (_, i) => ({ x: i * 26 + Math.floor(r() * 18), r: 3 + Math.floor(r() * 3) }));
-    this.turbines = [Math.round(W * 0.07), Math.round(W * 0.92)];
+    this.turbines = wide ? [Math.round(W * 0.035), Math.round(W * 0.965)] : [Math.round(W * 0.06), Math.round(W * 0.94)];
   };
 
   Scene.prototype.rect = function (x, y, w, h, c) { this.ctx.fillStyle = c; this.ctx.fillRect(Math.round(x), Math.round(y), Math.round(w), Math.round(h)); };
@@ -114,20 +123,28 @@
     }
   };
 
-  Scene.prototype.sky = function (p) {
-    const bands = p.sky.length, H = this.ground;
-    for (let y = 0; y < H; y++) {
-      const f = (y / H) * (bands - 1), i = Math.floor(f), frac = f - i;
-      for (let x = 0; x < this.W; x++) {
-        const k = BAYER[y % 4][x % 4] / 16;
-        this.ctx.fillStyle = p.sky[Math.min(bands - 1, frac > k ? i + 1 : i)];
-        this.ctx.fillRect(x, y, 1, 1);
+  // The dithered sky is the same every frame, so it is drawn once into a buffer and copied.
+  Scene.prototype.sky = function (p, night) {
+    if (this.skyFor !== night) {
+      const buf = this.skyBuf || (this.skyBuf = document.createElement("canvas"));
+      buf.width = this.W;
+      buf.height = this.ground;
+      const c = buf.getContext("2d"), bands = p.sky.length, H = this.ground;
+      for (let y = 0; y < H; y++) {
+        const f = (y / H) * (bands - 1), i = Math.floor(f), frac = f - i;
+        for (let x = 0; x < this.W; x++) {
+          const k = BAYER[y % 4][x % 4] / 16;
+          c.fillStyle = p.sky[Math.min(bands - 1, frac > k ? i + 1 : i)];
+          c.fillRect(x, y, 1, 1);
+        }
       }
+      this.skyFor = night;
     }
+    this.ctx.drawImage(this.skyBuf, 0, 0);
   };
 
   Scene.prototype.sun = function (p, night) {
-    const cx = Math.round(this.W * 0.8), cy = Math.round(this.H * 0.22), R = Math.max(5, Math.round(this.H * 0.075));
+    const [cx, cy] = this.sunAt, R = Math.max(5, Math.round(this.S * 0.085));
     if (!night) {
       const n = 8, pulse = Math.round(Math.sin(this.t / 9) + 1);
       for (let k = 0; k < n; k++) {
@@ -152,11 +169,11 @@
   };
 
   Scene.prototype.turbine = function (x, p) {
-    const top = this.ground - Math.round(this.H * 0.52), base = this.ground - 2;
+    const top = this.ground - Math.round(this.S * 0.52), base = this.ground - 2;
     this.rect(x, top, 1, base - top, p.turbine);
     this.rect(x + 1, top + 3, 1, base - top - 3, p.turbineShade);
     this.rect(x - 1, top - 1, 3, 2, p.turbine);
-    const L = Math.round(this.H * 0.17), a0 = this.t / 14;
+    const L = Math.round(this.S * 0.17), a0 = this.t / 14;
     for (let k = 0; k < 3; k++) {
       const a = a0 + (k * Math.PI * 2) / 3;
       this.line(x, top, x + Math.cos(a) * L, top + Math.sin(a) * L, p.turbine);
@@ -168,7 +185,7 @@
     const behind = p.sky[p.sky.length - 2];
 
     // India Gate: a sandstone arch with piers, a cornice, an attic and the bowl on top
-    const gx = this.gate, gw = this.gateW, gh = Math.round(this.H * 0.44);
+    const gx = this.gate, gw = this.gateW, gh = Math.round(this.S * 0.44);
     this.rect(gx - 2, g - 3, gw + 4, 3, p.gateShade);
     this.rect(gx, g - gh, gw, gh - 3, p.gate);
     this.rect(gx + gw - 2, g - gh, 2, gh - 3, p.gateShade);
@@ -190,7 +207,7 @@
 
     // Lotus Temple: two rings of white petals on a low plinth
     if (this.lotusW) {
-      const lx = this.lotus, lw = this.lotusW, lh = Math.round(this.H * 0.2);
+      const lx = this.lotus, lw = this.lotusW, lh = Math.round(this.S * 0.2);
       const petal = (cx, pw, ph, base, c, shade) => {
         for (let y = 0; y < ph; y++) {
           const w = Math.max(1, Math.round(pw * (1 - y / ph) ** 0.8));
@@ -205,7 +222,7 @@
     }
 
     // Qutub Minar: a tapering, fluted red-sandstone tower with balcony bands and a cupola
-    const mx = this.minar, mh = Math.round(this.H * 0.7);
+    const mx = this.minar, mh = Math.round(this.S * 0.7);
     const bands = [0.3, 0.52, 0.7, 0.85].map((f) => Math.round(mh * f));
     for (let y = 0; y < mh; y++) {
       const w = Math.max(4, Math.round(11 - (y / mh) * 6)), left = mx - Math.floor(w / 2);
@@ -218,7 +235,7 @@
   };
 
   Scene.prototype.metro = function (p) {
-    const y = this.ground - Math.round(this.H * 0.2);
+    const y = this.ground - Math.round(this.S * 0.2);
     this.rect(0, y, this.W, 2, p.track);
     for (let x = 6; x < this.W; x += 22) this.rect(x, y + 2, 2, this.ground - y - 2, p.track);
     const len = 46, span = this.W + len + 40, tx = this.W - ((this.t * 0.9) % span) + 20;
@@ -273,8 +290,9 @@
   };
 
   Scene.prototype.draw = function () {
+    if (!this.W) return;
     const night = isNight(), p = PALETTES[night ? "night" : "day"];
-    this.sky(p);
+    this.sky(p, night);
     if (night) for (const s of this.stars) if (Math.sin(this.t / 12 + s.tw) > -0.3) this.rect(s.x, s.y, 1, 1, p.star);
     this.sun(p, night);
     for (const c of this.clouds) this.cloud(c, p);
@@ -289,6 +307,7 @@
   };
 
   Scene.prototype.step = function () {
+    if (!this.W) return;  // the hero is hidden (an inner page is open); layout runs when it shows
     this.t += 1;
     for (const c of this.clouds) { c.x += c.speed * 4; if (c.x > this.W + 10) c.x = -c.w - 10; }
     this.draw();
@@ -307,8 +326,14 @@
       requestAnimationFrame(loop);
     }
     requestAnimationFrame(loop);
-    let resize;
-    window.addEventListener("resize", () => { clearTimeout(resize); resize = setTimeout(() => { scene.layout(); scene.draw(); }, 150); });
+    // the hero grows and shrinks with its content (fonts loading, language switch), not only the window
+    let resize, size = "";
+    const relayout = () => {
+      const b = canvas.getBoundingClientRect(), now = `${Math.round(b.width)}x${Math.round(b.height)}`;
+      if (now !== size && b.width && b.height) { size = now; scene.layout(); scene.draw(); }
+    };
+    if ("ResizeObserver" in window) new ResizeObserver(() => { clearTimeout(resize); resize = setTimeout(relayout, 120); }).observe(canvas);
+    else window.addEventListener("resize", () => { clearTimeout(resize); resize = setTimeout(relayout, 150); });
     new MutationObserver(() => scene.draw()).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
   }
 

@@ -389,6 +389,73 @@ Object.assign(T.hi, {
   pixelCredit: "स्काईलाइन कोड से बनी",
 });
 
+
+// The short home page: a working chat up top, three uses, the gap, WhatsApp. Everything else is a page.
+Object.assign(T.en, {
+  navQuote: "Check a quote", navApply: "Application guide", navRules: "Rates & rules", navAws: "How it's built",
+  sub: "Send a photo of your electricity bill. In about 10 seconds you'll know the right solar size, your PM Surya Ghar subsidy, the EMI and how fast it pays for itself.",
+  heroNote: "Free, in Hindi and English. Your name and address are never read or stored.",
+  sample: "See an example", tune: "Add your location or roof size",
+  today: "Today", message: "Message", readMore: "Read more", chatSub: "online", typing: "typing…",
+  demoReply: "☀️ Solar estimate for your BSES Rajdhani connection\n\nBest size: 2 kW (needs about 200 sq ft of shade-free roof)\nCost: ₹1,30,000 − ₹60,000 subsidy = ₹70,000\nSaves ₹14,300–15,600 a year, about ₹1,200 a month\nPays for itself in 4.9 years",
+  demoApply: "APPLY",
+  demoPlan: "🚀 Your application plan has 8 steps, from a pre-flight check to the subsidy in your account. If a step takes longer than usual, you'll get a reminder here.",
+  usesTitle: "It stays with you after the estimate",
+  u1t: "Check a vendor's quote",
+  u1d: "Send the quotation before you sign. It catches the problems that cost families their subsidy or overcharge them.",
+  docMeta: "2 pages · PDF",
+  u1reply: "🔴 Don't sign yet. Fix these first:\n• These panels are not DCR (made with Indian cells). Under PM Surya Ghar that means no subsidy: you'd lose ₹78,000.\n• 60% advance is a lot. Tie payments to installation milestones.",
+  quoteUpload: "Upload a quote", sampleQuote: "Try a sample quote",
+  u2t: "Chase a stuck application",
+  u2d: "It knows the usual time for each of the 8 steps. When one runs late, it writes the complaint for you to send.",
+  u2nudge: "⏰ It's been 41 days at \"Net meter and inspection\", longer than the usual 20.",
+  u2reply: "✉️ Here's a message to send to the provider's nodal officer (email). Fill in the parts in [brackets]:\n\nSubject: PM Surya Ghar rooftop solar application [application number], pending at \"Net meter and inspection\" for 41 days…",
+  u2a: "See all 8 steps",
+  u3t: "Ask by voice, in Hindi",
+  u3d: "Send a voice note with any question about loans, the subsidy or vendors. The answer comes back as a voice note too.",
+  u3a: "Ask a question",
+  whyNowTitle: "41 lakh homes have rooftop solar. The goal is 1 crore.",
+  whyNowBody: "Most families stop before they apply. They can't tell if solar will pay, which vendor to trust, or what to do next (CEEW survey, June 2026). Surya Saathi answers all three.",
+  cellsNote: "Each square is 1 lakh homes.",
+  waTitle: "Try it on WhatsApp",
+  waSub: "Send a bill or quote photo, in Hindi or English. During the hackathon the bot runs on Twilio's WhatsApp sandbox, so send the join code first.",
+  waOpen: "Open WhatsApp",
+  cmdTitle: "Everything you can send on WhatsApp",
+  applyCta: "See the application guide",
+});
+Object.assign(T.hi, {
+  navQuote: "कोटेशन जाँचें", navApply: "आवेदन गाइड", navRules: "रेट और नियम", navAws: "कैसे बना है",
+  sub: "अपने बिजली बिल की फोटो भेजें। लगभग 10 सेकंड में पता चलेगा कि कितने kW का सोलर लें, PM सूर्य घर में कितनी सब्सिडी मिलेगी, EMI कितनी होगी और लागत कितनी जल्दी वसूल होगी।",
+  heroNote: "मुफ़्त, हिंदी और अंग्रेज़ी में। आपका नाम और पता न पढ़ा जाता है, न सेव होता है।",
+  sample: "उदाहरण देखें", tune: "लोकेशन या छत का साइज़ जोड़ें",
+  today: "आज", message: "मैसेज", readMore: "और पढ़ें", chatSub: "ऑनलाइन", typing: "टाइप कर रहा है…",
+  demoReply: "☀️ आपके BSES Rajdhani कनेक्शन के लिए सोलर अनुमान\n\nसही साइज़: 2 kW (लगभग 200 वर्ग फुट छाया-रहित छत चाहिए)\nलागत: ₹1,30,000 − ₹60,000 सब्सिडी = ₹70,000\nबचत: सालाना ₹14,300–15,600, यानी लगभग ₹1,200 महीना\n4.9 साल में पूरी लागत वसूल",
+  demoApply: "आवेदन",
+  demoPlan: "🚀 आपके आवेदन प्लान में 8 कदम हैं, प्री-फ़्लाइट जाँच से लेकर खाते में सब्सिडी आने तक। कोई कदम सामान्य से ज़्यादा समय ले, तो यहीं याद दिलाया जाएगा।",
+  usesTitle: "अनुमान के बाद भी साथ रहता है",
+  u1t: "वेंडर का कोटेशन जाँचें",
+  u1d: "साइन करने से पहले कोटेशन भेजें। यह उन गड़बड़ियों को पकड़ता है जिनसे सब्सिडी डूबती है या ज़्यादा पैसे लगते हैं।",
+  docMeta: "2 पेज · PDF",
+  u1reply: "🔴 अभी साइन न करें। पहले ये ठीक करवाएँ:\n• ये पैनल DCR (भारत में बने सेल) नहीं हैं। PM सूर्य घर में इसका मतलब है कोई सब्सिडी नहीं: आपके ₹78,000 चले जाएँगे।\n• 60% एडवांस बहुत ज़्यादा है। भुगतान काम के चरणों से जोड़ें।",
+  quoteUpload: "कोटेशन अपलोड करें", sampleQuote: "सैंपल कोटेशन आज़माएँ",
+  u2t: "अटके आवेदन का पीछा",
+  u2d: "इसे पता है कि 8 में से हर कदम में आम तौर पर कितना समय लगता है। कोई कदम देर से चले, तो यह आपके भेजने के लिए शिकायत लिख देता है।",
+  u2nudge: "⏰ \"नेट मीटर और जाँच\" पर 41 दिन हो गए, जबकि आम तौर पर 20 लगते हैं।",
+  u2reply: "✉️ बिजली कंपनी के नोडल ऑफ़िसर को भेजने के लिए मैसेज (ईमेल)। [ब्रैकेट] वाली जगहें भरें:\n\nविषय: PM सूर्य घर रूफ़टॉप सोलर आवेदन [आवेदन नंबर], \"नेट मीटर और जाँच\" पर 41 दिन से लंबित…",
+  u2a: "आठों कदम देखें",
+  u3t: "हिंदी में बोलकर पूछें",
+  u3d: "लोन, सब्सिडी या वेंडर के बारे में कोई भी सवाल वॉइस नोट में भेजें। जवाब भी वॉइस नोट में आता है।",
+  u3a: "सवाल पूछें",
+  whyNowTitle: "41 लाख घरों में रूफ़टॉप सोलर लग चुका है। लक्ष्य 1 करोड़ का है।",
+  whyNowBody: "ज़्यादातर परिवार आवेदन से पहले ही रुक जाते हैं। उन्हें पता नहीं होता कि सोलर से फ़ायदा होगा या नहीं, किस वेंडर पर भरोसा करें, या आगे क्या करें (CEEW सर्वे, जून 2026)। सूर्य साथी इन तीनों का जवाब देता है।",
+  cellsNote: "हर खाना 1 लाख घर है।",
+  waTitle: "WhatsApp पर आज़माएँ",
+  waSub: "हिंदी या अंग्रेज़ी में बिल या कोटेशन की फोटो भेजें। हैकथॉन के दौरान बॉट Twilio के WhatsApp सैंडबॉक्स पर चलता है, इसलिए पहले जॉइन कोड भेजें।",
+  waOpen: "WhatsApp खोलें",
+  cmdTitle: "WhatsApp पर क्या-क्या भेज सकते हैं",
+  applyCta: "आवेदन गाइड देखें",
+});
+
 const $ = (id) => document.getElementById(id);
 const state = { lang: initialLang(), lat: null, lon: null, last: null, lastBody: null, lastQuote: null };
 
@@ -418,7 +485,7 @@ function applyLang() {
 }
 
 function show(id) {
-  for (const s of ["start", "busy", "problem", "result", "quote-result"]) $(s).hidden = s !== id;
+  for (const s of ["start", "busy", "problem", "result", "quote-result", "guide", "rules", "built"]) $(s).hidden = s !== id;
   window.scrollTo({ top: 0 });
 }
 
@@ -906,18 +973,36 @@ function renderWhatsApp() {
   $("wa-number").textContent = wa.number || "";
   $("wa-join").hidden = !wa.join;
   if (wa.join) $("wa-join").textContent = t("waJoin", wa.join);
+  const digits = (wa.number || "").replace(/\D/g, "");
+  $("wa-open").hidden = !digits;
+  if (digits) $("wa-open").href = "https://wa.me/" + digits + (wa.join ? "?text=" + encodeURIComponent(wa.join) : "");
 }
 
-// in-page links work from the result views too
-document.querySelectorAll('a[href^="#"]').forEach((a) => a.addEventListener("click", (e) => {
-  if (!$("start").hidden) return;
+// One document, several pages: #guide, #rules and #built are views of their own; other links scroll.
+function route(hash, smooth) {
+  const id = (hash || "").replace(/^#/, "");
+  const target = id && id !== "top" ? document.getElementById(id) : null;
+  const view = (target && target.closest("[data-view]")) || $("start");
+  if (view.hidden) { state.last = null; state.lastQuote = null; show(view.id); }
+  const behavior = smooth ? "smooth" : "auto";
+  if (target && target !== view) target.scrollIntoView({ behavior });
+  else window.scrollTo({ top: 0, behavior });
+  document.querySelectorAll(".nav a").forEach((a) => {
+    if (a.getAttribute("href") === "#" + view.id) a.setAttribute("aria-current", "page");
+    else a.removeAttribute("aria-current");
+  });
+}
+
+document.addEventListener("click", (e) => {
+  const a = e.target.closest('a[href^="#"]');
+  if (!a || a.classList.contains("skip")) return;
   e.preventDefault();
-  state.last = null;
-  state.lastQuote = null;
-  show("start");
-  const target = document.querySelector(a.getAttribute("href"));
-  if (target) target.scrollIntoView();
-}));
+  const hash = a.getAttribute("href");
+  history.pushState(null, "", hash === "#top" ? location.pathname + location.search : hash);
+  route(hash, true);
+});
+window.addEventListener("popstate", () => route(location.hash));
+
 
 
 // --- flats: a society's common areas -----------------------------------------------------
@@ -1044,3 +1129,20 @@ applyLang();
 loadStats();
 loadJourney().then(loadTimes);
 loadFacts();
+
+// the hero chat plays once: the bill goes out, the bot types, the real reply comes back
+function playDemo() {
+  const phone = $("demo");
+  if (!phone || (window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches)) return;
+  phone.classList.add("playing");
+  const status = $("demo-status");
+  phone.querySelectorAll("[data-at]").forEach((el) => {
+    setTimeout(() => {
+      el.classList.add("shown");
+      if (el.classList.contains("typing")) status.textContent = t("typing");
+    }, +el.dataset.at);
+    if (el.dataset.until) setTimeout(() => { el.classList.add("gone"); status.textContent = t("chatSub"); }, +el.dataset.until);
+  });
+}
+playDemo();
+if (location.hash) route(location.hash);

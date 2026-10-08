@@ -23,32 +23,28 @@
       <svg class="brand-mark" viewBox="0 0 16 16" shape-rendering="crispEdges" aria-hidden="true"><rect x="5" y="5" width="6" height="6"/><rect x="7" y="1" width="2" height="2"/><rect x="7" y="13" width="2" height="2"/><rect x="1" y="7" width="2" height="2"/><rect x="13" y="7" width="2" height="2"/><rect x="3" y="3" width="1" height="1"/><rect x="12" y="3" width="1" height="1"/><rect x="3" y="12" width="1" height="1"/><rect x="12" y="12" width="1" height="1"/></svg>
       <span data-t="brand"></span>
     </a>
-    <nav class="nav" aria-label="Sections">
-      <a href="#how" data-t="navHow"></a>
+    <nav class="nav" aria-label="Pages">
       <a href="#quote" data-t="navQuote"></a>
-      <a href="#apply" data-t="navApply"></a>
+      <a href="#guide" data-t="navApply"></a>
       <a href="#rules" data-t="navRules"></a>
-      <a href="#aws" data-t="navAws"></a>
+      <a href="#built" data-t="navAws"></a>
     </nav>
     <div class="top-actions">
-      <button id="lang" class="text-btn" type="button" aria-label="Switch language"></button>
+      <button id="lang" class="btn btn-quiet btn-sm" type="button" aria-label="Switch language"></button>
       <label class="btn btn-primary btn-sm top-cta" for="file" data-t="upload"></label>
     </div>
   </div>
 </header>
 
 <main id="main">
-  <section id="start">
-    <div class="banner" id="top">
+  <!-- ============ home ============ -->
+  <section id="start" data-view>
+    <div class="hero" id="top">
       <canvas id="scene" aria-hidden="true"></canvas>
-    </div>
-
-    <div class="wrap frame">
-      <div class="hero">
+      <div class="wrap hero-inner">
         <div class="hero-copy">
           <h1 data-t="title"></h1>
           <p class="lede" data-t="sub"></p>
-          <p class="lede lede-2" data-t="sub2"></p>
           <div class="cta-row">
             <label class="btn btn-primary btn-lg" for="file">
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>
@@ -57,57 +53,160 @@
             <input id="file" class="sr-only" type="file" accept="image/*,application/pdf">
             <button id="sample" class="link-btn" type="button" data-t="sample"></button>
           </div>
-          <p class="hint" data-t="uploadHint"></p>
-          <div class="extras">
-            <button id="locate" class="chip" type="button" data-t="location"></button>
-            <label class="roof" for="roof">
-              <span data-t="roof"></span>
-              <input id="roof" type="number" inputmode="numeric" min="50" step="10" placeholder="—">
-            </label>
-          </div>
-          <p class="delhi-note"><b data-t="dlLead"></b> <span data-t="dlTitle"></span></p>
-          <p class="privacy" data-t="privacy"></p>
+          <p class="hero-note" data-t="heroNote"></p>
+          <details class="tune">
+            <summary data-t="tune"></summary>
+            <div class="extras">
+              <button id="locate" class="chip" type="button" data-t="location"></button>
+              <label class="roof" for="roof">
+                <span data-t="roof"></span>
+                <input id="roof" type="number" inputmode="numeric" min="50" step="10" placeholder="—">
+              </label>
+            </div>
+          </details>
         </div>
 
-        <figure class="device">
-          <div class="device-screen">
-            <div class="device-bar"><span>9:41</span><span class="device-pill"></span><span>5G</span></div>
-            <div class="wa-head">
-              <span class="avatar">☀</span>
-              <div><b data-t="brand"></b><span data-t="chatSub"></span></div>
+        <!-- a WhatsApp conversation, played once: the bill goes in, the bot's real reply comes back -->
+        <figure class="phone" id="demo" aria-label="Example WhatsApp chat with Surya Saathi">
+          <div class="phone-screen">
+            <div class="wa-status" aria-hidden="true">
+              <span>9:41</span>
+              <span class="island"></span>
+              <span class="sys">
+                <svg viewBox="0 0 18 12"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5" width="3" height="7" rx="1"/><rect x="10" y="2" width="3" height="10" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg>
+                <svg viewBox="0 0 16 12"><path d="M8 11.5l2.4-3a3.4 3.4 0 0 0-4.8 0zM3.6 6.4a6.3 6.3 0 0 1 8.8 0l1.5-1.8a8.7 8.7 0 0 0-11.8 0zM.2 2.6l1.5 1.8a9.3 9.3 0 0 1 12.6 0l1.5-1.8a11.7 11.7 0 0 0-15.6 0z"/></svg>
+                <svg viewBox="0 0 26 12"><rect x="0.5" y="0.5" width="22" height="11" rx="3" fill="none" stroke="currentColor"/><rect x="2" y="2" width="17" height="8" rx="2"/><rect x="23.5" y="4" width="2" height="4" rx="1"/></svg>
+              </span>
             </div>
-            <div class="wa-body">
-              <div class="wa-msg mine">
-                <div class="bill-thumb" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
-                <span data-t="devSent"></span>
+            <div class="wa-bar">
+              <svg class="wa-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12H5M11 5l-7 7 7 7"/></svg>
+              <span class="wa-avatar" aria-hidden="true">☀</span>
+              <div class="wa-who"><b data-t="brand"></b><span id="demo-status" data-t="chatSub"></span></div>
+              <svg class="wa-ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="6" width="13" height="12" rx="2"/><path d="M15.5 10.5l6-3.5v10l-6-3.5"/></svg>
+              <svg class="wa-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3.5h3.5l1.8 4.5-2.3 1.5a11 11 0 0 0 6.5 6.5l1.5-2.3 4.5 1.8V19a2 2 0 0 1-2 2A17 17 0 0 1 3 5.5a2 2 0 0 1 2-2z"/></svg>
+              <svg class="wa-ic wa-dots" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="5" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="12" cy="19" r="1.6"/></svg>
+            </div>
+            <div class="wa-chat">
+              <div class="m out img" data-at="300">
+                <svg class="bill-photo" viewBox="0 0 240 172" role="img" aria-label="Photo of an electricity bill">
+                  <defs>
+                    <linearGradient id="bill-table" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#9a8571"/><stop offset="1" stop-color="#6a5747"/></linearGradient>
+                    <filter id="bill-shadow" x="-10%" y="-10%" width="130%" height="130%"><feDropShadow dx="2" dy="5" stdDeviation="4" flood-opacity=".4"/></filter>
+                  </defs>
+                  <rect width="240" height="172" fill="url(#bill-table)"/>
+                  <g transform="rotate(-4 120 90)" filter="url(#bill-shadow)" font-family="Arial, sans-serif">
+                    <rect x="36" y="10" width="172" height="196" fill="#fbfaf5"/>
+                    <rect x="36" y="10" width="172" height="22" fill="#1f4e8c"/>
+                    <circle cx="48" cy="21" r="6" fill="#f2a516"/>
+                    <text x="59" y="24.5" font-size="9" font-weight="700" fill="#fff">ELECTRICITY BILL</text>
+                    <text x="200" y="24" font-size="6" fill="#cfe0f5" text-anchor="end">SEP 2026</text>
+                    <g font-size="5.6" fill="#666">
+                      <text x="44" y="43">Consumer No.</text><text x="44" y="52">Sanctioned load</text><text x="44" y="61">Units billed</text><text x="44" y="70">Bill date</text>
+                    </g>
+                    <rect x="100" y="38.6" width="54" height="5" fill="#d8d8d8"/>
+                    <g font-size="5.6" fill="#222">
+                      <text x="100" y="52">6.000 kW</text><text x="100" y="61" font-weight="700">312 units</text><text x="100" y="70">12-09-2026</text>
+                    </g>
+                    <rect x="44" y="76" width="156" height="8" fill="#e6edf6"/>
+                    <g font-size="5" fill="#334">
+                      <text x="47" y="81.6">Slab</text><text x="92" y="81.6">Units</text><text x="128" y="81.6">Rate</text><text x="168" y="81.6">Amount</text>
+                    </g>
+                    <g fill="#c9c9c9"><rect x="47" y="88" width="30" height="3"/><rect x="92" y="88" width="14" height="3"/><rect x="128" y="88" width="16" height="3"/><rect x="168" y="88" width="22" height="3"/>
+                      <rect x="47" y="95" width="34" height="3"/><rect x="92" y="95" width="14" height="3"/><rect x="128" y="95" width="16" height="3"/><rect x="168" y="95" width="22" height="3"/>
+                      <rect x="47" y="102" width="28" height="3"/><rect x="92" y="102" width="12" height="3"/><rect x="128" y="102" width="16" height="3"/><rect x="168" y="102" width="20" height="3"/></g>
+                    <text x="44" y="116" font-size="5" fill="#666">Consumption history (units)</text>
+                    <g fill="#7f9cc4"><rect x="46" y="140" width="6" height="8"/><rect x="55" y="139" width="6" height="9"/><rect x="64" y="134" width="6" height="14"/><rect x="73" y="131" width="6" height="17"/><rect x="82" y="122" width="6" height="26"/><rect x="91" y="119" width="6" height="29"/><rect x="100" y="125" width="6" height="23"/><rect x="109" y="128" width="6" height="20"/><rect x="118" y="131" width="6" height="17"/><rect x="127" y="137" width="6" height="11"/><rect x="136" y="139" width="6" height="9"/><rect x="145" y="140" width="6" height="8" fill="#1f4e8c"/></g>
+                    <rect x="158" y="120" width="44" height="26" fill="#fff4d6" stroke="#e2b54a" stroke-width=".8"/>
+                    <text x="180" y="129" font-size="4.6" fill="#7a5a10" text-anchor="middle">AMOUNT PAYABLE</text>
+                    <text x="180" y="140" font-size="8.5" font-weight="700" fill="#222" text-anchor="middle">₹2,840</text>
+                  </g>
+                </svg>
+                <span class="meta on-img">9:41 <svg class="ticks" viewBox="0 0 18 11"><path d="M1 6l3 3 6-7M7 8l1 1 6-7"/></svg></span>
               </div>
-              <div class="wa-msg answer">
-                <span class="wa-label" data-t="devVerdict"></span>
-                <span class="wa-big">2<small>kW</small></span>
-                <dl class="wa-figs">
-                  <div><dt data-t="costAfter"></dt><dd>₹70,000</dd></div>
-                  <div><dt data-t="payback"></dt><dd>4.9 <small data-t="yrs"></small></dd></div>
-                  <div><dt data-t="emiShort"></dt><dd>₹1,284</dd></div>
-                  <div><dt data-t="co2Short"></dt><dd>2.0 <small>t</small></dd></div>
-                </dl>
-                <div class="device-chart" aria-hidden="true">
-                  <i style="--u:13%;--s:58%"></i><i style="--u:14%;--s:62%"></i><i style="--u:25%;--s:74%"></i><i style="--u:29%;--s:70%"></i>
-                  <i style="--u:92%;--s:66%"></i><i style="--u:100%;--s:56%"></i><i style="--u:69%;--s:49%"></i><i style="--u:52%;--s:50%"></i>
-                  <i style="--u:41%;--s:58%"></i><i style="--u:21%;--s:68%"></i><i style="--u:13%;--s:60%"></i><i style="--u:11%;--s:58%"></i>
-                </div>
-                <span class="wa-legend"><i class="key usage"></i><span data-t="usage"></span><i class="key solar"></i><span data-t="solar"></span></span>
+              <div class="m in typing transient" data-at="1300" data-until="3100" aria-hidden="true"><i></i><i></i><i></i></div>
+              <div class="m in" data-at="3100">
+                <p class="wa-text" data-t="demoReply"></p>
+                <span class="wa-more" data-t="readMore"></span>
+                <span class="meta">9:41</span>
               </div>
-              <div class="wa-msg" data-t="devNote"></div>
+              <div class="m out" data-at="4800">
+                <p class="wa-text" data-t="demoApply"></p>
+                <span class="meta">9:42 <svg class="ticks" viewBox="0 0 18 11"><path d="M1 6l3 3 6-7M7 8l1 1 6-7"/></svg></span>
+              </div>
+              <div class="m in typing transient" data-at="5500" data-until="6700" aria-hidden="true"><i></i><i></i><i></i></div>
+              <div class="m in" data-at="6700">
+                <p class="wa-text" data-t="demoPlan"></p>
+                <span class="meta">9:42</span>
+              </div>
+            </div>
+            <div class="wa-input" aria-hidden="true">
+              <div class="wa-field">
+                <svg class="wa-ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8.5 14.5a4.5 4.5 0 0 0 7 0"/><circle cx="9" cy="10" r=".8"/><circle cx="15" cy="10" r=".8"/></svg>
+                <span data-t="message"></span>
+                <svg class="wa-ic" viewBox="0 0 24 24"><path d="M16.5 6.5l-7.8 7.8a2 2 0 0 0 2.8 2.8l8-8a4 4 0 0 0-5.7-5.7l-8.2 8.2a6 6 0 0 0 8.5 8.5l6-6"/></svg>
+                <svg class="wa-ic" viewBox="0 0 24 24"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>
+              </div>
+              <span class="wa-mic"><svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/></svg></span>
             </div>
           </div>
-          <figcaption data-t="devFoot"></figcaption>
         </figure>
       </div>
+    </div>
+
+    <div class="wrap frame">
+      <section class="sec uses" id="uses" aria-labelledby="uses-title">
+        <h2 id="uses-title" data-t="usesTitle"></h2>
+        <div class="use-grid">
+          <article class="use" id="quote">
+            <div class="snip">
+              <div class="m out doc">
+                <span class="pdf">PDF</span>
+                <span class="doc-name"><b>Quotation_3kW.pdf</b><small data-t="docMeta"></small></span>
+                <span class="meta">11:05 <svg class="ticks" viewBox="0 0 18 11"><path d="M1 6l3 3 6-7M7 8l1 1 6-7"/></svg></span>
+              </div>
+              <div class="m in"><p class="wa-text" data-t="u1reply"></p><span class="meta">11:05</span></div>
+            </div>
+            <h3 data-t="u1t"></h3>
+            <p data-t="u1d"></p>
+            <div class="use-actions" id="quote-card">
+              <label class="btn btn-line btn-sm" for="quote-file" data-t="quoteUpload"></label>
+              <input id="quote-file" class="sr-only" type="file" accept="image/*,application/pdf">
+              <button id="sample-quote" class="link-btn" type="button" data-t="sampleQuote"></button>
+            </div>
+          </article>
+          <article class="use">
+            <div class="snip">
+              <div class="m in"><p class="wa-text" data-t="u2nudge"></p><span class="meta">10:00</span></div>
+              <div class="m out"><p class="wa-text">STUCK</p><span class="meta">10:12 <svg class="ticks" viewBox="0 0 18 11"><path d="M1 6l3 3 6-7M7 8l1 1 6-7"/></svg></span></div>
+              <div class="m in"><p class="wa-text" data-t="u2reply"></p><span class="meta">10:12</span></div>
+            </div>
+            <h3 data-t="u2t"></h3>
+            <p data-t="u2d"></p>
+            <div class="use-actions"><a class="link-btn" href="#guide" data-t="u2a"></a></div>
+          </article>
+          <article class="use">
+            <div class="snip">
+              <div class="m out voice">
+                <span class="play"></span><span class="wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
+                <span class="dur">0:06</span><span class="meta">8:30 <svg class="ticks" viewBox="0 0 18 11"><path d="M1 6l3 3 6-7M7 8l1 1 6-7"/></svg></span>
+              </div>
+              <div class="m in voice">
+                <span class="play"></span><span class="wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
+                <span class="dur">0:14</span><span class="meta">8:30</span>
+              </div>
+              <div class="m in"><p class="wa-text" lang="hi">हाँ। ₹2 लाख तक का सोलर लोन बिना गारंटी के मिलता है, लगभग 5.75% ब्याज पर, 10 साल के लिए।</p><span class="meta">8:30</span></div>
+            </div>
+            <h3 data-t="u3t"></h3>
+            <p data-t="u3d"></p>
+            <div class="use-actions"><a class="link-btn" href="#ask" data-t="u3a"></a></div>
+          </article>
+        </div>
+      </section>
 
       <section class="why" id="why" aria-labelledby="why-title">
         <div class="why-copy">
           <h2 id="why-title" data-t="whyNowTitle"></h2>
-          <p class="sec-lede" data-t="whyNowBody"></p>
+          <p data-t="whyNowBody"></p>
         </div>
         <figure class="progress">
           <div class="cells" id="cells" role="img" aria-label="41 of 100 squares filled"></div>
@@ -123,76 +222,47 @@
         <p class="stats-note" data-t="sNote"></p>
       </section>
 
-      <section class="sec" id="how">
-        <header class="sec-head">
-          <h2 data-t="howTitle"></h2>
-          <p class="sec-lede" data-t="howSub"></p>
-        </header>
-        <ol class="stages">
-          <li><b data-t="st1"></b><p data-t="st1d"></p></li>
-          <li><b data-t="st2"></b><p data-t="st2d"></p></li>
-          <li><b data-t="st3"></b><p data-t="st3d"></p></li>
-          <li><b data-t="st4"></b><p data-t="st4d"></p></li>
-          <li><b data-t="st5"></b><p data-t="st5d"></p></li>
-        </ol>
-      </section>
-
-      <section class="sec split" id="quote">
-        <header class="sec-head">
-          <h2 data-t="quoteTitle"></h2>
-          <p class="sec-lede" data-t="quoteSub"></p>
-          <ul class="checks">
-            <li data-t="trap1"></li><li data-t="trap2"></li><li data-t="trap3"></li><li data-t="trap4"></li>
-          </ul>
-        </header>
-        <div class="panel-card" id="quote-card">
-          <label class="drop" for="quote-file">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 13h7M9 17h5"/></svg>
-            <b data-t="quoteUpload"></b>
-            <span class="hint" data-t="quoteHint"></span>
-            <input id="quote-file" class="sr-only" type="file" accept="image/*,application/pdf">
-          </label>
-          <button id="sample-quote" class="link-btn" type="button" data-t="sampleQuote"></button>
+      <section class="sec wa-band" id="whatsapp" aria-labelledby="wa-title">
+        <div>
+          <h2 id="wa-title" data-t="waTitle"></h2>
+          <p class="sec-lede" data-t="waSub"></p>
+        </div>
+        <div class="wa-cta">
+          <p class="wa-number"><span id="wa-number"></span></p>
+          <p id="wa-join" class="join" hidden></p>
+          <a id="wa-open" class="btn btn-wa" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 0 0-7.8 13.5L3 21l4.6-1.2A9 9 0 1 0 12 3z"/><path d="M9 8.5c0 3.5 2.6 6.5 6.5 6.5l1-1.6-2-1-1 .9a4.5 4.5 0 0 1-2.4-2.4l.9-1-1-2z"/></svg>
+            <span data-t="waOpen"></span>
+          </a>
         </div>
       </section>
+    </div>
+  </section>
 
-      <section class="sec split" id="apply">
-        <header class="sec-head">
-          <h2 data-t="applyTitle"></h2>
-          <p class="sec-lede" data-t="applySub"></p>
+  <!-- ============ application guide ============ -->
+  <section id="guide" class="page" data-view hidden>
+    <div class="wrap frame">
+      <header class="page-head">
+        <h1 data-t="applyTitle"></h1>
+        <p class="sec-lede" data-t="applySub"></p>
+      </header>
+      <div class="sec split" id="apply">
+        <div>
           <ol class="steps" id="steps"></ol>
           <h3 class="sub-h" data-t="timesTitle"></h3>
           <p class="hint" id="times-empty" data-t="timesEmpty"></p>
           <div class="scroll"><table id="times" hidden></table></div>
-        </header>
-        <div class="chat sticky" aria-label="Example WhatsApp conversation">
-          <div class="chat-head"><span class="avatar">☀</span><div><b data-t="brand"></b><span data-t="chatSub"></span></div></div>
-          <div class="bubble mine">STUCK</div>
-          <div class="bubble"><b data-t="chatHead"></b><span data-t="chatBody"></span></div>
-          <div class="bubble faint" data-t="chatNext"></div>
         </div>
-      </section>
-
-      <section class="sec split" id="ask">
-        <header class="sec-head">
-          <h2 data-t="askTitle"></h2>
-          <p class="sec-lede" data-t="askSub"></p>
-          <form id="ask-form" class="ask-form">
-            <input id="ask-input" type="text" maxlength="300" required aria-label="Your question">
-            <button class="btn btn-primary" type="submit" data-t="askSend"></button>
-          </form>
-          <p class="hint" data-t="askTry"></p>
-          <div class="examples" id="ask-examples"></div>
-        </header>
-        <div class="chat ask-answer sticky" aria-live="polite">
-          <div class="chat-head"><span class="avatar">☀</span><div><b data-t="brand"></b><span data-t="chatSub"></span></div></div>
-          <div class="bubble mine" id="ask-q" hidden></div>
-          <div class="bubble" id="ask-a" data-t="askEmpty"></div>
+        <div class="snip sticky">
+          <div class="m in"><p class="wa-text" data-t="u2nudge"></p><span class="meta">10:00</span></div>
+          <div class="m out"><p class="wa-text">STUCK</p><span class="meta">10:12 <svg class="ticks" viewBox="0 0 18 11"><path d="M1 6l3 3 6-7M7 8l1 1 6-7"/></svg></span></div>
+          <div class="m in"><p class="wa-text"><b data-t="chatHead"></b><br><span data-t="chatBody"></span></p><span class="meta">10:12</span></div>
+          <div class="m in"><p class="wa-text" data-t="chatNext"></p><span class="meta">10:12</span></div>
         </div>
-      </section>
+      </div>
 
-      <section class="sec split" id="flats">
-        <header class="sec-head">
+      <div class="sec split" id="flats">
+        <div>
           <h2 data-t="flatTitle"></h2>
           <p class="sec-lede" data-t="flatSub"></p>
           <label class="field" for="society-bill">
@@ -201,40 +271,16 @@
           </label>
           <dl class="society" id="society"></dl>
           <p class="hint" data-t="flatNote"></p>
-        </header>
+        </div>
         <div class="panel-card sticky">
           <p class="panel-title" data-t="flatMsgTitle"></p>
           <p class="rwa-msg" id="rwa-msg"></p>
           <button id="copy-rwa" class="btn btn-line" type="button" data-t="copy"></button>
         </div>
-      </section>
+      </div>
 
-      <section class="sec" id="rules">
-        <header class="sec-head">
-          <h2 data-t="rulesTitle"></h2>
-          <p class="sec-lede" data-t="rulesSub"></p>
-        </header>
-        <div class="learn">
-          <div><b data-t="l1"></b><p data-t="l1d"></p></div>
-          <div><b data-t="l2"></b><p data-t="l2d"></p></div>
-          <div><b data-t="l3"></b><p data-t="l3d"></p></div>
-          <div><b data-t="l4"></b><p data-t="l4d"></p></div>
-        </div>
-        <div class="filters" role="group" aria-label="Region">
-          <button class="chip" type="button" data-scope="" aria-pressed="true" data-t="fAll"></button>
-          <button class="chip" type="button" data-scope="DL" aria-pressed="false">Delhi</button>
-          <button class="chip" type="button" data-scope="UP" aria-pressed="false">Uttar Pradesh</button>
-          <button class="chip" type="button" data-scope="HR" aria-pressed="false">Haryana</button>
-        </div>
-        <ul class="facts" id="facts"><li class="fact-empty" data-t="factsLoading"></li></ul>
-      </section>
-
-      <section class="sec split" id="whatsapp">
-        <header class="sec-head">
-          <h2 data-t="waTitle"></h2>
-          <p class="sec-lede" data-t="waSub"></p>
-          <p class="wa-number"><span id="wa-number"></span><span id="wa-join" class="tag" hidden></span></p>
-        </header>
+      <div class="sec" id="commands">
+        <h2 data-t="cmdTitle"></h2>
         <dl class="commands">
           <dt data-t="c1"></dt><dd data-t="c1d"></dd>
           <dt data-t="c2"></dt><dd data-t="c2d"></dd>
@@ -248,13 +294,60 @@
           <dt><code>हिंदी</code> <code>ENGLISH</code></dt><dd data-t="c6d"></dd>
           <dt><code>DELETE MY DATA</code></dt><dd data-t="c7d"></dd>
         </dl>
-      </section>
+      </div>
+    </div>
+  </section>
 
-      <section class="sec" id="aws">
-        <header class="sec-head">
-          <h2>How it's built on AWS</h2>
-          <p class="sec-lede">Everything runs serverless in AWS's Mumbai region and deploys from one AWS SAM template. Each bill is read three times in parallel on Amazon Bedrock, and only the figures the readings agree on are used. Each household's application runs as its own long-lived Step Functions workflow.</p>
-        </header>
+  <!-- ============ rates, rules and questions ============ -->
+  <section id="rules" class="page" data-view hidden>
+    <div class="wrap frame">
+      <header class="page-head">
+        <h1 data-t="rulesTitle"></h1>
+        <p class="sec-lede" data-t="rulesSub"></p>
+      </header>
+      <div class="sec">
+        <div class="learn">
+          <div><b data-t="l1"></b><p data-t="l1d"></p></div>
+          <div><b data-t="l2"></b><p data-t="l2d"></p></div>
+          <div><b data-t="l3"></b><p data-t="l3d"></p></div>
+          <div><b data-t="l4"></b><p data-t="l4d"></p></div>
+        </div>
+        <div class="filters" role="group" aria-label="Region">
+          <button class="chip" type="button" data-scope="" aria-pressed="true" data-t="fAll"></button>
+          <button class="chip" type="button" data-scope="DL" aria-pressed="false">Delhi</button>
+          <button class="chip" type="button" data-scope="UP" aria-pressed="false">Uttar Pradesh</button>
+          <button class="chip" type="button" data-scope="HR" aria-pressed="false">Haryana</button>
+        </div>
+        <ul class="facts" id="facts"><li class="fact-empty" data-t="factsLoading"></li></ul>
+      </div>
+
+      <div class="sec split" id="ask">
+        <div>
+          <h2 data-t="askTitle"></h2>
+          <p class="sec-lede" data-t="askSub"></p>
+          <form id="ask-form" class="ask-form">
+            <input id="ask-input" type="text" maxlength="300" required aria-label="Your question">
+            <button class="btn btn-primary" type="submit" data-t="askSend"></button>
+          </form>
+          <p class="hint" data-t="askTry"></p>
+          <div class="examples" id="ask-examples"></div>
+        </div>
+        <div class="snip ask-answer sticky" aria-live="polite">
+          <div class="m out" id="ask-q" hidden></div>
+          <div class="m in" id="ask-a" data-t="askEmpty"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ how it's built ============ -->
+  <section id="built" class="page" data-view hidden>
+    <div class="wrap frame">
+      <header class="page-head">
+        <h1>How it's built on AWS</h1>
+        <p class="sec-lede">Everything runs serverless in AWS's Mumbai region and deploys from one AWS SAM template. Each bill is read three times in parallel on Amazon Bedrock, and only the figures the readings agree on are used. Each household's application runs as its own long-lived Step Functions workflow.</p>
+      </header>
+      <div class="sec" id="aws">
         <div class="diagram">
           <svg viewBox="0 0 860 400" role="img" aria-label="Architecture: WhatsApp and the website reach API Gateway; Lambda functions read bills with Amazon Bedrock, keep state in DynamoDB, run the application journey on Step Functions, and a weekly EventBridge Scheduler job watches official sources.">
             <defs><marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="d-arrowhead"/></marker></defs>
@@ -289,17 +382,18 @@
           </svg>
         </div>
         <ul class="services">
-          <li><b>Amazon Bedrock (Nova 2 Lite)</b> reads bills, quotes and inverter screens, and answers questions using the facts listed above.</li>
+          <li><b>Amazon Bedrock (Nova 2 Lite)</b> reads bills, quotes and inverter screens, and answers questions using the facts on the rates and rules page.</li>
           <li><b>AWS Step Functions</b> pauses on a task token at each application step. If a step runs long, the timeout sends a reminder.</li>
           <li><b>Amazon EventBridge Scheduler</b> re-reads the official sources every week and flags any fact whose page has changed.</li>
           <li><b>Amazon Transcribe and Polly</b> handle Hindi voice notes in both directions. <b>S3</b> keeps the audio for one day.</li>
           <li><b>DynamoDB</b> stores learned tariffs, quote prices, facts, sessions and counters. <b>Lambda and API Gateway</b> serve WhatsApp and this site, which is hosted on <b>Amplify</b>.</li>
         </ul>
-      </section>
+      </div>
     </div>
   </section>
 
-  <div class="wrap frame views">
+  <!-- ============ results ============ -->
+  <div class="wrap views">
     <section id="busy" hidden>
       <div class="loader" aria-hidden="true"><i></i><i></i><i></i></div>
       <p id="busy-text" role="status"></p>
@@ -335,7 +429,7 @@
       <div class="next-actions">
         <a class="btn btn-primary" id="share" target="_blank" rel="noopener" data-t="share"></a>
         <button id="to-quote" class="btn btn-line" type="button" data-t="checkQuoteCta"></button>
-        <a class="btn btn-line" href="#whatsapp" id="to-apply" data-t="applyCta"></a>
+        <a class="btn btn-line" href="#guide" id="to-apply" data-t="applyCta"></a>
       </div>
       <button class="again link-btn" type="button" data-t="again"></button>
     </section>
@@ -359,7 +453,10 @@
 <footer class="foot">
   <div class="wrap foot-inner">
     <span data-t="footer"></span>
-    <span class="foot-links"><a id="privacy-link" data-t="privacyLink"></a><a href="https://github.com/piyushk-dev/surya-saathi">GitHub</a><span data-t="pixelCredit"></span></span>
+    <span class="foot-links">
+      <a href="#guide" data-t="navApply"></a><a href="#rules" data-t="navRules"></a><a href="#built" data-t="navAws"></a>
+      <a id="privacy-link" data-t="privacyLink"></a><a href="https://github.com/piyushk-dev/surya-saathi">GitHub</a>
+    </span>
   </div>
 </footer>
 <script src="scene.js"></script>
