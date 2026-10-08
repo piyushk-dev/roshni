@@ -72,22 +72,33 @@ def test_bill_total_misread_as_energy_charge_is_ignored():
     assert bill_reader.read_bill(b"img", "image/png", client=fake).energy_charge_rs is None
 
 
-def test_incomplete_reading_is_retried_and_merged():
-    class Flaky(FakeBedrock):
-        def converse(self, modelId, **request):
-            self.calls.append(modelId)
-            fields = {**FIELDS, "sanctioned_load_kw": None} if len(self.calls) == 1 else FIELDS
-            return {"output": {"message": {"content": [{"toolUse": {"input": json.loads(json.dumps(fields))}}]}}}
-
-    fake = Flaky()
-    r = bill_reader.read_bill(b"img", "image/png", client=fake)
-    assert r.sanctioned_load_kw == 6 and len(fake.calls) == 3
+def _reading(**changes):
+    return bill_reader._reading({**FIELDS, **changes}, "m")
 
 
-def test_complete_reading_needs_one_call():
+def test_consensus_drops_a_stray_month_and_restores_a_dropped_one():
+    good = _reading()
+    stray = _reading(usage_rows=REAL_ROWS + [{"units": 62}])   # one reading invents November
+    dropped = _reading(usage_rows=[r for r in REAL_ROWS if r["units"] != 560])  # one misses May
+    r = bill_reader.consensus([good, stray, dropped])
+    assert r.monthly_units == good.monthly_units
+    assert 11 not in r.monthly_units and r.monthly_units[5] == 560.0
+
+
+def test_consensus_takes_the_majority_load():
+    r = bill_reader.consensus([_reading(), _reading(sanctioned_load_kw=None), _reading(sanctioned_load_kw=60)])
+    assert r.sanctioned_load_kw in (6, 60) and bill_reader.consensus([_reading(), _reading(), _reading(sanctioned_load_kw=60)]).sanctioned_load_kw == 6
+
+
+def test_majority_not_a_bill_wins():
+    no = bill_reader._reading({"is_electricity_bill": False}, "m")
+    assert not bill_reader.consensus([no, no, _reading()]).is_electricity_bill
+
+
+def test_three_reads_in_parallel():
     fake = FakeBedrock()
     bill_reader.read_bill(b"img", "image/png", client=fake)
-    assert len(fake.calls) == 1
+    assert len(fake.calls) == bill_reader.READS
 
 
 def test_misread_current_period_still_anchors_the_months():
@@ -111,7 +122,7 @@ def test_indian_dates_are_day_first():
 def test_falls_back_when_a_model_is_not_enabled():
     fake = FakeBedrock(denied={bill_reader.MODELS[0]})
     r = bill_reader.read_bill(b"img", "image/png", client=fake)
-    assert fake.calls == bill_reader.MODELS[:2]
+    assert bill_reader.MODELS[0] in fake.calls
     assert r.model_id == bill_reader.MODELS[1]
 
 

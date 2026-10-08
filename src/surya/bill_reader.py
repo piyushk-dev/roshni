@@ -15,6 +15,7 @@ import os
 from collections import Counter
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass, field
+from statistics import median
 from datetime import date, datetime, timedelta
 
 import boto3
@@ -30,6 +31,7 @@ MODELS = list(dict.fromkeys(m for m in (
 REGION = os.environ.get("BEDROCK_REGION", "ap-south-1")
 IMAGE_FORMATS = {"image/jpeg": "jpeg", "image/png": "png", "image/webp": "webp", "image/gif": "gif"}
 DAYS_PER_MONTH = 30.44
+READS = 3  # single readings of a phone photo drift; three in parallel cost one read's latency
 ENERGY_RS_PER_UNIT = (1.5, 10.0)  # any Indian domestic slab average falls in here; outside it, the model misread
 DATE_FORMATS = ("%d-%m-%Y", "%d/%m/%Y", "%d.%m.%Y", "%d-%m-%y", "%d/%m/%y", "%d-%b-%Y", "%d-%b-%y", "%d %b %Y", "%Y-%m-%d")
 
@@ -224,18 +226,35 @@ def _reading(f: dict, model: str) -> BillReading:
     return reading
 
 
-def _complete(r: BillReading) -> bool:
-    return not r.is_electricity_bill or bool(r.sanctioned_load_kw and r.billing_month and len(r.monthly_units) >= 2)
+def _majority(values: list):
+    values = [v for v in values if v is not None]
+    return Counter(values).most_common(1)[0][0] if values else None
 
 
-def _merge(readings: list[BillReading]) -> BillReading:
-    """The fullest reading, with the load most readings agree on."""
-    best = max(readings, key=lambda r: (bool(r.sanctioned_load_kw), bool(r.billing_month), len(r.monthly_units)))
-    loads = Counter(r.sanctioned_load_kw for r in readings if r.sanctioned_load_kw)
-    if loads:
-        best.sanctioned_load_kw = loads.most_common(1)[0][0]
-    if best.energy_charge_rs is None:
-        best.energy_charge_rs = next((r.energy_charge_rs for r in readings if r.energy_charge_rs), None)
+def consensus(readings: list[BillReading]) -> BillReading:
+    """What most readings agree on: majority load, provider and month; per-month median units,
+    keeping only months that at least half the readings saw. One stray or dropped row can't move it."""
+    bills = [r for r in readings if r.is_electricity_bill]
+    if len(bills) * 2 < len(readings):
+        return next(r for r in readings if not r.is_electricity_bill)
+    best = max(bills, key=lambda r: (bool(r.sanctioned_load_kw), bool(r.billing_month), len(r.monthly_units)))
+    best.discom = _majority([r.discom for r in bills]) or best.discom
+    best.sanctioned_load_kw = _majority([r.sanctioned_load_kw for r in bills])
+    best.billing_month = _majority([r.billing_month for r in bills])
+
+    seen = [r for r in bills if r.monthly_units]
+    need = (len(seen) + 1) // 2
+    months = {}
+    for m in range(1, 13):
+        values = [r.monthly_units[m] for r in seen if m in r.monthly_units]
+        if values and len(values) >= need:
+            months[m] = median(values)
+    best.monthly_units = months
+    same_period = [r for r in bills if r.billing_month == best.billing_month]
+    units = [r.units_billed for r in same_period if r.units_billed is not None]
+    energy = [r.energy_charge_rs for r in same_period if r.energy_charge_rs is not None]
+    best.units_billed = median(units) if units else None
+    best.energy_charge_rs = median(energy) if energy else None
     return best
 
 
@@ -264,14 +283,14 @@ def call_first_enabled(client, request: dict) -> tuple[dict, str]:
     raise RuntimeError("no Bedrock model configured")
 
 
-def read_bill(data: bytes, media_type: str, client=None, retries: int = 2) -> BillReading:
-    """One model call usually does it; an incomplete reading triggers `retries` more in parallel, merged."""
+def read_bill(data: bytes, media_type: str, client=None, reads: int = READS) -> BillReading:
+    """`reads` independent readings in parallel, reduced to what they agree on."""
     client = client or boto3.client("bedrock-runtime", region_name=REGION)
     request = tool_request(data, media_type, PROMPT, TOOL)
-    fields, model = call_first_enabled(client, request)
-    first = _reading(fields, model)
-    if _complete(first) or not retries:
-        return first
-    with ThreadPoolExecutor(retries) as pool:
-        more = [_reading(f, model) for f in pool.map(lambda _: call_tool(client, model, request), range(retries))]
-    return _merge([first, *more])
+
+    def one(_) -> BillReading:
+        fields, model = call_first_enabled(client, request)
+        return _reading(fields, model)
+
+    with ThreadPoolExecutor(reads) as pool:
+        return consensus(list(pool.map(one, range(reads))))
