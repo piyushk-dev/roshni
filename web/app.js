@@ -238,6 +238,34 @@ Object.assign(T.hi, {
   applyCta: "📋 WhatsApp पर आवेदन प्लान शुरू करें →",
 });
 
+
+Object.assign(T.en, {
+  flatTitle: "Live in a flat? Your society can go solar.",
+  flatSub: "PM Surya Ghar pays ₹18,000 per kW for a housing society's common areas (lifts, water pumps, lights, EV charging), up to 500 kW. Enter what your society pays for common-area electricity.",
+  flatInput: "Society's common-area bill per month (₹)",
+  flatNote: "Estimates: ₹7.50 a unit for common areas, ₹58,000 per kW installed, 1,480 units per kW a year. Some states, Delhi among them, also allow virtual net metering so one system can credit every flat's bill.",
+  flatMsgTitle: "A message for your RWA",
+  socKw: "Size", socNet: "Cost after subsidy", socSaves: "Saves every year", socPayback: "Pays for itself in",
+  rwaMsg: (kw, net, saves) => `Dear Committee, PM Surya Ghar gives our society ₹18,000 per kW for rooftop solar on common areas, up to 500 kW. A ${kw} kW system would cost about ${net} after subsidy and could cut our common-area electricity bill by about ${saves} a year. Can we discuss this at the next meeting and invite two registered vendors to quote?`,
+  copy: "Copy message", copied: "Copied", copyFallback: "Select the text above to copy it",
+  c8: "Inverter screenshot", c8d: "check output against what the panels should make",
+  c9: "Voice note", c9d: "ask anything in Hindi or English; the answer comes back as a voice note",
+  c10d: "solar for your housing society's common areas", c11d: "set your system's real size for output checks",
+});
+Object.assign(T.hi, {
+  flatTitle: "फ़्लैट में रहते हैं? आपकी सोसाइटी सोलर लगा सकती है।",
+  flatSub: "PM सूर्य घर हाउसिंग सोसाइटी के कॉमन एरिया (लिफ़्ट, पानी के पंप, लाइटें, EV चार्जिंग) के लिए ₹18,000 प्रति kW देता है, 500 kW तक। आपकी सोसाइटी कॉमन एरिया की बिजली के लिए जितना देती है, वह डालें।",
+  flatInput: "सोसाइटी का कॉमन एरिया का मासिक बिल (₹)",
+  flatNote: "अनुमान: कॉमन एरिया के लिए ₹7.50 प्रति यूनिट, ₹58,000 प्रति kW लगवाने का खर्च, हर kW से सालाना 1,480 यूनिट। कुछ राज्यों में, जिनमें दिल्ली भी है, वर्चुअल नेट मीटरिंग से एक सिस्टम हर फ़्लैट के बिल में क्रेडिट दे सकता है।",
+  flatMsgTitle: "आपकी RWA के लिए मैसेज",
+  socKw: "साइज़", socNet: "सब्सिडी के बाद लागत", socSaves: "हर साल बचत", socPayback: "लागत वसूल",
+  rwaMsg: (kw, net, saves) => `माननीय समिति, PM सूर्य घर योजना में हमारी सोसाइटी को कॉमन एरिया पर रूफ़टॉप सोलर के लिए ₹18,000 प्रति kW मिलते हैं, 500 kW तक। ${kw} kW सिस्टम सब्सिडी के बाद लगभग ${net} का पड़ेगा और हमारे कॉमन एरिया के बिजली बिल में सालाना लगभग ${saves} की बचत कर सकता है। क्या अगली बैठक में इस पर चर्चा करके दो रजिस्टर्ड वेंडर से कोटेशन मँगवा सकते हैं?`,
+  copy: "मैसेज कॉपी करें", copied: "कॉपी हो गया", copyFallback: "कॉपी करने के लिए ऊपर का टेक्स्ट चुनें",
+  c8: "इन्वर्टर का स्क्रीनशॉट", c8d: "पैनल को जितना बनाना चाहिए, उससे उत्पादन मिलाएँ",
+  c9: "वॉइस नोट", c9d: "हिंदी या अंग्रेज़ी में कुछ भी पूछें; जवाब वॉइस नोट में आएगा",
+  c10d: "हाउसिंग सोसाइटी के कॉमन एरिया के लिए सोलर", c11d: "उत्पादन जाँच के लिए सिस्टम का असली साइज़",
+});
+
 const $ = (id) => document.getElementById(id);
 const state = { lang: initialLang(), lat: null, lon: null, last: null, lastBody: null, lastQuote: null };
 
@@ -263,7 +291,7 @@ function applyLang() {
   if (state.lat !== null) $("locate").textContent = t("locationOn");
   if (state.last) render(state.last);
   if (state.lastQuote) renderQuote(state.lastQuote);
-  if (typeof renderSteps === "function") { renderSteps(); renderFacts(); renderWhatsApp(); }
+  if (typeof renderSteps === "function") { renderSteps(); renderFacts(); renderWhatsApp(); renderSociety(); }
 }
 
 function show(id) {
@@ -765,6 +793,48 @@ document.querySelectorAll('a[href^="#"]').forEach((a) => a.addEventListener("cli
   const target = document.querySelector(a.getAttribute("href"));
   if (target) target.scrollIntoView();
 }));
+
+
+// --- flats: a society's common areas -----------------------------------------------------
+const SOCIETY = { ratePerUnit: 7.5, costPerKw: 58000, subsidyPerKw: 18000, maxKw: 500, yieldPerKw: 1480 };
+
+function renderSociety() {
+  const bill = Math.max(0, parseFloat($("society-bill").value) || 0);
+  const kw = Math.min(SOCIETY.maxKw, Math.max(1, Math.round((bill / SOCIETY.ratePerUnit) * 12 / SOCIETY.yieldPerKw)));
+  const net = kw * (SOCIETY.costPerKw - SOCIETY.subsidyPerKw);
+  const saves = Math.min(bill * 12, kw * SOCIETY.yieldPerKw * SOCIETY.ratePerUnit);
+  const rows = [[t("socKw"), t("kw", kw)], [t("socNet"), rupees(Math.round(net / 1000) * 1000)],
+    [t("socSaves"), rupees(Math.round(saves / 1000) * 1000)], [t("socPayback"), t("years", (net / saves).toFixed(1))]];
+  const dl = $("society");
+  dl.innerHTML = "";
+  for (const [k, v] of rows) {
+    const wrap = document.createElement("div");
+    const dt = document.createElement("dt");
+    dt.textContent = k;
+    const dd = document.createElement("dd");
+    dd.textContent = v;
+    wrap.append(dt, dd);
+    dl.append(wrap);
+  }
+  $("rwa-msg").textContent = t("rwaMsg", kw, rupees(Math.round(net / 1000) * 1000), rupees(Math.round(saves / 1000) * 1000));
+}
+
+$("society-bill").addEventListener("input", renderSociety);
+$("copy-rwa").addEventListener("click", async () => {
+  const btn = $("copy-rwa");
+  try {
+    await navigator.clipboard.writeText($("rwa-msg").textContent);
+    btn.textContent = t("copied");
+  } catch (_) {
+    const range = document.createRange();
+    range.selectNodeContents($("rwa-msg"));
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+    btn.textContent = t("copyFallback");
+  }
+  setTimeout(() => { btn.textContent = t("copy"); }, 2500);
+});
 
 $("privacy-link").href = API + "/privacy";
 applyLang();

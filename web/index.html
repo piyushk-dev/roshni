@@ -160,6 +160,24 @@
       <ul class="facts" id="facts"><li class="fact-empty" data-t="factsLoading"></li></ul>
     </section>
 
+    <section class="band split" id="flats">
+      <div>
+        <h2 data-t="flatTitle"></h2>
+        <p class="section-lede" data-t="flatSub"></p>
+        <label class="field" for="society-bill">
+          <span data-t="flatInput"></span>
+          <input id="society-bill" type="number" inputmode="numeric" min="1000" step="1000" value="25000">
+        </label>
+        <dl class="society" id="society"></dl>
+        <p class="small" data-t="flatNote"></p>
+      </div>
+      <div class="card">
+        <h2 data-t="flatMsgTitle"></h2>
+        <p class="rwa-msg" id="rwa-msg"></p>
+        <button id="copy-rwa" class="chip" type="button" data-t="copy"></button>
+      </div>
+    </section>
+
     <section class="band split" id="whatsapp">
       <div>
         <h2 data-t="waTitle"></h2>
@@ -169,9 +187,13 @@
       <dl class="commands">
         <dt data-t="c1"></dt><dd data-t="c1d"></dd>
         <dt data-t="c2"></dt><dd data-t="c2d"></dd>
+        <dt data-t="c8"></dt><dd data-t="c8d"></dd>
         <dt>APPLY · आवेदन</dt><dd data-t="c3d"></dd>
         <dt>DONE · हो गया</dt><dd data-t="c4d"></dd>
         <dt>STUCK · अटका</dt><dd data-t="c5d"></dd>
+        <dt data-t="c9"></dt><dd data-t="c9d"></dd>
+        <dt>FLAT · सोसाइटी</dt><dd data-t="c10d"></dd>
+        <dt>SYSTEM 3.3</dt><dd data-t="c11d"></dd>
         <dt>हिंदी · ENGLISH</dt><dd data-t="c6d"></dd>
         <dt>DELETE MY DATA</dt><dd data-t="c7d"></dd>
       </dl>
