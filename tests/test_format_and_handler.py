@@ -2,7 +2,7 @@ import json
 
 from conftest import HEAVY_AC, LOW, months
 
-from surya import handler
+from surya import handler, pipeline
 from surya.calculator import Household, analyze
 from surya.format import inr, message
 
@@ -29,7 +29,7 @@ def _event(method, path, body=None):
 
 
 def test_handler_routes(monkeypatch, delhi_yield):
-    monkeypatch.setattr(handler, "_yield_for", lambda lat, lon: delhi_yield)
+    monkeypatch.setattr(pipeline, "yield_for", lambda lat, lon: delhi_yield)
     assert handler.lambda_handler(_event("GET", "/health"), None)["statusCode"] == 200
     assert handler.lambda_handler(_event("GET", "/nope"), None)["statusCode"] == 404
 

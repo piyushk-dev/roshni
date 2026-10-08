@@ -6,7 +6,14 @@ Parameters:
   BedrockModelId:
     Type: String
     Default: global.anthropic.claude-haiku-5-5
-    Description: Vision model for reading bills; falls back to Nova 2 Lite if access is denied
+    Description: Vision model for reading bills; falls back to Haiku 4.5 then Nova 2 Lite if access is denied
+  WhatsAppPhoneNumberId:
+    Type: String
+    Default: ""
+    Description: Phone number ID from Meta's WhatsApp API Setup page
+  GraphApiVersion:
+    Type: String
+    Default: v23.0
 
 Globals:
   Function:
@@ -55,6 +62,83 @@ Resources:
           Type: HttpApi
           Properties: {ApiId: !Ref Api, Path: /health, Method: GET}
 
+  # Acknowledges Meta within milliseconds, then hands the message to the worker
+  WhatsAppWebhookFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/
+      Handler: surya.wa_handler.webhook
+      Timeout: 10
+      Environment:
+        Variables:
+          SSM_PREFIX: /surya-saathi/whatsapp
+          WORKER_FUNCTION: !Ref WhatsAppWorkerFunction
+      Policies:
+        - SSMParameterReadPolicy:
+            ParameterName: surya-saathi/whatsapp/*
+        - LambdaInvokePolicy:
+            FunctionName: !Ref WhatsAppWorkerFunction
+      Events:
+        Verify:
+          Type: HttpApi
+          Properties: {ApiId: !Ref Api, Path: /whatsapp, Method: GET}
+        Receive:
+          Type: HttpApi
+          Properties: {ApiId: !Ref Api, Path: /whatsapp, Method: POST}
+
+  WhatsAppWorkerFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/
+      Handler: surya.wa_handler.worker
+      Timeout: 90
+      Environment:
+        Variables:
+          SSM_PREFIX: /surya-saathi/whatsapp
+          SESSION_TABLE: !Ref SessionTable
+          YIELD_TABLE: !Ref YieldCache
+          BEDROCK_MODEL_ID: !Ref BedrockModelId
+          WA_PHONE_NUMBER_ID: !Ref WhatsAppPhoneNumberId
+          GRAPH_VERSION: !Ref GraphApiVersion
+      Policies:
+        - SSMParameterReadPolicy:
+            ParameterName: surya-saathi/whatsapp/*
+        - DynamoDBCrudPolicy:
+            TableName: !Ref SessionTable
+        - DynamoDBCrudPolicy:
+            TableName: !Ref YieldCache
+        - Statement:
+            - Effect: Allow
+              Action: [bedrock:InvokeModel]
+              Resource:
+                - !Sub arn:aws:bedrock:${AWS::Region}:${AWS::AccountId}:inference-profile/*
+                - arn:aws:bedrock:*::foundation-model/*
+
+  WebhookLogs:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${WhatsAppWebhookFunction}
+      RetentionInDays: 14
+
+  WorkerLogs:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${WhatsAppWorkerFunction}
+      RetentionInDays: 14
+
+  # Per-user language, location and last estimate, plus message ids for de-duplication
+  SessionTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - {AttributeName: pk, AttributeType: S}
+      KeySchema:
+        - {AttributeName: pk, KeyType: HASH}
+      TimeToLiveSpecification:
+        AttributeName: expires
+        Enabled: true
+
   AnalyzeLogs:
     Type: AWS::Logs::LogGroup
     Properties:
@@ -74,3 +158,5 @@ Resources:
 Outputs:
   ApiUrl:
     Value: !Sub https://${Api}.execute-api.${AWS::Region}.amazonaws.com
+  WhatsAppCallbackUrl:
+    Value: !Sub https://${Api}.execute-api.${AWS::Region}.amazonaws.com/whatsapp

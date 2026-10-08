@@ -107,6 +107,37 @@ SKIP = {
 }
 
 
+PROBLEMS = {
+    "file_type": {
+        "en": "Please send the bill as a photo or a PDF.",
+        "hi": "कृपया बिल फोटो या PDF के रूप में भेजें।",
+    },
+    "not_a_bill": {
+        "en": "That doesn't look like an electricity bill. Please send a clear photo of the whole bill.",
+        "hi": "यह बिजली का बिल नहीं लग रहा। कृपया पूरे बिल की साफ़ फोटो भेजें।",
+    },
+    "unsupported_provider": {
+        "en": "Sorry, only Delhi bills work for now (BSES Rajdhani, BSES Yamuna, Tata Power-DDL). This one is from {provider}.",
+        "hi": "माफ़ कीजिए, अभी सिर्फ़ दिल्ली के बिल (BSES राजधानी, BSES यमुना, टाटा पावर-DDL) पढ़े जा सकते हैं। यह बिल {provider} का है।",
+    },
+    "unreadable": {
+        "en": "I couldn't read the sanctioned load or the usage history. Please send a clearer photo that shows the whole bill.",
+        "hi": "बिल से स्वीकृत लोड या खपत का इतिहास पढ़ा नहीं जा सका। कृपया पूरे बिल की और साफ़ फोटो भेजें।",
+    },
+}
+
+
+class BillProblem(ValueError):
+    """Something about the bill the household can fix, with the reply to send them."""
+
+    def __init__(self, code: str, **values):
+        self.code, self.values = code, values
+        super().__init__(self.text("en"))
+
+    def text(self, lang: str) -> str:
+        return PROBLEMS[self.code][lang if lang in ("en", "hi") else "en"].format(**self.values)
+
+
 def message(a: Analysis, lang: str = "en") -> str:
     lang = lang if lang in GO else "en"
     o = a.recommended

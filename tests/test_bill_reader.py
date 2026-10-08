@@ -5,7 +5,7 @@ import pytest
 from botocore.exceptions import ClientError
 from conftest import HEAVY_AC
 
-from surya import bill_reader, handler
+from surya import bill_reader, handler, pipeline
 
 FIELDS = {
     "is_electricity_bill": True,
@@ -53,7 +53,7 @@ def test_rejects_unknown_file_types():
 
 
 def test_bill_route(monkeypatch, delhi_yield):
-    monkeypatch.setattr(handler, "_yield_for", lambda lat, lon: delhi_yield)
+    monkeypatch.setattr(pipeline, "yield_for", lambda lat, lon: delhi_yield)
     real = bill_reader.read_bill
     monkeypatch.setattr(bill_reader, "read_bill", lambda data, mt: real(data, mt, client=FakeBedrock()))
     event = {
