@@ -12,14 +12,15 @@ class Bill:
     units: float
     energy: float
     fixed: float
-    ppac: float
+    fppas: float
+    surcharge: float
     pension: float
     tax: float
     subsidy: float
 
     @property
     def gross(self) -> float:
-        return self.energy + self.fixed + self.ppac + self.pension + self.tax
+        return self.energy + self.fixed + self.fppas + self.surcharge + self.pension + self.tax
 
     @property
     def net(self) -> float:
@@ -31,9 +32,10 @@ class Tariff:
     state: str
     discom: str
     discom_name: str
-    ppac_pct: float
+    fppas_pct: float
     slabs: tuple[tuple[float | None, float], ...]
     fixed_bands: tuple[tuple[float | None, float], ...]
+    surcharge_pct: float
     pension_pct: float
     tax_pct: float
     subsidy: dict | None
@@ -50,9 +52,10 @@ class Tariff:
                     state=state,
                     discom=discom,
                     discom_name=d["name"],
-                    ppac_pct=d["ppac_pct"],
+                    fppas_pct=d["fppas_pct"],
                     slabs=tuple(map(tuple, t["energy_slabs"])),
                     fixed_bands=tuple(map(tuple, t["fixed_charge_bands"])),
+                    surcharge_pct=t["regulatory_surcharge_pct"],
                     pension_pct=t["pension_surcharge_pct"],
                     tax_pct=t["electricity_tax_pct"],
                     subsidy=t.get("subsidy"),
@@ -82,11 +85,16 @@ class Tariff:
     def bill(self, units: float, load_kw: float) -> Bill:
         energy = self.energy_charge(units)
         fixed = self.fixed_charge(load_kw)
-        ppac = (energy + fixed) * self.ppac_pct / 100
+        return self.bill_from_charges(units, energy, fixed)
+
+    def bill_from_charges(self, units: float, energy: float, fixed: float) -> Bill:
+        """The rest of the bill, built the way a Delhi bill prints it, from its energy and fixed charges."""
+        fppas = energy * self.fppas_pct / 100
+        surcharge = (energy + fixed) * self.surcharge_pct / 100
         pension = (energy + fixed) * self.pension_pct / 100
-        tax = (energy + fixed + ppac + pension) * self.tax_pct / 100
-        gross = energy + fixed + ppac + pension + tax
-        return Bill(units, energy, fixed, ppac, pension, tax, self._subsidy(units, gross))
+        tax = (energy + fppas + surcharge) * self.tax_pct / 100
+        gross = energy + fixed + fppas + surcharge + pension + tax
+        return Bill(units, energy, fixed, fppas, surcharge, pension, tax, self._subsidy(units, gross))
 
     def _subsidy(self, units: float, gross: float) -> float:
         s = self.subsidy

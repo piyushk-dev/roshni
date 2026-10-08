@@ -24,6 +24,7 @@ class Household:
     roof_sqft: float | None = None
     last_bill_rs: float | None = None
     last_bill_units: float | None = None
+    last_bill_energy_rs: float | None = None  # the bill's printed energy charge: more reliable than its total
 
 
 @dataclass
@@ -83,13 +84,16 @@ def fill_months(monthly_units: dict) -> tuple[list[float], list[int]]:
 
 
 def calibration_factor(h: Household, tariff: Tariff) -> float:
-    """Scale the modelled bill to the household's real one, so surcharges we don't model are counted."""
-    if not h.last_bill_rs or not h.last_bill_units:
+    """Scale the modelled bill to the household's real one, so tariff changes we haven't caught are counted."""
+    if not h.last_bill_units:
         return 1.0
-    modelled = tariff.bill(h.last_bill_units, h.sanctioned_kw).net
-    if modelled <= 0:
+    if h.last_bill_energy_rs:
+        actual, modelled = h.last_bill_energy_rs, tariff.energy_charge(h.last_bill_units)
+    elif h.last_bill_rs:
+        actual, modelled = h.last_bill_rs, tariff.bill(h.last_bill_units, h.sanctioned_kw).net
+    else:
         return 1.0
-    return min(max(h.last_bill_rs / modelled, 0.7), 1.4)
+    return min(max(actual / modelled, 0.7), 1.4) if modelled > 0 else 1.0
 
 
 def year_with_solar(units: list[float], generation: list[float], tariff: Tariff, load_kw: float) -> tuple[float, float]:

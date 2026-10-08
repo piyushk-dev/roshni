@@ -55,8 +55,8 @@ def request_from_bill(data: bytes, media_type: str) -> tuple[dict, bill_reader.B
         "discom": reading.discom,
         "sanctioned_kw": reading.sanctioned_load_kw,
         "monthly_units": reading.monthly_units,
-        "last_bill_rs": reading.amount_rs,
         "last_bill_units": reading.units_billed,
+        "last_bill_energy_rs": reading.energy_charge_rs,
     }, reading
 
 
@@ -69,6 +69,7 @@ def run(body: dict) -> Analysis:
         roof_sqft=body.get("roof_sqft"),
         last_bill_rs=body.get("last_bill_rs"),
         last_bill_units=body.get("last_bill_units"),
+        last_bill_energy_rs=body.get("last_bill_energy_rs"),
     )
     lat = float(body.get("lat") or tariff.default_lat)
     lon = float(body.get("lon") or tariff.default_lon)

@@ -314,7 +314,7 @@ $("file").addEventListener("change", (e) => {
     const { b64, type } = await prepare(file);
     const data = await post("/bill", { file_base64: b64, media_type: type, ...extras() });
     const b = data.bill;
-    state.lastBody = { discom: b.discom, sanctioned_kw: b.sanctioned_load_kw, monthly_units: b.monthly_units, last_bill_rs: b.amount_rs, last_bill_units: b.units_billed, ...extras() };
+    state.lastBody = { discom: b.discom, sanctioned_kw: b.sanctioned_load_kw, monthly_units: b.monthly_units, last_bill_units: b.units_billed, last_bill_energy_rs: b.energy_charge_rs, ...extras() };
     return data;
   });
 });

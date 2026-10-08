@@ -29,8 +29,19 @@ def test_delhi_subsidy_bands(brpl):
     assert brpl.bill(450, 3).subsidy == 0
 
 
-def test_ppac_differs_by_provider():
-    assert Tariff.for_discom("BYPL").bill(500, 3).gross > Tariff.for_discom("BRPL").bill(500, 3).gross
+def test_fppas_differs_by_provider():
+    assert Tariff.for_discom("TPDDL").bill(500, 3).gross > Tariff.for_discom("BYPL").bill(500, 3).gross
+
+
+def test_matches_a_real_brpl_bill(brpl):
+    """BRPL, 09-06-2026 to 06-07-2026, 562 units, 6 kW. Energy 2634.00 is printed; fixed 556.10 is derived
+    from the printed 8% surcharge. The bill's own lines: surcharge 255.21, pension 223.31, tax 165.49;
+    total before its one-off "other charges" 4397.44."""
+    b = brpl.bill_from_charges(562, 2634.00, 556.10)
+    assert b.surcharge == pytest.approx(255.21, abs=0.05)
+    assert b.pension == pytest.approx(223.31, abs=0.05)
+    assert b.tax == pytest.approx(165.49, rel=0.02)
+    assert b.gross == pytest.approx(4397.44, rel=0.03)
 
 
 def test_unknown_provider():
