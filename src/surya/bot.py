@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import re
 
-from . import journey, quote
+from . import doctor, journey, quote
 from .format import BillProblem, message
 
 DEVANAGARI = re.compile(r"[ऀ-ॿ]")
@@ -119,7 +119,7 @@ def handle(msg: dict, user: dict, wa, pipeline) -> dict | None:
         wa.send_text(to, TEXT["reading"][lang])
         data, media_type = wa.download_media(msg[kind]["id"])
         try:
-            request, _ = pipeline.request_from_bill(data, media_type)
+            request, reading = pipeline.request_from_bill(data, media_type)
             a = pipeline.run({**request, **{k: user[k] for k in ("lat", "lon") if k in user}})
         except BillProblem as p:
             if p.code != "not_a_bill":
@@ -130,6 +130,9 @@ def handle(msg: dict, user: dict, wa, pipeline) -> dict | None:
             return user
         pipeline.count_analysis(a)
         wa.send_text(to, message(a, lang))
+        checkup = doctor.message(pipeline.bill_checkup(reading, request), lang)
+        if checkup:
+            wa.send_text(to, checkup)
         if a.verdict == "go" and not (user.get("journey") and not user["journey"].get("done")):
             wa.send_text(to, journey.TEXT[lang if lang in journey.TEXT else "en"]["cta"])
         o = a.recommended

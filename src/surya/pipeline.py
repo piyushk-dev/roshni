@@ -106,8 +106,20 @@ def count_analysis(a) -> None:
                     co2_t_per_year=o.co2_t_per_year if o else 0)
 
 
+def tariff_for(body: dict) -> Tariff:
+    return Tariff.from_spec(body["tariff"]) if body.get("tariff") else Tariff.for_discom(body["discom"])
+
+
+def bill_checkup(reading: bill_reader.BillReading, body: dict) -> list:
+    from . import doctor
+
+    found = doctor.check(reading, tariff_for(body))
+    knowledge.count(bill_savings_rs=sum(f.saves_rs for f in found))
+    return found
+
+
 def run(body: dict) -> Analysis:
-    tariff = Tariff.from_spec(body["tariff"]) if body.get("tariff") else Tariff.for_discom(body["discom"])
+    tariff = tariff_for(body)
     h = Household(
         discom=body["discom"],
         sanctioned_kw=float(body["sanctioned_kw"]),

@@ -413,6 +413,34 @@ function render(data) {
   billRead(data.bill);
   $("bonus").hidden = !data.bonus;
   $("bonus").textContent = data.bonus || "";
+  renderDoctor(data.doctor);
+}
+
+function renderDoctor(doc) {
+  const box = $("doctor");
+  if (doc) state.doctor = doc;  // a language switch re-runs only the sums, so keep the check-up
+  doc = doc || state.doctor;
+  box.hidden = !doc || !doc.findings.length;
+  if (box.hidden) return;
+  const v = doc.views[state.lang] || doc.views.en;
+  box.innerHTML = "";
+  const h = document.createElement("h2");
+  h.textContent = v.head;
+  box.append(h);
+  if (v.total) {
+    const total = document.createElement("p");
+    total.className = "total";
+    total.textContent = v.total;
+    box.append(total);
+  }
+  const ul = document.createElement("ul");
+  for (const item of v.items) {
+    const li = document.createElement("li");
+    li.className = item.level;
+    li.textContent = item.text;
+    ul.append(li);
+  }
+  box.append(ul);
 }
 
 function tile(label, value, sub) {
@@ -549,7 +577,7 @@ $("lang").addEventListener("click", () => {
   }
 });
 
-document.querySelectorAll(".again").forEach((b) => b.addEventListener("click", () => { state.last = null; state.lastQuote = null; show("start"); }));
+document.querySelectorAll(".again").forEach((b) => b.addEventListener("click", () => { state.last = null; state.lastQuote = null; state.doctor = null; show("start"); }));
 
 // --- landing page: live counters, the 8 steps, the facts board, WhatsApp details ---------
 const landing = { journey: null, facts: null, scope: "" };

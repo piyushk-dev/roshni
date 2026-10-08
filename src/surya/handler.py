@@ -7,7 +7,7 @@ import json
 from dataclasses import asdict
 from importlib import resources
 
-from . import knowledge, pipeline, quote
+from . import doctor, knowledge, pipeline, quote
 from .format import BillProblem, bonus_text, explain, message
 
 
@@ -93,4 +93,6 @@ def lambda_handler(event: dict, context) -> dict:
     result = {"analysis": a.to_dict(), "reason": reason, "notes": notes, "bonus": bonus_text(a, lang), "message": message(a, lang)}
     if reading:
         result["bill"] = asdict(reading)
+        found = pipeline.bill_checkup(reading, body)
+        result["doctor"] = {"findings": doctor.to_dict(found), "views": {code: doctor.render(found, code) for code in ("en", "hi")}}
     return _response(200, result)

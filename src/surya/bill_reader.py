@@ -53,6 +53,9 @@ Rules:
   demand charge for this period.
 - state: the two-letter code of the Indian state the connection is in (DL, UP, MH, KA...),
   from the provider or the bill.
+- other_charges_rs: the line labelled "Other Charges" (or another one-off charge such as a meter
+  or deposit charge), if printed. Not taxes, surcharges, pension surcharge or fuel adjustment. net_metered: true if the bill has import and export
+  readings. export_units: units exported to the grid this period, if shown.
 - Do not record the consumer's name, address, phone number, email or account/consumer number."""
 
 _ROW = {
@@ -90,6 +93,9 @@ TOOL = {
                     "required": ["units", "rate"]}},
                 "fixed_charge_rs": {"type": "number"},
                 "max_demand_kw": {"type": "number", "description": "MDI or maximum demand recorded, if printed"},
+                "other_charges_rs": {"type": "number"},
+                "net_metered": {"type": "boolean"},
+                "export_units": {"type": "number"},
                 "reading_type": {"type": "string", "enum": ["actual", "estimated", "not_stated"],
                                  "description": "whether this bill's meter reading is actual or estimated/provisional"},
                 "pincode": {"type": "string"},
@@ -118,6 +124,9 @@ class BillReading:
     fixed_charge_rs: float | None = None  # per standard month
     max_demand_kw: float | None = None
     reading_type: str | None = None
+    other_charges_rs: float | None = None
+    net_metered: bool = False
+    export_units: float | None = None
     model_id: str | None = None
 
 
@@ -250,6 +259,9 @@ def _reading(f: dict, model: str) -> BillReading:
         state=(f.get("state") or "").upper()[:2] or None,
         max_demand_kw=f.get("max_demand_kw"),
         reading_type=f.get("reading_type"),
+        other_charges_rs=f.get("other_charges_rs"),
+        net_metered=bool(f.get("net_metered")),
+        export_units=f.get("export_units"),
         model_id=model,
     )
     current = f.get("current_period") or None
@@ -307,6 +319,9 @@ def consensus(readings: list[BillReading]) -> BillReading:
     best.slabs = max(with_slabs, key=lambda r: len(r.slabs)).slabs if with_slabs else None
     fixed = [r.fixed_charge_rs for r in same_period if r.fixed_charge_rs]
     best.fixed_charge_rs = median(fixed) if fixed else None
+    best.other_charges_rs = _majority([r.other_charges_rs for r in bills])
+    best.net_metered = sum(r.net_metered for r in bills) * 2 > len(bills)
+    best.export_units = _majority([r.export_units for r in bills])
     return best
 
 
