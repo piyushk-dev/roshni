@@ -1,44 +1,182 @@
 [
-  {"id": "central-subsidy", "scope": "IN", "title": "PM Surya Ghar central subsidy",
-   "value": "₹30,000/kW for the first 2 kW, ₹18,000 for the 3rd kW, up to ₹78,000",
-   "source": "https://pmsuryaghar.gov.in", "official": true, "verified": "2026-10-08"},
-  {"id": "dcr-required", "scope": "IN", "title": "Subsidy needs made-in-India (DCR) panels",
-   "value": "Non-DCR panels fail inspection and get no subsidy",
-   "source": "https://www.securedengineers.com/insights/pm-surya-ghar-almm-non-dcr-module-exemption-explained/", "official": false, "verified": "2026-10-08"},
-  {"id": "loan-rate", "scope": "IN", "title": "Collateral-free solar loan",
-   "value": "Repo + 0.5% (about 5.75%) up to ₹2 lakh, 10 years, 10% margin",
-   "source": "https://www.solarsquare.in/blog/solar-loan-interest-rates/", "official": false, "verified": "2026-10-08"},
-  {"id": "cfa-claim-deadline", "scope": "IN", "title": "Phase II subsidy claim deadline",
-   "value": "Claims for applications already redeemed, inspected or installed must reach MNRE by 30 Nov 2026",
-   "source": "https://www.energetica-india.net/news/mnre-extends-pm-surya-ghar-cfa-claim-deadline-to-november-30-2026", "official": false, "verified": "2026-10-08"},
-  {"id": "helpline", "scope": "IN", "title": "PM Surya Ghar helpline",
-   "value": "15555 (toll-free)",
-   "source": "https://pmsuryaghar.gov.in", "official": true, "verified": "2026-10-08"},
-  {"id": "rwa-common-area", "scope": "IN", "title": "Housing societies (RWA/GHS) common areas",
-   "value": "₹18,000/kW for common facilities incl. EV charging, up to 500 kW",
-   "source": "https://solar.delhi.gov.in/page/central-subsidy", "official": true, "verified": "2026-10-08"},
-  {"id": "dl-zero-upfront", "scope": "DL", "title": "Delhi: ₹0 upfront for homes averaging up to 400 units/month",
-   "value": "Up to 3 kW at no upfront cost, 5 years of free maintenance (Cabinet 2 Sep 2026; guidelines being notified)",
-   "source": "https://desitalkchicago.com/delhi-solar-policy-gets-major-push-2-30-lakh-rooftops-targeted-by-march-2027/", "official": false, "verified": "2026-10-08"},
-  {"id": "dl-top-up", "scope": "DL", "title": "Delhi state top-up",
-   "value": "Matches the central subsidy, up to ₹78,000 for 3 kW",
-   "source": "https://bridgewaypower.in/delhi-solar-policy-2026", "official": false, "verified": "2026-10-08"},
-  {"id": "dl-free-units", "scope": "DL", "title": "Delhi electricity subsidy",
-   "value": "0–200 units free; 201–400 units half, up to ₹800",
-   "source": "https://bridgewaypower.in/delhi-electricity-rate-2026", "official": false, "verified": "2026-10-08"},
-  {"id": "dl-fppas", "scope": "DL", "title": "Delhi fuel surcharge (FPPAS), June 2026",
-   "value": "BRPL 17.94%, BYPL 17.43%, TPDDL 18.50% of the energy charge",
-   "source": "https://solarquarter.com/2026/07/14/derc-allows-delhi-discoms-to-recover-higher-fppas-for-may-2026-amid-rising-power-purchase-costs/", "official": false, "verified": "2026-10-08"},
-  {"id": "dl-net-metering", "scope": "DL", "title": "Delhi net-metering timeline",
-   "value": "Cut from 75 to 25 days; fees waived up to 10 kW",
-   "source": "https://desitalkchicago.com/delhi-solar-policy-gets-major-push-2-30-lakh-rooftops-targeted-by-march-2027/", "official": false, "verified": "2026-10-08"},
-  {"id": "up-top-up", "scope": "UP", "title": "Uttar Pradesh state top-up (UPNEDA)",
-   "value": "₹15,000/kW, up to ₹30,000 (sources disagree)",
-   "source": "https://pmsolar.org.in/en/state/uttar-pradesh/", "official": false, "verified": "2026-10-08"},
-  {"id": "hr-top-up", "scope": "HR", "title": "Haryana top-up for Antyodaya families",
-   "value": "Income-linked: up to ₹25,000/kW for incomes up to ₹1.8 lakh, max ₹50,000",
-   "source": "https://pmsolar.org.in/en/state/haryana/", "official": false, "verified": "2026-10-08"},
-  {"id": "price-band", "scope": "IN", "title": "Typical installed price (seed until enough quotes arrive)",
-   "value": "₹55,000–70,000 per kW up to 3 kW, including GST",
-   "source": "https://bridgewaypower.in/blog/cost-of-solar-installation-delhi-ncr", "official": false, "verified": "2026-10-08"}
+  {
+    "id": "central-subsidy",
+    "scope": "IN",
+    "title": "PM Surya Ghar central subsidy",
+    "value": "₹30,000/kW for the first 2 kW, ₹18,000 for the 3rd kW, up to ₹78,000",
+    "source": "https://pmsuryaghar.gov.in",
+    "official": true,
+    "verified": "2026-10-08"
+  },
+  {
+    "id": "dcr-required",
+    "scope": "IN",
+    "title": "Subsidy needs made-in-India (DCR) panels",
+    "value": "Non-DCR panels fail inspection and get no subsidy",
+    "source": "https://www.securedengineers.com/insights/pm-surya-ghar-almm-non-dcr-module-exemption-explained/",
+    "official": false,
+    "verified": "2026-10-08"
+  },
+  {
+    "id": "loan-rate",
+    "scope": "IN",
+    "title": "Collateral-free solar loan",
+    "value": "About 5.75% up to ₹2 lakh with no collateral, about 7.9% above (SBI); 10 years, 10% margin; apply on Jan Samarth",
+    "source": "https://sbi.co.in/web/personal-banking/loans/pm-surya-ghar-loan-for-solar-roof-top",
+    "official": true,
+    "verified": "2026-10-08"
+  },
+  {
+    "id": "cfa-claim-deadline",
+    "scope": "IN",
+    "title": "Phase II subsidy claim deadline",
+    "value": "Claims for applications already redeemed, inspected or installed must reach MNRE by 30 Nov 2026",
+    "source": "https://www.energetica-india.net/news/mnre-extends-pm-surya-ghar-cfa-claim-deadline-to-november-30-2026",
+    "official": false,
+    "verified": "2026-10-08"
+  },
+  {
+    "id": "helpline",
+    "scope": "IN",
+    "title": "PM Surya Ghar helpline",
+    "value": "15555 (toll-free)",
+    "source": "https://pmsuryaghar.gov.in",
+    "official": true,
+    "verified": "2026-10-08"
+  },
+  {
+    "id": "rwa-common-area",
+    "scope": "IN",
+    "title": "Housing societies (RWA/GHS) common areas",
+    "value": "₹18,000/kW for common facilities incl. EV charging, up to 500 kW",
+    "source": "https://solar.delhi.gov.in/page/central-subsidy",
+    "official": true,
+    "verified": "2026-10-08"
+  },
+  {
+    "id": "dl-zero-upfront",
+    "scope": "DL",
+    "title": "Delhi: ₹0 upfront for homes averaging up to 400 units/month",
+    "value": "Up to 3 kW at no upfront cost, 5 years of free maintenance (Cabinet 2 Sep 2026; guidelines being notified)",
+    "source": "https://desitalkchicago.com/delhi-solar-policy-gets-major-push-2-30-lakh-rooftops-targeted-by-march-2027/",
+    "official": false,
+    "verified": "2026-10-08"
+  },
+  {
+    "id": "dl-top-up",
+    "scope": "DL",
+    "title": "Delhi state top-up",
+    "value": "Matches the central subsidy, up to ₹78,000 for 3 kW",
+    "source": "https://bridgewaypower.in/delhi-solar-policy-2026",
+    "official": false,
+    "verified": "2026-10-08"
+  },
+  {
+    "id": "dl-free-units",
+    "scope": "DL",
+    "title": "Delhi electricity subsidy",
+    "value": "0–200 units free; 201–400 units half, up to ₹800",
+    "source": "https://bridgewaypower.in/delhi-electricity-rate-2026",
+    "official": false,
+    "verified": "2026-10-08"
+  },
+  {
+    "id": "dl-fppas",
+    "scope": "DL",
+    "title": "Delhi fuel surcharge (FPPAS), June 2026",
+    "value": "BRPL 17.94%, BYPL 17.43%, TPDDL 18.50% of the energy charge",
+    "source": "https://solarquarter.com/2026/07/14/derc-allows-delhi-discoms-to-recover-higher-fppas-for-may-2026-amid-rising-power-purchase-costs/",
+    "official": false,
+    "verified": "2026-10-08"
+  },
+  {
+    "id": "dl-net-metering",
+    "scope": "DL",
+    "title": "Delhi net-metering timeline",
+    "value": "Cut from 75 to 25 days; fees waived up to 10 kW",
+    "source": "https://desitalkchicago.com/delhi-solar-policy-gets-major-push-2-30-lakh-rooftops-targeted-by-march-2027/",
+    "official": false,
+    "verified": "2026-10-08"
+  },
+  {
+    "id": "up-top-up",
+    "scope": "UP",
+    "title": "Uttar Pradesh state top-up (UPNEDA)",
+    "value": "₹15,000/kW, up to ₹30,000 (sources disagree)",
+    "source": "https://pmsolar.org.in/en/state/uttar-pradesh/",
+    "official": false,
+    "verified": "2026-10-08"
+  },
+  {
+    "id": "hr-top-up",
+    "scope": "HR",
+    "title": "Haryana top-up for Antyodaya families",
+    "value": "Income-linked: up to ₹25,000/kW for incomes up to ₹1.8 lakh, max ₹50,000",
+    "source": "https://pmsolar.org.in/en/state/haryana/",
+    "official": false,
+    "verified": "2026-10-08"
+  },
+  {
+    "id": "price-band",
+    "scope": "IN",
+    "title": "Typical installed price (seed until enough quotes arrive)",
+    "value": "₹55,000–70,000 per kW up to 3 kW, including GST",
+    "source": "https://bridgewaypower.in/blog/cost-of-solar-installation-delhi-ncr",
+    "official": false,
+    "verified": "2026-10-08"
+  },
+  {
+    "id": "special-category",
+    "scope": "IN",
+    "title": "Higher subsidy in hill and North-East states",
+    "value": "₹33,000/kW for the first 2 kW, ₹19,800 for the 3rd, up to ₹85,800",
+    "source": "https://pmsuryaghar.gov.in",
+    "official": true,
+    "verified": "2026-10-08"
+  },
+  {
+    "id": "rj-top-up",
+    "scope": "RJ",
+    "title": "Rajasthan top-up for free-electricity scheme homes",
+    "value": "₹17,000 extra, only for homes in the Mukhyamantri Nishulk Bijli Yojana",
+    "source": "https://bluebirdsolar.com/blogs/all/rajasthan-introduces-17000-extra-solar-subsidy-under-pm-surya-ghar-yojana",
+    "official": false,
+    "verified": "2026-10-08"
+  },
+  {
+    "id": "as-top-up",
+    "scope": "AS",
+    "title": "Assam state top-up",
+    "value": "₹15,000/kW, up to ₹45,000",
+    "source": "https://www.solarsquare.in/blog/solar-panel-subsidy-in-assam/",
+    "official": false,
+    "verified": "2026-10-08"
+  },
+  {
+    "id": "mh-top-up",
+    "scope": "MH",
+    "title": "Maharashtra: no general state top-up",
+    "value": "Central subsidy only; extra for BPL/SC/ST homes under Swayampurna is unconfirmed",
+    "source": "https://qbitsenergy.com/blog/solar-subsidy-maharashtra-2026/",
+    "official": false,
+    "verified": "2026-10-08"
+  },
+  {
+    "id": "gj-top-up",
+    "scope": "GJ",
+    "title": "Gujarat: state top-up unclear",
+    "value": "Older SURYA Gujarat payments appear retired for homes; ask for the government order",
+    "source": "https://ornatesolar.com/blog/potential-of-solar-power-in-gujarat",
+    "official": false,
+    "verified": "2026-10-08"
+  },
+  {
+    "id": "kl-top-up",
+    "scope": "KL",
+    "title": "Kerala: no state top-up in 2026",
+    "value": "Central subsidy only; KSEB's Soura runs inside the central scheme",
+    "source": "https://www.solarsquare.in/blog/solar-subsidy-in-kerala/",
+    "official": false,
+    "verified": "2026-10-08"
+  }
 ]
