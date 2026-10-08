@@ -9,20 +9,24 @@ import hashlib
 import hmac
 import json
 import os
+import time
 import urllib.request
 from collections.abc import Iterator
 
 GRAPH = f"https://graph.facebook.com/{os.environ.get('GRAPH_VERSION', 'v25.0')}"
-_secrets: dict[str, str] = {}
+SECRET_TTL_S = 300  # a rotated token reaches warm Lambdas within 5 minutes
+_secrets: dict[str, tuple[str, float]] = {}
 
 
 def secret(name: str) -> str:
-    if name not in _secrets:
+    value, fetched = _secrets.get(name, ("", 0.0))
+    if time.monotonic() - fetched > SECRET_TTL_S:
         import boto3
 
         param = boto3.client("ssm").get_parameter(Name=f"{os.environ['SSM_PREFIX']}/{name}", WithDecryption=True)
-        _secrets[name] = param["Parameter"]["Value"]
-    return _secrets[name]
+        value = param["Parameter"]["Value"]
+        _secrets[name] = (value, time.monotonic())
+    return value
 
 
 def valid_signature(body: bytes, header: str | None) -> bool:
