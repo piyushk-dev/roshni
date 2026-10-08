@@ -1,10 +1,16 @@
-"""Compare structured quote terms and provide sourced installer profiles.
+"""Get quotes from vendors, compared on one basis and checked before the household sees them.
 
-The public demo simulates replies and group prices; it does not contact installers, share
-household details, rank real businesses or invent completed-job outcomes. Risk examples are
-anonymous. A preference is saved without submitting a lead. Requests expire after 30 days.
+A household asks once (size from the bill, state, pin code). Every quote goes through the same
+checker as an uploaded quote and is shown with the price after subsidy, because a cheap quote with
+imported panels is the most expensive one once the subsidy is lost.
+
+The demo vendors are fictional (data/vendors.json); each shows a different trap. Their replies,
+scorecards and group prices are simulated and never touch the live impact counters. Real vendors
+can answer requests through the vendor form; their scorecards come only from quotes they sent.
+Requests pooled by pin code unlock a group price at five homes, like a Solarize campaign.
 
 Everything lives in one DynamoDB table (pk, sk). Without MARKET_TABLE it falls back to memory.
+Requests expire after 30 days and can be deleted at any time.
 """
 
 from __future__ import annotations
@@ -110,12 +116,12 @@ def forget_user(wa_id: str) -> None:
 
 # --- vendors ---------------------------------------------------------------------------------
 
-def demo_vendors(mode: str = "sample") -> list[dict]:
-    return load_data("vendors.json")["scenarios" if mode == "traps" else "vendors"]
+def demo_vendors() -> list[dict]:
+    return load_data("vendors.json")["vendors"]
 
 
 def _vendor(vendor_id: str) -> dict | None:
-    for v in demo_vendors() + demo_vendors("traps"):
+    for v in demo_vendors():
         if v["id"] == vendor_id:
             return v
     return _get(f"VENDOR#{vendor_id}", "PROFILE")
@@ -156,10 +162,12 @@ def scorecard(v: dict) -> dict:
 
 def vendors_for(state: str) -> list[dict]:
     state = state_code(state)
+    real = [_vendor(i["id"]) for i in _query("VENDORS")]
     out = []
-    for v in demo_vendors():
+    for v in demo_vendors() + [r for r in real if r]:
         if serves(v, state):
-            out.append({k: v[k] for k in ("id", "name", "region", "services", "source", "website", "checked_on", "coverage_note", "verified")})
+            out.append({"id": v["id"], "name": v["name"], "demo": bool(v.get("demo")), "since": v.get("since"),
+                        "verified": bool(v.get("verified")), "scorecard": scorecard(v)})
     return out
 
 
@@ -270,11 +278,8 @@ def _clean_request(body: dict) -> dict:
     pincode = str(body.get("pincode") or "").strip()
     if pincode and not re.fullmatch(r"[1-9]\d{5}", pincode):
         raise ValueError("PIN code must be 6 digits and cannot start with zero")
-    mode = body.get("mode", "sample")
-    if mode not in ("sample", "traps"):
-        raise ValueError("unknown comparison mode")
     return {"kw": round(kw, 1), "state": state, "discom": str(body.get("discom") or "")[:20], "pincode": pincode,
-            "sanctioned_kw": body.get("sanctioned_kw"), "source": body.get("source", "web"), "mode": mode}
+            "sanctioned_kw": body.get("sanctioned_kw"), "source": body.get("source", "web")}
 
 
 def create_request(body: dict, wa_id: str | None = None, now: float | None = None) -> dict:
@@ -291,7 +296,7 @@ def create_request(body: dict, wa_id: str | None = None, now: float | None = Non
         _put(f"USER#{wa_id}", rid, {"id": rid})
     _put(f"OPEN#{req['state']}", f"{int(now):010d}#{rid}", {"id": rid})
     discount = g["discount_pct"] if g else 0
-    for v in demo_vendors(req["mode"]):
+    for v in demo_vendors():
         if serves(v, req["state"]):
             q = demo_quote(v, req, band, discount)
             _put(f"REQ#{rid}", f"QUOTE#{v['id']}", {"vendor_id": v["id"], "quote": q, "ready_at": now + v["reply_after_s"]})
@@ -311,17 +316,16 @@ def view(rid: str, now: float | None = None, for_vendor: bool = False) -> dict:
             continue
         v = _vendor(row["vendor_id"]) or {"id": row["vendor_id"], "name": row["quote"].get("vendor_name", "vendor")}
         ready.append({"vendor_id": v["id"], "vendor": {"name": v["name"], "demo": bool(v.get("demo")),
-                                                        "verified": v.get("verified", False), "scorecard": scorecard(v),
-                                                        "source": v.get("source"), "scenario": v.get("scenario", False)},
+                                                        "verified": bool(v.get("verified")), "scorecard": scorecard(v)},
                       "quote": row["quote"], "check": assess(row["quote"], req["band"]), "ready_at": row["ready_at"]})
     ready.sort(key=lambda r: r["ready_at"])
     waiting = [r["ready_at"] - now for r in all_quotes if r["ready_at"] > now]
-    public = {k: req[k] for k in ("id", "kw", "state", "discom", "pincode", "created", "status", "band", "group", "mode")}
+    public = {k: req[k] for k in ("id", "kw", "state", "discom", "pincode", "created", "status", "band", "group")}
     if req.get("chosen"):
         public["chosen"] = req["chosen"]
     out = {"request": public, "quotes": ready, "pending": len(waiting),
            "next_in": round(min(waiting), 1) if waiting else None,
-           "recommendation": recommend(ready) if ready and req["mode"] == "traps" else None}
+           "recommendation": recommend(ready) if ready else None}
     if for_vendor:
         out["quotes"] = [{"vendor_id": r["vendor_id"]} for r in ready]
     return out
@@ -466,22 +470,16 @@ def wa_chosen(result: dict, lang: str) -> str:
     return reply + ("\n" + result["website"] if result.get("website") else "")
 
 
-# Public installer names are real; instant quotes and the group-price mechanics are simulations.
+# The hackathon demo's vendors are fictional; say so wherever a reply could be mistaken for a real offer.
 TEXT["en"].update(
-    ask_pin="Reply with your 6-digit PIN code to see a sample comparison using published installer profiles. No installer is contacted and your number is not shared.",
-    waiting="Sample comparison for {kw:g} kW is preparing ({n} profiles). These are illustrative prices, not installer offers. Reply QUOTES shortly.",
-    group="Demo group: {homes} requests in {pincode} this month. At {needed}, the simulation illustrates a group price; real discounts need vendor confirmation.",
-    group_on="Demo group price: {homes} requests in {pincode}; simulated {pct}% reduction. No vendor has offered this discount.",
-    head="Sample quotes for {kw:g} kW. Prices and checks are illustrative, not actual offers or ratings of these businesses:",
-    best="Best fit among these sample terms: {name}. Reply CHOOSE {n} to save this preference. No contact is shared.",
-    chosen="Saved your preference for {name}{demo}. No installer was contacted. Use their website to ask for an actual survey and quote. Reply PASSPORT for the signing and handover checks.",
+    waiting="📨 Asked {n} vendors for a {kw:g} kW quote. Reply QUOTES in a minute to compare them. (Demo: these vendors are fictional.)",
+    best="Best fit: {name}. Reply CHOOSE {n} to pick it.",
+    chosen="✅ Saved {name}{demo} as your choice. Demo vendors aren't contacted; a real vendor would call you to fix a site visit.\n"
+           "Next: when the vendor uploads your agreement on pmsuryaghar.gov.in, approve it there. Reply APPLY for the step-by-step plan, PASSPORT for the handover checks.",
 )
 TEXT["hi"].update(
-    ask_pin="प्रकाशित वेंडर प्रोफ़ाइल के साथ सैंपल तुलना के लिए 6 अंकों का पिन कोड भेजें। कोई वेंडर संपर्क नहीं किया जाएगा और नंबर साझा नहीं होगा।",
-    waiting="{kw:g} kW की सैंपल तुलना बन रही है ({n} प्रोफ़ाइल)। कीमतें उदाहरण हैं, वेंडर के असली ऑफ़र नहीं। थोड़ी देर बाद QUOTES लिखें।",
-    group="डेमो ग्रुप: इस महीने {pincode} में {homes} अनुरोध। {needed} पर ग्रुप कीमत का उदाहरण; असली छूट वेंडर से तय होगी।",
-    group_on="डेमो ग्रुप कीमत: {pincode} में {homes} अनुरोध; उदाहरण में {pct}% छूट। किसी वेंडर ने यह छूट नहीं दी।",
-    head="{kw:g} kW के सैंपल कोटेशन। कीमत और जाँच उदाहरण हैं, इन कंपनियों के असली ऑफ़र या रेटिंग नहीं:",
-    best="इन सैंपल शर्तों में सबसे सही: {name}। पसंद सेव करने के लिए CHOOSE {n} लिखें। संपर्क साझा नहीं होगा।",
-    chosen="{name}{demo} की पसंद सेव की। वेंडर से संपर्क नहीं किया गया। असली सर्वे और कोटेशन उनकी वेबसाइट पर माँगें। जाँच सूची के लिए PASSPORT लिखें।",
+    waiting="📨 {n} वेंडर से {kw:g} kW का कोटेशन माँगा है। तुलना के लिए एक मिनट बाद QUOTES लिखें। (डेमो: ये वेंडर काल्पनिक हैं।)",
+    best="सबसे सही: {name}। चुनने के लिए CHOOSE {n} लिखें।",
+    chosen="✅ {name}{demo} को आपकी पसंद के रूप में सेव किया। डेमो वेंडर से संपर्क नहीं होता; असली वेंडर साइट विज़िट के लिए कॉल करेगा।\n"
+           "आगे: जब वेंडर pmsuryaghar.gov.in पर एग्रीमेंट अपलोड करे, वहीं मंज़ूर करें। कदम-दर-कदम प्लान के लिए APPLY, जाँच सूची के लिए PASSPORT लिखें।",
 )

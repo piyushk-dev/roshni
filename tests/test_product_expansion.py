@@ -22,8 +22,8 @@ def api(method, path, body=None, params=None):
     return response["statusCode"], json.loads(response["body"])
 
 
-def ready(mode="sample", state="DL", wa_id=None):
-    result = market.create_request({"state": state, "kw": 3, "mode": mode, "pincode": "110001"}, wa_id=wa_id)
+def ready(state="DL", wa_id=None):
+    result = market.create_request({"state": state, "kw": 3, "pincode": "110001"}, wa_id=wa_id)
     return market.view(result["request"]["id"], now=time.time()+20)
 
 
@@ -109,26 +109,22 @@ def test_budget_rejects_unusable_inputs(field, value):
         product.finance({field: value})
 
 
-def test_real_profiles_have_no_invented_outcomes_or_registration_badge():
+def test_demo_vendors_are_fictional_and_labelled():
     vendors = market.vendors_for("DL")
-    assert {v["name"] for v in vendors} == {"SolarSquare", "Alien Energy", "Bridgeway Power", "Tata Power Solaroof"}
-    assert all(not v["verified"] and v["source"].startswith("https://") for v in vendors)
-    assert all("scorecard" not in v for v in vendors)
-    assert market.vendors_for("TS")[0]["name"] == "Freyr Energy"
-    assert market.vendors_for("TN")[0]["name"] == "Tata Power Solaroof"
-    assert "not guaranteed" in market.vendors_for("TN")[0]["coverage_note"]["en"]
+    assert {v["name"] for v in vendors} == {"Dhoop Rooftop Co.", "Jhatpat Solar", "Shaan Solar Roofs", "Aaram Energy Services"}
+    assert all(v["demo"] and not v["verified"] and v["scorecard"]["demo"] for v in vendors)
+    assert "fictional" in market.load_data("vendors.json")["_note"]
+
+
+def test_each_demo_vendor_shows_a_trap_and_the_cheapest_costs_most_after_subsidy():
     comparison = ready()
-    assert comparison["recommendation"] is None  # cannot endorse a real business on fabricated terms
-    assert all(q["check"]["verdict"] == "ok" for q in comparison["quotes"])
-    assert all(not q["vendor"]["scorecard"]["outcomes_available"] for q in comparison["quotes"])
-
-
-def test_educational_risks_are_anonymous_and_recommended_by_terms():
-    comparison = ready("traps")
-    assert len(comparison["quotes"]) == 4
-    assert all(q["vendor"]["name"].startswith("Example quote") for q in comparison["quotes"])
-    assert any(q["check"]["verdict"] == "red" for q in comparison["quotes"])
-    assert comparison["recommendation"]["cheapest_is_trap"]
+    verdicts = {q["vendor_id"]: q["check"]["verdict"] for q in comparison["quotes"]}
+    assert verdicts == {"dhoop": "ok", "jhatpat": "red", "shaan": "red", "aaram": "amber"}
+    rec = comparison["recommendation"]
+    assert rec["vendor_id"] == "dhoop" and rec["cheapest_vendor_id"] == "jhatpat" and rec["cheapest_is_trap"]
+    net = {q["vendor_id"]: q["check"]["net_rs"] for q in comparison["quotes"]}
+    total = {q["vendor_id"]: q["check"]["total_rs"] for q in comparison["quotes"]}
+    assert total["jhatpat"] < total["dhoop"] and net["jhatpat"] > net["dhoop"]  # imported panels lose the subsidy
 
 
 def test_samples_do_not_train_prices_or_increment_real_impact(monkeypatch):
@@ -152,15 +148,15 @@ def test_request_ids_are_unguessable_and_phone_stays_private():
 def test_cannot_choose_a_quote_before_it_is_visible():
     result = market.create_request({})
     with pytest.raises(ValueError):
-        market.choose(result["request"]["id"], "solarsquare")
+        market.choose(result["request"]["id"], "dhoop")
 
 
-def test_choose_saves_preference_without_claiming_contact_shared(monkeypatch):
+def test_choosing_a_demo_vendor_never_claims_contact(monkeypatch):
     comparison = ready()
     monkeypatch.setattr(market.time, "time", lambda: comparison["quotes"][-1]["ready_at"]+1)
-    chosen = market.choose(comparison["request"]["id"], "solarsquare")
+    chosen = market.choose(comparison["request"]["id"], "dhoop")
     assert chosen["contact_shared"] is False
-    assert "No installer was contacted" in market.wa_chosen(chosen, "en")
+    assert "Demo vendors aren't contacted" in market.wa_chosen(chosen, "en")
     assert ".." not in market.wa_chosen(chosen, "en").splitlines()[0]
 
 
@@ -233,13 +229,13 @@ def test_json_and_base64_validation_are_consistent():
 
 
 def test_http_create_view_choose_delete_and_preview(monkeypatch):
-    code,data=api("POST","/market/requests",{"mode":"traps","state":"DL"})
+    code,data=api("POST","/market/requests",{"state":"DL"})
     assert code == 201
     rid=data["request"]["id"]
     now=time.time()
     monkeypatch.setattr(market.time,"time",lambda:now+20)
     assert len(api("GET",f"/market/requests/{rid}")[1]["quotes"]) == 4
-    assert api("POST",f"/market/requests/{rid}/choose",{"vendor_id":"example-1"})[0] == 200
+    assert api("POST",f"/market/requests/{rid}/choose",{"vendor_id":"dhoop"})[0] == 200
     assert api("DELETE",f"/market/requests/{rid}")[0] == 200
     assert api("GET",f"/market/requests/{rid}")[0] == 404
     assert api("POST","/market/preview",{"quote":{"total_price_rs":195000,"system_kw":3}})[1]["check"]["subsidy_rs"] == 0
@@ -267,7 +263,7 @@ def test_whatsapp_market_passport_schemes_and_deletion(monkeypatch):
     assert user["asking_pin"]
     user=send("110001",user)
     assert user["market_request"]
-    assert "not installer offers" in wa.sent[-1]
+    assert "fictional" in wa.sent[-1]
     send("PASSPORT",user)
     assert "outages" in wa.sent[-1]
     send("SCHEMES AS",user)
