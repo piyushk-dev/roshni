@@ -1,4 +1,8 @@
-"""WhatsApp webhook Lambdas: `webhook` verifies and acknowledges fast, `worker` does the slow part."""
+"""WhatsApp webhook Lambdas: `webhook` verifies and acknowledges fast, `worker` does the slow part.
+
+Two ways in: /whatsapp from Meta's Cloud API and /twilio from the Twilio Sandbox. Both end up
+in the same `bot.handle`.
+"""
 
 from __future__ import annotations
 
@@ -6,14 +10,36 @@ import base64
 import json
 import logging
 import os
+import urllib.parse
 
-from . import bot, pipeline, store, whatsapp
+from . import bot, pipeline, store, twilio_wa, whatsapp
 
 log = logging.getLogger()
 log.setLevel(logging.INFO)
 
 
+def _hand_off(payload: dict) -> None:
+    import boto3
+
+    boto3.client("lambda").invoke(FunctionName=os.environ["WORKER_FUNCTION"], InvocationType="Event", Payload=json.dumps(payload))
+
+
+def _twilio_webhook(event: dict) -> dict:
+    raw = event.get("body") or ""
+    form = base64.b64decode(raw).decode("utf-8") if event.get("isBase64Encoded") else raw
+    params = dict(urllib.parse.parse_qsl(form, keep_blank_values=True))
+    headers = {k.lower(): v for k, v in (event.get("headers") or {}).items()}
+    if not twilio_wa.valid_signature(f"https://{headers.get('host')}{event['rawPath']}", params, headers.get("x-twilio-signature")):
+        log.warning("rejected a Twilio webhook with a bad signature")
+        return {"statusCode": 401, "body": "bad signature"}
+    if params.get("MessageSid"):
+        _hand_off({"channel": "twilio", "params": params})
+    return {"statusCode": 200, "headers": {"content-type": "text/xml"}, "body": "<Response/>"}
+
+
 def webhook(event: dict, context) -> dict:
+    if event.get("rawPath") == "/twilio":
+        return _twilio_webhook(event)
     if event["requestContext"]["http"]["method"] == "GET":
         q = event.get("queryStringParameters") or {}
         if q.get("hub.mode") == "subscribe" and q.get("hub.verify_token") == whatsapp.secret("verify-token"):
@@ -34,22 +60,24 @@ def webhook(event: dict, context) -> dict:
 
     # Meta wants a 200 within seconds and retries otherwise; reading a bill takes longer
     if any(True for _ in whatsapp.messages(payload)):
-        import boto3
-
-        boto3.client("lambda").invoke(FunctionName=os.environ["WORKER_FUNCTION"], InvocationType="Event", Payload=body)
+        _hand_off(payload)
     return {"statusCode": 200, "body": "ok"}
 
 
 def worker(event: dict, context) -> None:
-    for msg in whatsapp.messages(event):
+    if event.get("channel") == "twilio":
+        msgs, client = [twilio_wa.to_message(event["params"])], twilio_wa.Client(event["params"]["To"])
+    else:
+        msgs, client = list(whatsapp.messages(event)), whatsapp
+    for msg in msgs:
         if not store.claim_message(msg["id"]):
             continue
         user = store.get_user(msg["from"])
         try:
-            user = bot.handle(msg, user, whatsapp, pipeline)
+            user = bot.handle(msg, user, client, pipeline)
         except Exception:
             log.exception("failed on message %s", msg["id"])
-            whatsapp.send_text(msg["from"], bot.TEXT["error"][user.get("lang", bot.DEFAULT_LANG)])
+            client.send_text(msg["from"], bot.TEXT["error"][user.get("lang", bot.DEFAULT_LANG)])
         if user is None:
             store.delete_user(msg["from"])
         else:

@@ -91,6 +91,9 @@ Resources:
         Receive:
           Type: HttpApi
           Properties: {ApiId: !Ref Api, Path: /whatsapp, Method: POST}
+        Twilio:
+          Type: HttpApi
+          Properties: {ApiId: !Ref Api, Path: /twilio, Method: POST}
 
   WhatsAppWorkerFunction:
     Type: AWS::Serverless::Function
