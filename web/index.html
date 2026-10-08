@@ -41,6 +41,31 @@
 
     <p class="privacy">🔒 <span data-t="privacy"></span></p>
     <button id="sample" class="link" type="button" data-t="sample"></button>
+
+    <div class="card quote-card" id="quote-card">
+      <h2 data-t="quoteTitle"></h2>
+      <p class="small" data-t="quoteSub"></p>
+      <label class="upload upload-small" for="quote-file">
+        <span class="upload-icon" aria-hidden="true">🧾</span>
+        <span class="upload-text" data-t="quoteUpload"></span>
+        <input id="quote-file" type="file" accept="image/*,application/pdf">
+      </label>
+      <button id="sample-quote" class="link" type="button" data-t="sampleQuote"></button>
+    </div>
+  </section>
+
+  <section id="quote-result" hidden>
+    <p id="q-head" class="small"></p>
+    <div id="q-verdict" class="verdict"></div>
+    <ul id="q-issues" class="notes issues"></ul>
+    <ul id="q-notes" class="notes small"></ul>
+    <div class="card" id="q-ask-card">
+      <h2 id="q-ask-title"></h2>
+      <ul id="q-ask" class="notes"></ul>
+    </div>
+    <p id="q-foot" class="small"></p>
+    <p><a id="q-sample-link" class="small" href="sample-quote.png" target="_blank" rel="noopener" data-t="viewSample" hidden></a></p>
+    <button class="again chip" type="button" data-t="again"></button>
   </section>
 
   <section id="busy" hidden>
@@ -78,6 +103,7 @@
     </div>
 
     <p class="small" data-t="conservative"></p>
+    <button id="to-quote" class="chip cta" type="button" data-t="checkQuoteCta"></button>
     <button class="again chip" type="button" data-t="again"></button>
   </section>
 </main>

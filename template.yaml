@@ -55,6 +55,9 @@ Resources:
         Bill:
           Type: HttpApi
           Properties: {ApiId: !Ref Api, Path: /bill, Method: POST}
+        Quote:
+          Type: HttpApi
+          Properties: {ApiId: !Ref Api, Path: /quote, Method: POST}
         Analyze:
           Type: HttpApi
           Properties: {ApiId: !Ref Api, Path: /analyze, Method: POST}

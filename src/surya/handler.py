@@ -7,7 +7,7 @@ import json
 from dataclasses import asdict
 from importlib import resources
 
-from . import pipeline
+from . import pipeline, quote
 from .format import BillProblem, explain, message
 
 
@@ -26,7 +26,7 @@ def lambda_handler(event: dict, context) -> dict:
     if route == "GET /privacy":
         page = resources.files("surya").joinpath("privacy.html").read_text(encoding="utf-8")
         return {"statusCode": 200, "headers": {"content-type": "text/html; charset=utf-8"}, "body": page}
-    if route not in ("POST /analyze", "POST /bill"):
+    if route not in ("POST /analyze", "POST /bill", "POST /quote"):
         return _response(404, {"error": f"no route {route}"})
 
     raw = event.get("body") or "{}"
@@ -37,6 +37,16 @@ def lambda_handler(event: dict, context) -> dict:
         body = json.loads(raw)
         lang = body.get("lang", "en")
         reading = None
+        if route == "POST /quote":
+            q, flags = pipeline.check_quote(base64.b64decode(body["file_base64"]), body.get("media_type", "image/jpeg"))
+            if not q.get("is_solar_quote"):
+                return _response(422, {"error": quote.message(q, flags, lang), "code": "not_a_quote"})
+            return _response(200, {
+                "quote": q,
+                "flags": quote.flags_dict(flags),
+                "views": {code: quote.render(q, flags, code) for code in ("en", "hi")},
+                "message": quote.message(q, flags, lang),
+            })
         if route == "POST /bill":
             request, reading = pipeline.request_from_bill(base64.b64decode(body["file_base64"]), body.get("media_type", "image/jpeg"))
             body = {**{k: body[k] for k in ("lat", "lon", "roof_sqft") if k in body}, **request}

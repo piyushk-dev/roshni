@@ -239,28 +239,39 @@ def _merge(readings: list[BillReading]) -> BillReading:
     return best
 
 
-def read_bill(data: bytes, media_type: str, client=None, retries: int = 2) -> BillReading:
-    """One model call usually does it; an incomplete reading triggers `retries` more in parallel, merged."""
-    client = client or boto3.client("bedrock-runtime", region_name=REGION)
-    request = {
-        "messages": [{"role": "user", "content": [_content(data, media_type), {"text": PROMPT}]}],
-        "toolConfig": {"tools": [TOOL], "toolChoice": {"tool": {"name": "record_bill"}}},
-        "inferenceConfig": {"maxTokens": 2000, "temperature": 0},
+def tool_request(data: bytes, media_type: str, prompt: str, tool: dict, max_tokens: int = 2000) -> dict:
+    """A Converse request that shows the document and forces one call to `tool`."""
+    return {
+        "messages": [{"role": "user", "content": [_content(data, media_type), {"text": prompt}]}],
+        "toolConfig": {"tools": [tool], "toolChoice": {"tool": {"name": tool["toolSpec"]["name"]}}},
+        "inferenceConfig": {"maxTokens": max_tokens, "temperature": 0},
     }
 
-    def call(model: str) -> dict:
-        response = client.converse(modelId=model, **request)
-        return next(c["toolUse"]["input"] for c in response["output"]["message"]["content"] if "toolUse" in c)
 
+def call_tool(client, model: str, request: dict) -> dict:
+    response = client.converse(modelId=model, **request)
+    return next(c["toolUse"]["input"] for c in response["output"]["message"]["content"] if "toolUse" in c)
+
+
+def call_first_enabled(client, request: dict) -> tuple[dict, str]:
+    """(tool input, model id) from the first model in MODELS this account may use."""
     for i, model in enumerate(MODELS):
         try:
-            first = _reading(call(model), model)
-            break
+            return call_tool(client, model, request), model
         except ClientError as e:
             if e.response["Error"]["Code"] != "AccessDeniedException" or i == len(MODELS) - 1:
                 raise
+    raise RuntimeError("no Bedrock model configured")
+
+
+def read_bill(data: bytes, media_type: str, client=None, retries: int = 2) -> BillReading:
+    """One model call usually does it; an incomplete reading triggers `retries` more in parallel, merged."""
+    client = client or boto3.client("bedrock-runtime", region_name=REGION)
+    request = tool_request(data, media_type, PROMPT, TOOL)
+    fields, model = call_first_enabled(client, request)
+    first = _reading(fields, model)
     if _complete(first) or not retries:
         return first
     with ThreadPoolExecutor(retries) as pool:
-        more = [_reading(f, model) for f in pool.map(lambda _: call(model), range(retries))]
+        more = [_reading(f, model) for f in pool.map(lambda _: call_tool(client, model, request), range(retries))]
     return _merge([first, *more])

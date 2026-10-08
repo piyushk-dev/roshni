@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 import os
 
-from . import bill_reader
+from . import bill_reader, quote
 from .calculator import Analysis, Household, analyze
 from .format import BillProblem
 from .solar import SolarYield, fetch_sources, solar_yield
@@ -39,12 +39,21 @@ def yield_for(lat: float, lon: float) -> SolarYield:
     return sy
 
 
-def request_from_bill(data: bytes, media_type: str) -> tuple[dict, bill_reader.BillReading]:
-    """Read a bill and turn it into the same request body POST /analyze takes."""
+def _media_type(media_type: str) -> str:
     media_type = media_type.split(";")[0].strip().replace("image/jpg", "image/jpeg")
     if media_type != "application/pdf" and media_type not in bill_reader.IMAGE_FORMATS:
         raise BillProblem("file_type")
-    reading = bill_reader.read_bill(data, media_type)
+    return media_type
+
+
+def check_quote(data: bytes, media_type: str, state: str = "DL") -> tuple[dict, list[quote.Flag]]:
+    fields, _ = quote.read_quote(data, _media_type(media_type))
+    return fields, quote.check(fields, state) if fields.get("is_solar_quote") else []
+
+
+def request_from_bill(data: bytes, media_type: str) -> tuple[dict, bill_reader.BillReading]:
+    """Read a bill and turn it into the same request body POST /analyze takes."""
+    reading = bill_reader.read_bill(data, _media_type(media_type))
     if not reading.is_electricity_bill:
         raise BillProblem("not_a_bill")
     if reading.discom not in SUPPORTED_DISCOMS:

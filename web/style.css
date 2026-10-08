@@ -114,3 +114,17 @@ dd { margin: 0; font-weight: 600; }
 .again { margin: 8px 0 24px; }
 footer { font-size: 0.82rem; color: var(--muted); padding-top: 12px; padding-bottom: 32px; border-top: 1px solid var(--line); }
 footer a { color: inherit; }
+
+.quote-card { margin-top: 26px; }
+.upload-small { padding: 18px 16px; }
+.upload-small .upload-text { font-size: 1rem; }
+.verdict.red { background: var(--skip-soft); }
+.verdict.red .big { color: var(--skip); }
+.verdict.amber { background: var(--sun-soft); }
+.verdict.amber .big { color: var(--sun-deep); }
+.verdict.ok { background: var(--go-soft); }
+.verdict.ok .big { color: var(--go); }
+.issues li { margin: 10px 0; }
+.cta { display: block; width: 100%; margin: 10px 0 4px; padding: 12px 14px; text-align: left; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .verdict.amber .big { color: var(--sun); } }
+:root[data-theme="dark"] .verdict.amber .big { color: var(--sun); }

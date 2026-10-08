@@ -50,11 +50,18 @@ const T = {
     months: "Months of usage",
     amount: "This month's charges",
     conservative: "We use the lower of two sunlight datasets (PVGIS and NASA), so real savings should be at or above this.",
-    again: "← Check another bill",
+    again: "← Start again",
     error: "Something went wrong. Please try again.",
     tooBig: "That file is too big. Please send a photo or a PDF under 4 MB.",
     footer: "Built on AWS for WeMakeDevs × AWS Environmental Hacks",
     privacyLink: "Privacy",
+    quoteTitle: "Got a vendor's quote? Check it before you sign",
+    quoteSub: "Catches the traps that cost households their subsidy: non-DCR panels, inflated subsidy promises, high prices, short warranties.",
+    quoteUpload: "Upload the quote photo or PDF",
+    sampleQuote: "No quote handy? Check a sample quote →",
+    checkingQuote: "Checking the quote…",
+    viewSample: "See the sample quote that was checked",
+    checkQuoteCta: "🧾 Next: check a vendor's quote before you sign →",
     kw: (k) => `${k} kW`,
   },
   hi: {
@@ -98,17 +105,24 @@ const T = {
     months: "कितने महीनों की खपत",
     amount: "इस महीने का बिल",
     conservative: "हम धूप के दो डेटा (PVGIS और NASA) में से कम वाला लेते हैं, इसलिए असली बचत इससे कम नहीं होनी चाहिए।",
-    again: "← दूसरा बिल जाँचें",
+    again: "← फिर से शुरू करें",
     error: "कुछ गड़बड़ हो गई। कृपया फिर कोशिश करें।",
     tooBig: "फ़ाइल बहुत बड़ी है। कृपया 4 MB से छोटी फोटो या PDF भेजें।",
     footer: "AWS पर बना, WeMakeDevs × AWS Environmental Hacks के लिए",
     privacyLink: "प्राइवेसी",
+    quoteTitle: "वेंडर का कोटेशन मिला? साइन करने से पहले जाँचें",
+    quoteSub: "उन गलतियों को पकड़ता है जिनसे सब्सिडी डूबती है: बिना DCR पैनल, बढ़ा-चढ़ाकर सब्सिडी का वादा, ज़्यादा कीमत, कम वारंटी।",
+    quoteUpload: "कोटेशन की फोटो या PDF अपलोड करें",
+    sampleQuote: "कोटेशन पास नहीं है? एक सैंपल कोटेशन जाँचें →",
+    checkingQuote: "कोटेशन जाँचा जा रहा है…",
+    viewSample: "जाँचा गया सैंपल कोटेशन देखें",
+    checkQuoteCta: "🧾 आगे: साइन करने से पहले वेंडर का कोटेशन जाँचें →",
     kw: (k) => `${k} kW`,
   },
 };
 
 const $ = (id) => document.getElementById(id);
-const state = { lang: initialLang(), lat: null, lon: null, last: null, lastBody: null };
+const state = { lang: initialLang(), lat: null, lon: null, last: null, lastBody: null, lastQuote: null };
 
 function initialLang() {
   try {
@@ -131,10 +145,11 @@ function applyLang() {
   $("lang").textContent = t("switchTo");
   if (state.lat !== null) $("locate").textContent = t("locationOn");
   if (state.last) render(state.last);
+  if (state.lastQuote) renderQuote(state.lastQuote);
 }
 
 function show(id) {
-  for (const s of ["start", "busy", "problem", "result"]) $(s).hidden = s !== id;
+  for (const s of ["start", "busy", "problem", "result", "quote-result"]) $(s).hidden = s !== id;
   window.scrollTo({ top: 0 });
 }
 
@@ -187,12 +202,56 @@ async function run(label, work) {
   show("busy");
   try {
     state.last = await work();
+    state.lastQuote = null;
     render(state.last);
     show("result");
   } catch (e) {
     $("problem-text").textContent = e.message || t("error");
     show("problem");
   }
+}
+
+async function runQuote(work, isSample) {
+  $("busy-text").textContent = t("checkingQuote");
+  show("busy");
+  try {
+    state.lastQuote = await work();
+    state.last = null;
+    $("q-sample-link").hidden = !isSample;
+    renderQuote(state.lastQuote);
+    show("quote-result");
+  } catch (e) {
+    $("problem-text").textContent = e.message || t("error");
+    show("problem");
+  }
+}
+
+function fillList(id, items) {
+  const ul = $(id);
+  ul.innerHTML = "";
+  for (const text of items) {
+    const li = document.createElement("li");
+    li.textContent = text;
+    ul.append(li);
+  }
+}
+
+function renderQuote(data) {
+  const v = data.views[state.lang];
+  $("q-head").textContent = v.head;
+  const box = $("q-verdict");
+  box.className = "verdict " + v.verdict;
+  box.innerHTML = "";
+  const big = document.createElement("div");
+  big.className = "big";
+  big.textContent = v.title;
+  box.append(big);
+  fillList("q-issues", [...v.red, ...v.amber]);
+  fillList("q-notes", v.note);
+  fillList("q-ask", v.ask);
+  $("q-ask-title").textContent = v.ask_title;
+  $("q-ask-card").hidden = v.ask.length === 0;
+  $("q-foot").textContent = v.foot;
 }
 
 function render(data) {
@@ -319,6 +378,27 @@ $("file").addEventListener("change", (e) => {
   });
 });
 
+$("quote-file").addEventListener("change", (e) => {
+  const file = e.target.files[0];
+  e.target.value = "";
+  if (!file) return;
+  runQuote(async () => {
+    const { b64, type } = await prepare(file);
+    return post("/quote", { file_base64: b64, media_type: type });
+  }, false);
+});
+
+$("sample-quote").addEventListener("click", () => runQuote(async () => {
+  const blob = await (await fetch("sample-quote.png")).blob();
+  return post("/quote", { file_base64: await toBase64(blob), media_type: "image/png" });
+}, true));
+
+$("to-quote").addEventListener("click", () => {
+  state.last = null;
+  show("start");
+  $("quote-card").scrollIntoView({ behavior: "smooth" });
+});
+
 $("sample").addEventListener("click", () => {
   state.lastBody = { ...SAMPLE, ...extras() };
   run("analyzing", () => post("/analyze", state.lastBody));
@@ -349,6 +429,6 @@ $("lang").addEventListener("click", () => {
   }
 });
 
-document.querySelectorAll(".again").forEach((b) => b.addEventListener("click", () => { state.last = null; show("start"); }));
+document.querySelectorAll(".again").forEach((b) => b.addEventListener("click", () => { state.last = null; state.lastQuote = null; show("start"); }));
 $("privacy-link").href = API + "/privacy";
 applyLang();

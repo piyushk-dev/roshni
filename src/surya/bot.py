@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import re
 
+from . import quote
 from .format import BillProblem, message
 
 DEVANAGARI = re.compile(r"[ऀ-ॿ]")
@@ -80,7 +81,11 @@ def handle(msg: dict, user: dict, wa, pipeline) -> dict | None:
             request, _ = pipeline.request_from_bill(data, media_type)
             a = pipeline.run({**request, **{k: user[k] for k in ("lat", "lon") if k in user}})
         except BillProblem as p:
-            wa.send_text(to, p.text(lang))
+            if p.code != "not_a_bill":
+                wa.send_text(to, p.text(lang))
+                return user
+            q, flags = pipeline.check_quote(data, media_type)  # not a bill: maybe a vendor's quote
+            wa.send_text(to, quote.message(q, flags, lang) if q.get("is_solar_quote") else p.text(lang))
             return user
         wa.send_text(to, message(a, lang))
         o = a.recommended
