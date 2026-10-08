@@ -1,0 +1,13 @@
+[project]
+name = "surya-saathi"
+version = "0.1.0"
+description = "Rooftop-solar copilot for households applying under PM Surya Ghar"
+requires-python = ">=3.12"
+license = "MIT"
+
+[project.optional-dependencies]
+dev = ["pytest>=8"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]

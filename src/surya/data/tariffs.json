@@ -1,0 +1,26 @@
+{
+  "DL": {
+    "name": "Delhi domestic (DERC)",
+    "discoms": {
+      "BRPL": {"name": "BSES Rajdhani", "ppac_pct": 35.83},
+      "BYPL": {"name": "BSES Yamuna", "ppac_pct": 40.71},
+      "TPDDL": {"name": "Tata Power-DDL", "ppac_pct": 36.33}
+    },
+    "energy_slabs": [[200, 3.00], [400, 4.50], [800, 6.50], [1200, 7.00], [null, 8.00]],
+    "fixed_charge_bands": [[2, 20], [5, 50], [15, 100], [25, 200], [null, 250]],
+    "pension_surcharge_pct": 7.0,
+    "electricity_tax_pct": 5.0,
+    "subsidy": {"free_upto_units": 200, "half_upto_units": 400, "half_cap_rs": 800},
+    "export_rate_rs_per_kwh": 3.0,
+    "default_location": {"lat": 28.61, "lon": 77.21},
+    "estimates": [
+      "pension_surcharge_pct: sources disagree (7% vs Rs 0.10/unit); the bill-amount calibration absorbs the gap",
+      "subsidy: modelled on net billed units for solar homes, applied to the whole bill",
+      "export_rate_rs_per_kwh: year-end payout for surplus units, placeholder until checked against DERC net-metering rules"
+    ],
+    "sources": [
+      "https://bridgewaypower.in/delhi-electricity-rate-2026",
+      "https://www.derc.gov.in/sites/default/files/Order%20in%20Petition%20No.%2032_2025_PPAC_Q4_BRPL%20-11.08.2025.pdf"
+    ]
+  }
+}

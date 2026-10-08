@@ -1,0 +1,39 @@
+{
+  "pmsgy": {
+    "central_subsidy": {
+      "general": {"per_kw_first_2": 30000, "per_kw_3rd": 18000, "cap": 78000},
+      "special_category": {"per_kw_first_2": 33000, "per_kw_3rd": 19800, "cap": 85800}
+    },
+    "special_category_states": ["AR", "AS", "MN", "ML", "MZ", "NL", "SK", "TR", "HP", "UK", "JK", "LA", "AN", "LD"],
+    "requires_dcr_modules": true,
+    "target": "1 crore homes by 31 March 2027",
+    "loan": {
+      "margin_pct": 10,
+      "tenure_years": 10,
+      "low_rate_pct": 5.75,
+      "low_rate_upto_rs": 200000,
+      "standard_rate_pct": 7.90
+    }
+  },
+  "cost_rs_per_kw": {
+    "upto_3kw": {"low": 55000, "typical": 65000, "high": 70000},
+    "above_3kw": {"low": 50000, "typical": 58000, "high": 65000}
+  },
+  "economics": {
+    "lifetime_years": 25,
+    "degradation_pct_per_year": 0.5,
+    "discount_rate_pct": 8,
+    "inverter_replacement_year": 12,
+    "inverter_replacement_rs_per_kw": 5000,
+    "roof_sqft_per_kw": 100,
+    "max_kw": 10
+  },
+  "grid_emission_t_per_mwh": 0.675,
+  "sources": {
+    "subsidy_and_target": "https://www.drishtiias.com/important-government-schemes/ministry-of-new-and-renewable-energy/pm-surya-ghar-muft-bijli-yojana-1",
+    "dcr_rule": "https://www.securedengineers.com/insights/pm-surya-ghar-almm-non-dcr-module-exemption-explained/",
+    "loans": "https://www.solarsquare.in/blog/solar-loan-interest-rates/",
+    "cost": ["https://bridgewaypower.in/blog/cost-of-solar-installation-delhi-ncr", "https://www.solarsquare.in/blog/3-kw-solar-plant-price/"],
+    "grid_emission": "https://cea.nic.in/wp-content/uploads/baseline/2026/09/User_Guide__Version_22.0.pdf"
+  }
+}
