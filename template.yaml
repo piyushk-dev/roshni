@@ -112,6 +112,9 @@ Resources:
         CareBill:
           Type: HttpApi
           Properties: {ApiId: !Ref Api, Path: /care/bill, Method: POST}
+        CareSupport:
+          Type: HttpApi
+          Properties: {ApiId: !Ref Api, Path: /care/support, Method: POST}
         Scam:
           Type: HttpApi
           Properties: {ApiId: !Ref Api, Path: /scam-check, Method: POST}

@@ -3,6 +3,8 @@
 .product-page .page-head { max-width: 58rem; }
 .product-page .page-head h1 { max-width: 19ch; }
 .product-page .sec-lede { max-width: 75ch; }
+.product-page .sec { padding-block: clamp(32px,4vw,56px); gap: clamp(16px,2vw,24px); }
+.product-page .p-form { margin-block: 12px; }
 .p-form { margin-block: 24px; }
 .p-form label { display: grid; gap: 7px; color: var(--ink-2); font-size: 1rem; }
 .p-form input, .p-form select, .p-form textarea, .p-draft {

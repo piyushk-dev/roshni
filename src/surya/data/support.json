@@ -1,0 +1,62 @@
+{
+  "checked_on": "2026-10-08",
+  "topics": [
+    {
+      "id": "monitoring",
+      "title": {"en": "Monitoring app offline", "hi": "निगरानी ऐप ऑफ़लाइन"},
+      "who": {"en": "Installer or inverter manufacturer's support", "hi": "वेंडर या इन्वर्टर निर्माता की सहायता"},
+      "next": {"en": "An offline app does not prove the plant stopped generating. Record its last reporting time and any router or password change. Ask support to compare communication logs with generation readings; follow your own equipment's manual.", "hi": "ऐप ऑफ़लाइन होने से उत्पादन बंद होना साबित नहीं होता। आख़िरी रिपोर्ट का समय और राउटर या पासवर्ड में बदलाव लिखें। सहायता टीम से संचार लॉग और उत्पादन रीडिंग मिलाने को कहें; अपने उपकरण के मैनुअल का पालन करें।"},
+      "evidence": [
+        {"en": "App error screenshot and last reporting timestamp", "hi": "ऐप त्रुटि का स्क्रीनशॉट और आख़िरी रिपोर्ट का समय"},
+        {"en": "Inverter make/model, monitoring access and logger warranty", "hi": "इन्वर्टर ब्रांड/मॉडल, ऐप एक्सेस और डेटा लॉगर की वारंटी"},
+        {"en": "Network changes and safely visible daytime generation readings", "hi": "नेटवर्क बदलाव और सुरक्षित जगह से दिखती दिन की उत्पादन रीडिंग"}
+      ],
+      "source": "https://enphase.com/learn/home-energy/using-your-system/troubleshooting-and-support"
+    },
+    {
+      "id": "generation",
+      "title": {"en": "Low generation or inverter error", "hi": "कम उत्पादन या इन्वर्टर त्रुटि"},
+      "who": {"en": "Installer's service team", "hi": "वेंडर की सर्विस टीम"},
+      "next": {"en": "Use a completed month in the generation review below. Keep the actual error text, outage history and written estimate. Ask for diagnosis and applicable warranty terms; a percentage alone does not establish a fault or compensation.", "hi": "नीचे उत्पादन जाँच में पूरा महीना लें। त्रुटि का असली संदेश, कटौती और लिखित अनुमान रखें। कारण की जाँच और लागू वारंटी माँगें; केवल प्रतिशत से खराबी या मुआवज़ा तय नहीं होता।"},
+      "evidence": [
+        {"en": "Generation readings for matching dates and exact error message", "hi": "समान तारीखों की उत्पादन रीडिंग और त्रुटि का असली संदेश"},
+        {"en": "Written generation estimate/guarantee and exclusions", "hi": "लिखित उत्पादन अनुमान/गारंटी और अपवाद"},
+        {"en": "Outages, shading changes and maintenance log", "hi": "कटौती, छाया में बदलाव और रखरखाव रिकॉर्ड"}
+      ],
+      "source": "https://enphase.com/learn/home-energy/using-your-system/troubleshooting-and-support"
+    },
+    {
+      "id": "billing",
+      "title": {"en": "Net meter or bill credit mismatch", "hi": "नेट मीटर या बिल क्रेडिट का अंतर"},
+      "who": {"en": "Your DISCOM's billing or metering support", "hi": "अपनी बिजली कंपनी की बिल या मीटर सहायता"},
+      "next": {"en": "Match the meter and bill dates before comparing export. Use your DISCOM's official channel and retain its ticket number. Include carried credits and commissioning date; generation is not grid export.", "hi": "निर्यात मिलाने से पहले मीटर और बिल की तारीखें मिलाएँ। बिजली कंपनी के आधिकारिक चैनल का टिकट नंबर रखें। पुराने क्रेडिट और कमीशनिंग तारीख जोड़ें; उत्पादन ग्रिड निर्यात नहीं है।"},
+      "evidence": [
+        {"en": "Bill period, import/export readings and carried credits", "hi": "बिल अवधि, आयात/निर्यात रीडिंग और पुराने क्रेडिट"},
+        {"en": "Net-meter commissioning date and prior DISCOM ticket", "hi": "नेट मीटर कमीशनिंग तारीख और पिछला बिजली कंपनी टिकट"}
+      ],
+      "source": "https://enphase.com/learn/home-energy/explore-your-system/utility-bill-and-enphase-app"
+    },
+    {
+      "id": "documents",
+      "title": {"en": "Missing handover or DCR documents", "hi": "हैंडओवर या DCR दस्तावेज़ गायब"},
+      "who": {"en": "Installer's documentation team", "hi": "वेंडर की दस्तावेज़ टीम"},
+      "next": {"en": "Request the specific missing documents in writing and compare serials across equipment, invoice and DCR evidence. For an unresolved PM Surya Ghar issue, open the National Portal's grievance route or call 15555 for routing help. Keep the acknowledgement.", "hi": "कौन से दस्तावेज़ गायब हैं, लिखित में माँगें; उपकरण, बिल और DCR प्रमाण के सीरियल मिलाएँ। सूर्य घर का मुद्दा अनसुलझा हो तो राष्ट्रीय पोर्टल की शिकायत सुविधा या 15555 से सही रास्ता पूछें। पावती रखें।"},
+      "evidence": [
+        {"en": "Written quote/agreement, payment receipts and list of missing documents", "hi": "लिखित कोटेशन/एग्रीमेंट, भुगतान रसीद और गायब दस्तावेज़ की सूची"},
+        {"en": "Equipment serials, DCR verification and commissioning record", "hi": "उपकरण सीरियल, DCR जाँच और कमीशनिंग रिकॉर्ड"}
+      ],
+      "source": "https://mnre.gov.in/en/notice/solar-dcr-verification-portal-reg/"
+    },
+    {
+      "id": "maintenance",
+      "title": {"en": "Promised maintenance not received", "hi": "वादा की सर्विस नहीं मिली"},
+      "who": {"en": "Installer's maintenance team", "hi": "वेंडर की रखरखाव टीम"},
+      "next": {"en": "Ask which visits and repairs your signed agreement includes. Delhi's official PM Surya Ghar guidance describes five years of vendor O&M; check the applicable scheme and contract for your installation. Manufacturer warranty and installer service are different obligations. Keep a written reply and ticket number.", "hi": "हस्ताक्षर वाले एग्रीमेंट में कौन सी विज़िट और मरम्मत शामिल हैं, पूछें। दिल्ली की सूर्य घर गाइड में पाँच साल का वेंडर रखरखाव है; अपने सिस्टम की लागू योजना और एग्रीमेंट जाँचें। निर्माता की वारंटी और वेंडर की सर्विस अलग जिम्मेदारियाँ हैं। लिखित जवाब और टिकट रखें।"},
+      "evidence": [
+        {"en": "Signed maintenance scope, visits included and service exclusions", "hi": "हस्ताक्षर वाला रखरखाव विवरण, शामिल विज़िट और अपवाद"},
+        {"en": "Commissioning date, completed visits and earlier service requests", "hi": "कमीशनिंग तारीख, पूरी हुई विज़िट और पिछली सर्विस माँग"}
+      ],
+      "source": "https://solar.delhi.gov.in/page/operation-and-maintenance-procedure"
+    }
+  ]
+}

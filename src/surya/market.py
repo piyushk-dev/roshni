@@ -242,6 +242,8 @@ def assess(q: dict, band: dict) -> dict:
         "pay_upfront_rs": round(total * q["advance_pct"] / 100) if q.get("advance_pct") is not None else None,
         "subsidy_status": "subject_to_approval" if q.get("dcr") == "yes" else "not_eligible" if q.get("dcr") == "no" else "evidence_needed",
         "gst_unknown": q.get("gst_included") not in ("yes", "no"),
+        "budget_ready": all(q.get(field) == "yes" for field in
+                            ("gst_included", "net_meter_included", "structure_included", "earthing_included")),
     }
 
 

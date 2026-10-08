@@ -90,7 +90,7 @@ flowchart LR
 
 ```bash
 python -m venv .venv && .venv/Scripts/pip install pytest boto3 aws-sam-cli
-.venv/Scripts/python -m pytest            # 150 tests, offline
+.venv/Scripts/python -m pytest            # 173 tests, offline
 sam build && sam deploy --guided          # the whole backend
 python scripts/deploy_web.py              # the website, to Amplify
 ```
@@ -112,6 +112,7 @@ The local server runs the deterministic tools and uses captured Delhi sunlight f
 - **State assistance needs local confirmation.** The schemes selector covers central rules for all 36 states and union territories. Delhi, Uttar Pradesh and Assam have government source links; other reviewed entries distinguish secondary reports from official guidance. Unreviewed local support is shown as unknown.
 - **Installer profiles are research, not registration verification.** Confirm your PIN code, DISCOM list, written scope and contract with the actual business. Instant quotes and group discounts are samples.
 - **Ownership checks are evidence aids.** They do not certify equipment safety, DCR compliance, warranty liability or a monetary bill settlement. Generation review is manual and uses a completed month; low output alone does not diagnose dust.
+- **Support packs prepare the next conversation.** They distinguish monitoring, generation, billing, documents and maintenance, record dates and list relevant evidence. They do not submit tickets. Elapsed days are dated records, not regulatory deadlines.
 
 ## Built with
 

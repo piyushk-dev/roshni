@@ -1,6 +1,6 @@
 # Surya Saathi: product research and decisions
 
-Research conducted 8 October 2026. Implementation branch: `codex/product-expansion`, based on `4e92684`. The Desktop `main` checkout is separate.
+Research conducted 8 October 2026, including a second product review. Implementation branch: `codex/product-expansion`, based on `4e92684`. The Desktop `main` checkout is separate.
 
 ## Product thesis
 
@@ -105,3 +105,34 @@ Possible revenue: disclosed service coordination fees or an installer workflow s
 6. **Solar self-consumption coach:** use measured daytime consumption to suggest appliance scheduling. Without those measurements, recommendations and rupee savings would be assumptions.
 
 Live government submissions, lender underwriting, real vendor bidding, autonomous equipment control and paid bookings remain outside this branch. They require authenticated integrations and explicit household consent.
+
+
+## Second product review: turning warnings into the next action
+
+Additional desk research and review on 8 October 2026. No interviews, deployment results or measured customer impact are claimed.
+
+### Three discoveries that changed the implementation
+
+1. **Price opacity needs a scope check.** A [Kerala owner discussion](https://www.reddit.com/r/Kerala/comments/1u4tmjh/are_rooftop_solar_installers_in_kerala/) reports difficulty obtaining itemised quotes, and the replies discuss labour, approvals and maintenance obligations beyond hardware. This is self-reported discovery, not evidence of collusion or a fair-price benchmark. The product should ask what the price buys before judging the installer. Incomplete GST/meter/structure/earthing terms now keep the final budget amount blank until the household obtains the actual inclusive cost. The system size, state and DCR choice still carry across. Explicit GST-extra comparisons label the EPC tax blend as illustrative and require invoice confirmation; [MNRE's published GST update](https://www.pib.gov.in/Pressreleaseshare.aspx?PRID=2167486&lang=2&reg=48) supports the device-rate change, not one universal invoice treatment.
+2. **Service needs issue-specific evidence.** [ServiceFlow's installer product](https://serviceflow.in/solar) publishes component-specific complaint types, serial histories, maintenance contracts and monitoring context. This establishes its published capability, not adoption or service quality. [Enphase's official troubleshooting guidance](https://enphase.com/learn/home-energy/using-your-system/troubleshooting-and-support) distinguishes missing communication from lost generation. We therefore added five support-pack categories, each with its own recipient, source, evidence and dated request. An offline monitoring app does not become a claim that solar generation is zero. The packet requests acknowledgement, next action, expected date and applicable charges; it does not open a ticket or diagnose equipment.
+3. **Contract ownership matters after handover.** [Delhi's official maintenance guidance](https://solar.delhi.gov.in/page/operation-and-maintenance-procedure) describes five years of vendor O&M under PM Surya Ghar and retaining warranty records. Applicability must still be checked for the household's scheme and contract. The checklist now includes roof-leak responsibility, separate installer/manufacturer warranties and the household's own monitoring access. The support pack keeps maintenance scope and visit records distinct from an equipment warranty. [PIB confirms helpline 15555](https://www.pib.gov.in/PressReleasePage.aspx?PRID=2245159&lang=2&reg=48); documentation/maintenance packs link to the source and National Portal for routing help. No universal response deadline, sanction, refund or repair entitlement is inferred from an unanswered request.
+
+### Trust defects repaired during review
+
+- The offer checker no longer says the National Portal is the only official website. State, DISCOM, manufacturer and bank sites can be legitimate. Unfamiliar commercial links require independent verification; their presence alone does not establish fraud.
+- The checker scans all distinct links, so an innocent first URL cannot hide a later scheme-lookalike domain. A bare ending such as `fakegov.in` does not bypass the government-domain check. Generic business names containing “Surya” are no longer treated as scheme impersonation.
+- A link-verification note alone no longer captures an ordinary WhatsApp question as an unsolicited offer check. Serious and amber warning patterns still trigger forwarded-offer review.
+- Survey/booking fees are scope and refund questions, distinguished from national-portal application/processing charges. Negated and zero fees are handled separately. Remaining warnings identify patterns, not the sender's guilt.
+- The budget's untouched illustrative rate follows [SBI's published loan-amount tiers](https://sbi.bank.in/web/sbi-green/green-loans/personal/pm-surya-ghar-loan-for-solar-roof-top); an explicitly entered lender rate is preserved. Above the published loan limit, the automatic rate is cleared so a household must enter the other lender's actual rate. Floating rates and approval remain conditional.
+- Dates use India's calendar. Support records include their preparation date, so an old saved elapsed-day count is not presented as a fresh response clock. Support packs survive explicit save/reload and are included in passport export.
+
+### PM decisions for the next pilot
+
+| Hypothesis | Practical research task | Evidence that would change the roadmap |
+|---|---|---|
+| Scope uncertainty is the main quote-comparison friction | Observe five households using their own redacted written quotes. Ask them to obtain one missing term from the installer. | Whether they can obtain a confirmed total and explain exclusions; compare that with a price-only choice. |
+| A routed support pack reduces repeated explanation | Walk through recent monitoring, billing and missed-service cases with owners and technicians; ask each to identify the recipient and evidence needed. | Fewer requests for already supplied information, acknowledgement rate and time to a useful next action. Do not count generating a draft as resolution. |
+| Households can separate warranty and maintenance rights | Ask owners to find a manufacturer clause, an installer obligation and the service contact in their actual contract. | Which documents are absent, who supplied them, and whether paid service duplicates an included obligation. |
+| An installer-facing workflow can fund independence | Test the same evidence checklist with small EPC service teams and compare it with their existing CRM process. | Willingness to pay for agreed workflow or reduced repeat visits without buying recommendation placement. |
+
+The next substantial integration should preserve a real acknowledgement and resolution history across installer and household. It needs authenticated recipients, consent, retention controls and a live service partner. Until that exists, the product should measure whether a household understands its next action and can retain evidence, with proposed metrics clearly separated from simulated demo activity.

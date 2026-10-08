@@ -90,7 +90,18 @@ Object.assign(T.hi, {
   pLoadError: "टूल नहीं खुला। फिर कोशिश करें।", pRetry: "फिर कोशिश", pNothing: "सैंपल चुनें या अपना कोटेशन भरें।", pJourneyTitle: "बिल से बेहतर खरीद तक।", pJourneySub: "इंस्टॉलेशन के निर्णयों के लिए तीन काम के टूल।", pCard1: "प्रमाण से चुनें", pCard1d: "असली वेंडर, पूरे विवरण की तुलना और चेतावनी की जाँच।", pCard2: "बिना हैरानी का बजट", pCard2d: "स्रोत वाली योजनाएँ और सब्सिडी तक ज़रूरी नकदी।", pCard3: "वादा सामने रखें", pCard3d: "हैंडओवर रिकॉर्ड, उत्पादन का प्रमाण और पहले बिल की जाँच।", pNext: "सैंपल तुलना पाएँ →", pSourcePrice: "कीमत का आधार: पर्याप्त असली कोटेशन मिलने तक शुरुआती अनुमान। सैंपल से दरें नहीं बदलतीं।",
 });
 
-const productState = { schemes: null, vendors: [], checklist: null, checks: {}, request: null, preview: null, finance: null, care: null, bill: null, timer: null, generation: 0, schemeGeneration: 0 };
+Object.assign(T.en, {
+  pSupportTitle: "Get the right help with the right evidence.", pSupportSub: "Choose the issue, record dates and prepare a support pack. Monitoring, generation and billing need different checks.", pSupportDraft: "Prepared support request", pAutoRate: "SBI illustration: 5.75% up to ₹2 lakh loan, 7.90% above that up to ₹6 lakh. Rates float; replace this with your lender's actual offer.",
+  pSupportKind: "What needs help?", pNoticed: "First noticed", pContacted: "Last contact (optional)", pSupportMake: "Prepare support pack", pSupportWho: "Start with", pSupportEvidence: "Evidence to collect", pSupportDays: "Days since last contact", pPrepared: "Prepared on", pSupportUnsent: "No contact date recorded. Send the first request and keep its acknowledgement.", pSupportSource: "Read the source guidance ↗", pSupportHelp: "PM Surya Ghar help: 15555 · source ↗", pSupportPortal: "Open National Portal ↗",
+  pBudgetIncomplete: "GST or the meter, structure and earthing scope is unconfirmed or extra. Get the actual additional costs and a written final total before budgeting. The budget form will keep this system's details and ask for that confirmed total.", pOpenBudget: "Enter a confirmed total in my budget →",
+});
+Object.assign(T.hi, {
+  pSupportTitle: "सही प्रमाण से सही मदद पाएँ।", pSupportSub: "मुद्दा चुनें, तारीखें लिखें और सहायता के लिए प्रमाण तैयार करें। ऐप, उत्पादन और बिल की जाँच अलग होती है।", pSupportDraft: "तैयार सहायता अनुरोध", pAutoRate: "SBI उदाहरण: ₹2 लाख तक के लोन पर 5.75%, उससे ऊपर ₹6 लाख तक 7.90%। दर बदल सकती है; अपने बैंक की असली दर भरें।",
+  pSupportKind: "किस बात में मदद चाहिए?", pNoticed: "पहली बार कब देखा", pContacted: "आख़िरी संपर्क (वैकल्पिक)", pSupportMake: "सहायता के प्रमाण तैयार करें", pSupportWho: "पहले यहाँ पूछें", pSupportEvidence: "इकट्ठा करने वाले प्रमाण", pSupportDays: "आख़िरी संपर्क के बाद दिन", pPrepared: "तैयार करने की तारीख", pSupportUnsent: "संपर्क तारीख दर्ज नहीं है। पहला अनुरोध भेजें और पावती रखें।", pSupportSource: "स्रोत की गाइड पढ़ें ↗", pSupportHelp: "सूर्य घर सहायता: 15555 · स्रोत ↗", pSupportPortal: "राष्ट्रीय पोर्टल खोलें ↗",
+  pBudgetIncomplete: "GST या मीटर, स्ट्रक्चर और अर्थिंग का खर्च अलग या अनिश्चित है। अतिरिक्त खर्च और आख़िरी लिखित कुल कीमत लें। बजट फ़ॉर्म सिस्टम का विवरण रखेगा और पुष्टि वाली कुल कीमत माँगेगा।", pOpenBudget: "पुष्टि वाली कुल कीमत से बजट बनाएँ →",
+});
+
+const productState = { support: null, schemes: null, vendors: [], checklist: null, checks: {}, request: null, preview: null, finance: null, care: null, bill: null, timer: null, generation: 0, schemeGeneration: 0 };
 const pText = (key) => `<span data-t="${key}"></span>`;
 const pField = (key, id, type="number", attrs="") => `<label for="${id}">${pText(key)}<input id="${id}" type="${type}" ${attrs}></label>`;
 const pDcr = (id) => `<label for="${id}">${pText("pDcr")}<select id="${id}"><option value="not_stated" data-t="pDcrUnknown"></option><option value="yes" data-t="pDcrYes"></option><option value="no" data-t="pDcrNo"></option></select></label>`;
@@ -117,6 +128,14 @@ $("main").insertAdjacentHTML("beforeend", pPage("market","pMarketTitle","pMarket
   <section class="sec"><h2 data-t="pBillTitle"></h2><p class="sec-lede" data-t="pBillSub"></p><form id="bill-flow-form" class="p-form p-input-grid">${pField("pGeneration","flow-generation","number",'value="400" min="0" max="1000000" step="0.1" required')}${pField("pImport","flow-import","number",'value="300" min="0" max="1000000" step="0.1" required')}${pField("pExportKwh","flow-export","number",'value="150" min="0" max="1000000" step="0.1" required')}${pField("pBillExport","flow-bill-export","number",'value="100" min="0" max="1000000" step="0.1" required')}${pButton("pBillCheck","flow-check")}</form><div id="flow-result" aria-live="polite"></div></section>
 `));
 
+$("care-form").closest("section").insertAdjacentHTML("beforebegin",`<section class="sec" id="support"><h2 data-t="pSupportTitle"></h2><p class="sec-lede" data-t="pSupportSub"></p><form id="support-form" class="p-form p-input-grid"><label for="support-kind">${pText("pSupportKind")}<select id="support-kind" required></select></label>${pField("pNoticed","support-noticed","date",'required')}${pField("pContacted","support-contacted","date")}${pButton("pSupportMake","support-make")}</form><div id="support-result" aria-live="polite"></div></section>`);
+const pIndiaParts = Object.fromEntries(new Intl.DateTimeFormat("en", {timeZone:"Asia/Kolkata",year:"numeric",month:"2-digit",day:"2-digit"}).formatToParts(new Date()).map(p=>[p.type,p.value]));
+const pTodayIndia = `${pIndiaParts.year}-${pIndiaParts.month}-${pIndiaParts.day}`;
+$("support-noticed").value=pTodayIndia;$("support-noticed").max=pTodayIndia;$("support-contacted").max=pTodayIndia;
+$("finance-rate").closest("label").querySelector('[data-t="pRate"]').id="finance-rate-label";
+$("finance-rate").closest("label").insertAdjacentHTML("beforeend",'<small id="finance-rate-help" class="hint" data-t="pAutoRate"></small>');
+$("finance-rate").setAttribute("aria-labelledby","finance-rate-label");$("finance-rate").setAttribute("aria-describedby","finance-rate-help");
+
 document.querySelector(".nav").insertAdjacentHTML("afterbegin",`<a href="#market" data-t="pMarket"></a><a href="#schemes" data-t="pSchemes"></a><a href="#passport" data-t="pPassport"></a>`);
 document.querySelector('.nav a[href="#quote"]').remove();
 document.querySelector('.nav a[href="#built"]').remove();
@@ -124,16 +143,19 @@ $("uses").insertAdjacentHTML("beforebegin",`<section class="sec p-journey"><h2 d
 $("to-quote").insertAdjacentHTML("beforebegin",`<a class="btn btn-primary" href="#market" data-t="pNext"></a>`);
 $("preview-check").insertAdjacentHTML("beforebegin",`<details class="p-scope"><summary data-t="pScope"></summary><div class="p-input-grid">${pInclusion("pMeter","preview-meter")}${pInclusion("pStructure","preview-structure")}${pInclusion("pEarthing","preview-earthing")}${pField("pInverter","preview-inverter","number",'min="0.1" max="1000" step="0.1"')}${pField("pModuleCount","preview-count","number",'min="1" max="10000"')}${pField("pModuleWatt","preview-watt","number",'min="100" max="1000"')}${pField("pWarranty","preview-warranty","number",'min="0" max="100"')}${pField("pTimeline","preview-timeline","number",'min="1" max="730"')}${pField("pSubPromised","preview-subsidy","number",'min="0" max="50000000"')}</div></details>`);
 if(["localhost","127.0.0.1"].includes(location.hostname))document.querySelector("header.top").insertAdjacentHTML("afterend",'<p class="p-preview-banner" data-t="pLocalPreview"></p>');
-const pPrevious = new Date(); pPrevious.setDate(1); pPrevious.setMonth(pPrevious.getMonth()-1);
-$("care-month").value = `${pPrevious.getFullYear()}-${String(pPrevious.getMonth()+1).padStart(2,"0")}`;
+const pPrevious = new Date(Date.UTC(Number(pIndiaParts.year),Number(pIndiaParts.month)-2,1));
+$("care-month").value = `${pPrevious.getUTCFullYear()}-${String(pPrevious.getUTCMonth()+1).padStart(2,"0")}`;
 $("care-month").max = $("care-month").value;
 
 function pEl(tag, text, cls) { const el=document.createElement(tag); if(text !== undefined) el.textContent=text; if(cls) el.className=cls; return el; }
-function pLink(label, href) { const a=pEl("a",label,"link-btn"); if(href && /^https:\/\//.test(href)){a.href=href;a.target="_blank";a.rel="noopener";} return a; }
+function pLink(label, href) { const a=pEl("a",label,"link-btn"); if(href && /^https:\/\//.test(href)){a.href=href;a.target="_blank";a.rel="noopener";}else if(/^#(?:market|schemes|passport)$/.test(href||"")){a.href=href;} return a; }
 function pMetric(label, value) { const e=pEl("div",undefined,"p-metric");e.append(pEl("span",t(label)),pEl("b",value));return e; }
 function pError(id,error) { $(id).replaceChildren(pEl("p",error.message||t("pLoadError"),"p-error")); }
 async function pRun(button, output, task) { button.disabled=true; try { await task(); } catch(error){pError(output,error);} finally{button.disabled=false;} }
 const pValue = (id) => $(id).value;
+function pUpdateRate(){if(productState.rateEdited||!pValue("finance-cost"))return;const principal=Number(pValue("finance-cost"))*(1-Number(pValue("finance-margin"))/100);$("finance-rate").value=principal>600000?"":principal>200000?"7.90":"5.75";}
+$("finance-rate").addEventListener("input",()=>{productState.rateEdited=true;});
+for(const id of ["finance-cost","finance-margin"])$(id).addEventListener("input",pUpdateRate);
 const pMoney = value => value < 0 ? "−"+rupees(Math.abs(value)) : rupees(value);
 const pQuoteFields = {advance_pct:"preview-advance",net_meter_included:"preview-meter",structure_included:"preview-structure",earthing_included:"preview-earthing",inverter_kw:"preview-inverter",module_count:"preview-count",module_watt:"preview-watt",system_warranty_years:"preview-warranty",timeline_days:"preview-timeline",subsidy_promised_rs:"preview-subsidy"};
 const pFinanceMetrics = [["pCash","cash_before_install_rs"],["pWaitCash","cash_during_wait_rs"],["pEmiBefore","emi_before_rs"],["pEmiAfter","emi_after_rs"],["pInterest","interest_during_wait_rs"],["pMonthly","net_monthly_before_rs"]];
@@ -145,14 +167,14 @@ function pDirtyPassport(){
 }
 async function pCopy(content,field,button){
   field.focus();field.select();
-  if(document.execCommand("copy")){button.textContent=t("pCopied");return;}
+  try{if(document.execCommand("copy")){button.textContent=t("pCopied");return;}}catch(_){/* fall back to selected text and the Clipboard API */}
   button.textContent=t("pCopyManual");
   try{await navigator.clipboard.writeText(content);button.textContent=t("pCopied");}catch(_){/* selected text remains available for manual copying */}
 }
 function pInvalidate(key,output){pRevisions[key]=(pRevisions[key]||0)+1;pDirtyPassport();if(productState[key]){productState[key]=null;$(output).replaceChildren(pEl("p",t("pUpdated"),"hint"));}}
 function pWatch(form,key,output){$(form).addEventListener("input",()=>pInvalidate(key,output));}
 async function pChecked(key,task,render){const version=pRevisions[key]||0;const result=await task();if(version===(pRevisions[key]||0)){productState[key]=result;render();}}
-pWatch("finance-form","finance","finance-result");pWatch("care-form","care","care-result");pWatch("bill-flow-form","bill","flow-result");pWatch("preview-form","preview","preview-result");pWatch("offer-form","offer","offer-result");
+pWatch("support-form","support","support-result");pWatch("finance-form","finance","finance-result");pWatch("care-form","care","care-result");pWatch("bill-flow-form","bill","flow-result");pWatch("preview-form","preview","preview-result");pWatch("offer-form","offer","offer-result");
 $("schemes-form").addEventListener("input",()=>pInvalidate("finance","finance-result"));
 $("market-state").addEventListener("change",()=>pInvalidate("preview","preview-result"));
 function pOptions() {
@@ -182,14 +204,15 @@ function pQuoteCard(row, best=false, own=false) {
   if(best) card.append(pEl("p",t("pBest"),"p-best-label"));
   card.append(pEl("h3",row.vendor?.name||q.vendor_name),pill(c.verdict==="ok"?"ok":"warn",t(c.verdict==="ok"?"pSafe":c.verdict==="red"?"pRed":"pAmber")));
   const metrics=pEl("div",undefined,"p-quote-metrics");
-  metrics.append(pMetric("pTotal",rupees(c.total_rs)+(c.gst_unknown?" + GST?":"")),pMetric("pNet",rupees(c.net_rs)),pMetric("pAdvance",c.pay_upfront_rs===null?t("pUnknown"):rupees(c.pay_upfront_rs)),pMetric("pDays",q.timeline_days||t("pUnknown")));
+  metrics.append(pMetric("pTotal",rupees(c.total_rs)+(c.gst_unknown?" + GST?":"")),pMetric("pNet",rupees(c.net_rs)+(c.gst_unknown?" + GST?":"")),pMetric("pAdvance",c.pay_upfront_rs===null?t("pUnknown"):rupees(c.pay_upfront_rs)),pMetric("pDays",q.timeline_days||t("pUnknown")));
   card.append(metrics,pEl("p",t("pIncludes"),"hint"),pEl("p",[q.net_meter_included,q.structure_included,q.earthing_included].map(v=>t(v==="yes"?"pYes":v==="no"?"pNo":"pUnknown")).join(" / ")));
   card.append(pEl("p",t(c.subsidy_status==="not_eligible"?"pNotDcr":c.subsidy_status==="evidence_needed"?"pUnconfirmed":"pEligible"),"hint"));
   const detail=c.views[state.lang];
   const issues=pEl("ul");[...detail.red,...detail.amber,...detail.note].forEach(issue=>issues.append(pEl("li",issue)));card.append(issues);
   const questions=pEl("details");questions.append(pEl("summary",t("pQuestions")));const ask=pEl("ul");(detail.ask||[]).forEach(line=>ask.append(pEl("li",line)));questions.append(ask);card.append(questions);
   if(!own){const b=pEl("button",t("pChoose"),"btn btn-line");b.type="button";b.addEventListener("click",()=>pRun(b,"market-status",async()=>{const chosen=await post(`/market/requests/${productState.request.request.id}/choose`,{vendor_id:row.vendor_id});$("market-status").textContent=t("pChosen");if(chosen.website)$("market-status").append(" ",pLink(t("pVisit"),chosen.website));}));card.append(b);}
-  if(own){const b=pEl("button",t("pUseQuote"),"btn btn-line");b.type="button";b.addEventListener("click",()=>{pInvalidate("finance","finance-result");$("schemes-state").value=q.state;$("schemes-kw").value=q.system_kw;$("schemes-dcr").value=q.dcr;$("finance-cost").value=c.total_rs;productState.budgetEdited=true;location.hash="schemes";});card.append(b);}
+  if(own&&c.budget_ready){const b=pEl("button",t("pUseQuote"),"btn btn-line");b.type="button";b.addEventListener("click",()=>{pInvalidate("finance","finance-result");$("schemes-state").value=q.state;$("schemes-kw").value=q.system_kw;$("schemes-dcr").value=q.dcr;$("finance-cost").value=c.total_rs;pUpdateRate();productState.budgetEdited=true;location.hash="schemes";});card.append(b);}
+  if(own&&!c.budget_ready){const b=pEl("button",t("pOpenBudget"),"btn btn-line");b.type="button";b.addEventListener("click",()=>{pInvalidate("finance","finance-result");$("schemes-state").value=q.state;$("schemes-kw").value=q.system_kw;$("schemes-dcr").value=q.dcr;$("finance-cost").value="";productState.budgetEdited=true;location.hash="schemes";});card.append(pEl("p",t("pBudgetIncomplete"),"p-notice"),b);}
   return card;
 }
 function pRenderQuotes() {
@@ -245,16 +268,17 @@ function pRenderFinance(){if(!productState.finance)return;const f=productState.f
 
 function pProgress(){const keys=productState.checklist?.groups.flatMap(g=>g.items.map(i=>g.id+"-"+i.id))||[];const checked=keys.filter(k=>productState.checks[k]).length;$("check-progress").textContent=`${checked} / ${keys.length} ${t("pDone")}`;}
 function pRenderChecks(){if(!productState.checklist)return;$("passport-checks").replaceChildren(...productState.checklist.groups.map(group=>{const c=pEl("section",undefined,"p-check-card");c.append(pEl("h3",group.title[state.lang]));group.items.forEach(item=>{const label=pEl("label",undefined,"p-check-item"),input=pEl("input");input.type="checkbox";input.checked=!!productState.checks[group.id+"-"+item.id];input.addEventListener("change",()=>{productState.checks[group.id+"-"+item.id]=input.checked;pProgress();});label.append(input,pEl("span",item.text[state.lang]));c.append(label);});return c;}));pProgress();}
-function pSnapshot(){return {version:1,exported_at:new Date().toISOString(),checks:productState.checks,care:productState.care,bill:productState.bill,finance:productState.finance,preview:productState.preview};}
+function pSnapshot(){return {version:1,exported_at:new Date().toISOString(),checks:productState.checks,care:productState.care,bill:productState.bill,finance:productState.finance,support:productState.support,preview:productState.preview};}
 $("passport-checks").addEventListener("change",pDirtyPassport);
-$("passport-clear").addEventListener("click",()=>{pDirtyPassport();for(const k of ["care","bill","finance","preview"])pRevisions[k]=(pRevisions[k]||0)+1;});
+$("passport-clear").addEventListener("click",()=>{pDirtyPassport();for(const k of ["care","bill","finance","preview","support"])pRevisions[k]=(pRevisions[k]||0)+1;});
 $("passport-save").addEventListener("click",()=>{try{localStorage.setItem("surya-passport",JSON.stringify(pSnapshot()));$("passport-status").textContent=t("pSaved");}catch(error){pError("passport-status",error);}});
-$("passport-clear").addEventListener("click",()=>{try{localStorage.removeItem("surya-passport");productState.checks={};productState.care=null;productState.bill=null;productState.finance=null;productState.preview=null;pRenderChecks();["care-result","flow-result","finance-result","preview-result"].forEach(id=>$(id).replaceChildren());$("passport-status").textContent=t("pCleared");}catch(error){pError("passport-status",error);}});
+$("passport-clear").addEventListener("click",()=>{try{localStorage.removeItem("surya-passport");productState.checks={};productState.care=null;productState.bill=null;productState.finance=null;productState.preview=null;productState.support=null;pRenderChecks();["care-result","flow-result","finance-result","preview-result","support-result"].forEach(id=>$(id).replaceChildren());$("passport-status").textContent=t("pCleared");}catch(error){pError("passport-status",error);}});
 function pExportPassport(){
   const sections=["SURYA SAATHI — "+t("pPassport"),new Date().toISOString(),t("pExportNotice")];
   if(productState.checklist)sections.push(productState.checklist.groups.map(g=>g.title[state.lang]+"\n"+g.items.map(i=>`${productState.checks[g.id+"-"+i.id]?"[x]":"[ ]"} ${i.text[state.lang]}`).join("\n")).join("\n\n"));
   if(productState.preview){const p=productState.preview,q=p.quote,c=p.check,v=c.views[state.lang];sections.push(t("pQuotedContext")+`\n${q.vendor_name} · ${q.state} · ${q.system_kw} kW\n${t("pTotal")}: ${pMoney(c.total_rs)}${c.gst_unknown?" + GST?":""}\n${t("pNet")}: ${pMoney(c.net_rs)}\n${t("pAdvance")}: ${c.pay_upfront_rs===null?t("pUnknown"):pMoney(c.pay_upfront_rs)}\n`+[...v.red,...v.amber,...v.note,...v.ask].map(s=>"• "+s).join("\n"));}
   if(productState.finance){const f=productState.finance;sections.push(t("pBudgetContext")+"\n"+pFinanceContext(f)+"\n"+pFinanceMetrics.map(([label,key])=>t(label)+": "+pMoney(f[key])).join("\n")+"\n"+f.note[state.lang]+"\n"+f.source);}
+  if(productState.support){const s=productState.support;sections.push(`${t("pSupportWho")}: ${s.who[state.lang]}\n${t("pPrepared")}: ${s.prepared_on||s.checked_on}\n`+s.draft[state.lang]+"\n\n"+s.next[state.lang]+"\n"+s.note[state.lang]+"\n"+s.source+"\n"+s.help_source);}
   if(productState.care)sections.push(productState.care.draft[state.lang]+"\n"+productState.care.next[state.lang]);
   if(productState.bill){const b=productState.bill;sections.push(t("pBillTitle")+"\n"+[["pGeneration","generation_kwh"],["pImport","import_kwh"],["pExportKwh","export_kwh"],["pBillExport","bill_export_kwh"],...pFlowMetrics].map(([label,key])=>t(label)+": "+b[key]+" kWh").join("\n")+"\n"+b.note[state.lang]);}
   const content=sections.join("\n\n");
@@ -272,18 +296,37 @@ function pRenderCare(){const c=productState.care;if(!c)return;const el=pEl("div"
 $("bill-flow-form").addEventListener("submit",e=>{e.preventDefault();pRun($("flow-check"),"flow-result",()=>pChecked("bill",()=>post("/care/bill",{generation_kwh:pValue("flow-generation"),import_kwh:pValue("flow-import"),export_kwh:pValue("flow-export"),bill_export_kwh:pValue("flow-bill-export")}),pRenderFlow));});
 function pRenderFlow(){const b=productState.bill;if(!b)return;const grid=pEl("div",undefined,"p-budget-grid");pFlowMetrics.forEach(([label,key])=>grid.append(pMetric(label,`${b[key]} kWh`)));$("flow-result").replaceChildren(grid,pEl("p",b.note[state.lang],"hint"));}
 
-window.renderProduct=()=>{pOptions();pRenderDirectory();pRenderQuotes();pRenderSchemes();pRenderChecks();pRenderOffer();pRenderPreview();pRenderFinance();pRenderCare();pRenderFlow();if(productState.exportUrl)pExportPassport();};
+function pSupportOptions(){
+  const select=$("support-kind"),selected=select.value||productState.support?.id||"monitoring";
+  select.replaceChildren(...(productState.checklist?.support_topics||[]).map(topic=>{const o=pEl("option",topic.title[state.lang]);o.value=topic.id;return o;}));select.value=selected;
+}
+$("support-form").addEventListener("submit",e=>{e.preventDefault();pRun($("support-make"),"support-result",()=>pChecked("support",()=>post("/care/support",{kind:pValue("support-kind"),first_noticed:pValue("support-noticed"),contacted_on:pValue("support-contacted")}),pRenderSupport));});
+function pRenderSupport(){
+  const s=productState.support;if(!s)return;
+  const box=pEl("div",undefined,"p-care-card"),evidence=pEl("ul");
+  box.append(pEl("span",t("pSupportWho"),"p-eyebrow"),pEl("h3",s.who[state.lang]),pEl("p",s.next[state.lang]));
+  box.append(pEl("p",`${t("pPrepared")}: ${s.prepared_on||s.checked_on}`,"hint"));
+  if(s.days_since_contact!==null)box.append(pEl("p",`${t("pSupportDays")}: ${s.days_since_contact}`,"p-progress"));else box.append(pEl("p",t("pSupportUnsent"),"hint"));
+  s.evidence.forEach(item=>evidence.append(pEl("li",item[state.lang])));box.append(pEl("h3",t("pSupportEvidence")),evidence);
+  const draft=pEl("textarea",s.draft[state.lang],"p-draft");draft.readOnly=true;draft.rows=10;draft.setAttribute("aria-label",t("pSupportDraft"));
+  const copy=pEl("button",t("pCopy"),"btn btn-line");copy.type="button";copy.addEventListener("click",()=>pCopy(s.draft[state.lang],draft,copy));
+  box.append(pEl("h3",t("pSupportDraft")),draft,copy,pEl("p",s.note[state.lang],"hint"),pLink(t("pSupportSource"),s.source));
+  if(["documents","maintenance"].includes(s.id))box.append(pLink(t("pSupportHelp"),s.help_source),pLink(t("pSupportPortal"),s.portal));
+  $("support-result").replaceChildren(box);
+}
+window.renderProduct=()=>{pOptions();pRenderDirectory();pRenderQuotes();pRenderSchemes();pRenderChecks();pSupportOptions();pRenderSupport();pRenderOffer();pRenderPreview();pRenderFinance();pRenderCare();pRenderFlow();if(productState.exportUrl)pExportPassport();};
 window.productRoute=(id)=>{
   clearTimeout(productState.timer);
   const estimate=state.last||state.estimate,o=estimate?.analysis?.recommended;
-  if(o&&!productState.finance&&!productState.budgetEdited){$("schemes-kw").value=o.kw;$("finance-cost").value=Math.round(o.gross_cost);$("finance-saving").value=Math.round(o.savings_rs/12);}
+  if(o&&!productState.finance&&!productState.budgetEdited){$("schemes-kw").value=o.kw;$("finance-cost").value=Math.round(o.gross_cost);$("finance-saving").value=Math.round(o.savings_rs/12);pUpdateRate();}
   if(id==="market"){if(o&&!productState.request)$("market-kw").value=o.kw;pLoadDirectory();if(productState.request)pRefresh().catch(error=>pError("market-status",error));}
   if(id==="schemes")pLoadSchemes();
 };
-try{const saved=JSON.parse(localStorage.getItem("surya-passport")||"null");if(saved?.version===1){productState.checks=saved.checks||{};for(const k of ["care","bill","finance","preview"])productState[k]=saved[k]||null;}}catch(_){/* works with storage disabled */}
+try{const saved=JSON.parse(localStorage.getItem("surya-passport")||"null");if(saved?.version===1){productState.checks=saved.checks||{};for(const k of ["care","bill","finance","preview","support"])productState[k]=saved[k]||null;}}catch(_){/* works with storage disabled */}
 function pRestoreFields(){
+  const s=productState.support;if(s){$("support-noticed").value=s.first_noticed;$("support-contacted").value=s.contacted_on||"";}
   const f=productState.finance,c=productState.care,b=productState.bill,q=productState.preview?.quote;
-  if(f){Object.entries({"finance-cost":f.cost_rs,"finance-margin":Math.round((1-f.principal_rs/f.cost_rs)*100),"finance-rate":f.rate_pct,"finance-years":f.years,"finance-wait":f.delay_months,"finance-saving":f.monthly_saving_rs,"schemes-kw":f.kw,"schemes-dcr":f.dcr}).forEach(([id,v])=>{if(v!==undefined)$(id).value=v;});}
+  if(f){productState.rateEdited=true;Object.entries({"finance-cost":f.cost_rs,"finance-margin":Math.round((1-f.principal_rs/f.cost_rs)*100),"finance-rate":f.rate_pct,"finance-years":f.years,"finance-wait":f.delay_months,"finance-saving":f.monthly_saving_rs,"schemes-kw":f.kw,"schemes-dcr":f.dcr}).forEach(([id,v])=>{if(v!==undefined)$(id).value=v;});}
   if(c){Object.entries({"care-kw":c.kw,"care-month":c.month,"care-actual":c.actual_kwh,"care-promise":c.promised_kwh,"care-clean":c.last_cleaned||""}).forEach(([id,v])=>$(id).value=v);}
   if(b){Object.entries({"flow-generation":b.generation_kwh,"flow-import":b.import_kwh,"flow-export":b.export_kwh,"flow-bill-export":b.bill_export_kwh}).forEach(([id,v])=>{if(v!==undefined)$(id).value=v;});}
   if(q){Object.entries({"preview-name":q.vendor_name,"preview-cost":q.total_price_rs,"preview-kw":q.system_kw,"preview-dcr":q.dcr,"preview-gst":q.gst_included}).forEach(([id,v])=>$(id).value=v);Object.entries(pQuoteFields).forEach(([key,id])=>{if(q[key]!==undefined)$(id).value=q[key];});}
@@ -291,5 +334,5 @@ function pRestoreFields(){
 pRestoreFields();
 applyLang();
 pLoadSchemes().then(pLoadDirectory);
-getJSON("/care/checklists").then(data=>{productState.checklist=data;pRenderChecks();}).catch(error=>pError("passport-checks",error));
+getJSON("/care/checklists").then(data=>{productState.checklist=data;pRenderChecks();pSupportOptions();}).catch(error=>pError("passport-checks",error));
 if(location.hash)route(location.hash);

@@ -17,3 +17,6 @@ Before recording, choose English, expand the roof options, set roof area to **30
 | 2:50–3:00 | Existing AWS architecture + clear limits | “AI reads bills and quotes; deterministic rules explain decisions. WhatsApp, Lambda, DynamoDB and Step Functions support the journey. No fabricated integrations or impact claims.” |
 
 Do not imply the app contacts vendors, submits official applications, diagnoses equipment, guarantees subsidy, or issues compensation. The strongest demonstration is a correct decision followed by a useful next action.
+
+
+Optional follow-up demo: replace the first-bill segment with **Monitoring app offline → Prepare support pack**. Show its distinct evidence list and dated request, then save/reload and export. Explain that absent app data does not establish zero generation, and that the app prepares the request rather than claiming to dispatch a technician. Keep the total recorded video below the organiser's limit.

@@ -149,7 +149,54 @@ def care(body: dict) -> dict:
 
 
 def checklists() -> dict:
-    return load_data("checklists.json")
+    return {**load_data("checklists.json"), "support_topics": load_data("support.json")["topics"]}
+
+
+def support(body: dict) -> dict:
+    """Prepare evidence and a neutral request; never file a complaint or infer liability."""
+    topics = {topic["id"]: topic for topic in load_data("support.json")["topics"]}
+    kind = body.get("kind")
+    if not isinstance(kind, str) or kind not in topics:
+        raise ValueError("choose a recognised support issue")
+    today = today_india()
+
+    def past_date(value, name):
+        try:
+            parsed = date.fromisoformat(str(value))
+        except ValueError:
+            raise ValueError(f"{name} must be YYYY-MM-DD") from None
+        if parsed.isoformat() != value or parsed > today:
+            raise ValueError(f"{name} must be a valid date no later than today")
+        return parsed
+
+    noticed = past_date(body.get("first_noticed"), "first noticed date")
+    contact = past_date(body["contacted_on"], "contact date") if body.get("contacted_on") else None
+    if contact and contact < noticed:
+        raise ValueError("contact date cannot precede the first noticed date")
+    topic = topics[kind]
+    days = (today-contact).days if contact else None
+    draft = {}
+    for lang in ("en", "hi"):
+        chronology = (f"First noticed: {noticed.isoformat()}. Last contacted: {contact.isoformat() if contact else 'not recorded'}." if lang == "en" else
+                      f"पहली बार देखा: {noticed.isoformat()}। आख़िरी संपर्क: {contact.isoformat() if contact else 'दर्ज नहीं'}।")
+        request = ("Please acknowledge this request with a ticket number and confirm the next action and expected date in writing." if lang == "en" else
+                   "कृपया टिकट नंबर से पावती दें और अगला कदम व अनुमानित तारीख लिखित में दें।")
+        asks = {
+            "monitoring": {"en": "Please compare communication logs with generation readings, explain the monitoring problem and confirm logger coverage and any proposed charges before work starts.", "hi": "कृपया संचार लॉग और उत्पादन रीडिंग मिलाएँ, ऐप की समस्या समझाएँ और काम से पहले लॉगर की वारंटी तथा किसी शुल्क की पुष्टि करें।"},
+            "generation": {"en": "Please review matching-period generation, inverter errors and outages against the written estimate, and identify applicable service or guarantee terms and exclusions.", "hi": "समान अवधि के उत्पादन, इन्वर्टर त्रुटि और कटौती को लिखित अनुमान से मिलाएँ तथा लागू सर्विस/गारंटी और अपवाद बताएँ।"},
+            "billing": {"en": "Please provide the import/export statement for the matching bill dates, explain carried credits and settlement rules, and confirm any required bill correction in writing.", "hi": "कृपया बिल की समान तारीखों का आयात/निर्यात विवरण, पुराने क्रेडिट और भुगतान नियम समझाएँ तथा ज़रूरी बिल सुधार लिखित में बताएँ।"},
+            "documents": {"en": "Please provide the missing handover documents with matching equipment serials and confirm whether any portal record needs correction.", "hi": "गायब हैंडओवर दस्तावेज़ उपकरण के मिलते सीरियल के साथ दें और बताएँ कि पोर्टल रिकॉर्ड में सुधार चाहिए या नहीं।"},
+            "maintenance": {"en": "Please confirm visits and repairs included in the signed maintenance agreement, the record of completed visits, and any proposed charges before service starts.", "hi": "हस्ताक्षर वाले रखरखाव एग्रीमेंट की शामिल विज़िट/मरम्मत, पूरी हुई विज़िट और सर्विस से पहले किसी प्रस्तावित शुल्क की पुष्टि करें।"},
+        }
+        request += " " + asks[kind][lang]
+        heading = "Evidence to attach" if lang == "en" else "लगाने वाले प्रमाण"
+        draft[lang] = f"{topic['title'][lang]}\n\n{chronology}\n\n{request}\n\n{heading}:\n" + "\n".join("• "+item[lang] for item in topic["evidence"])
+    return {**topic, "first_noticed": noticed.isoformat(), "contacted_on": contact.isoformat() if contact else None,
+            "days_since_contact": days, "prepared_on": today.isoformat(), "draft": draft, "checked_on": RESEARCH_DATE,
+            "help_source": "https://www.pib.gov.in/PressReleasePage.aspx?PRID=2245159&lang=2&reg=48",
+            "portal": PORTAL,
+            "note": {"en": "This prepares a request; it does not open a service ticket or submit a complaint. Days since contact are a personal record, not an official response deadline. Review the note and send it through the recipient's official channel. Keep sensitive account and identity documents out of public messages.",
+                     "hi": "इससे अनुरोध तैयार होता है; टिकट या शिकायत जमा नहीं होती। संपर्क के बाद दिन आपका रिकॉर्ड है, आधिकारिक जवाब की समय सीमा नहीं। नोट जाँचकर सही आधिकारिक चैनल से खुद भेजें। सार्वजनिक संदेश में खाता या पहचान दस्तावेज़ न डालें।"}}
 
 
 def bill_balance(body: dict) -> dict:

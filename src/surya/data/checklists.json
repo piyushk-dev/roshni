@@ -12,8 +12,8 @@
         {
           "id": "survey",
           "text": {
-            "en": "Written site survey with shadows, roof rights and structure design",
-            "hi": "छाया, छत के अधिकार और स्ट्रक्चर डिज़ाइन वाला लिखित साइट सर्वे"
+            "en": "Written site survey with shadows, roof rights, structure design and roof-leak responsibility",
+            "hi": "छाया, छत के अधिकार, स्ट्रक्चर डिज़ाइन और छत के रिसाव की जिम्मेदारी वाला लिखित सर्वे"
           }
         },
         {
@@ -91,8 +91,8 @@
         {
           "id": "warranty",
           "text": {
-            "en": "Keep itemised GST invoice, warranties, service contact and monitoring-app access",
-            "hi": "GST बिल, वारंटी, सर्विस संपर्क और निगरानी ऐप का एक्सेस रखें"
+            "en": "Keep itemised GST invoice, separate manufacturer/installer warranties, service contact and your own monitoring-app access",
+            "hi": "GST बिल, निर्माता/वेंडर की अलग वारंटी, सर्विस संपर्क और अपना निगरानी ऐप एक्सेस रखें"
           }
         },
         {

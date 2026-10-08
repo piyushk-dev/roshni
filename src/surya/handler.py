@@ -54,6 +54,8 @@ def _handle(event: dict, context) -> dict:
         return _response(200, product.care(body))
     if route == "POST /care/bill":
         return _response(200, product.bill_balance(body))
+    if route == "POST /care/support":
+        return _response(200, product.support(body))
     if route == "POST /scam-check":
         text = body.get("text", "")
         if not isinstance(text, str) or not text.strip() or len(text) > 10000:
