@@ -129,7 +129,14 @@ Resources:
           WA_PHONE_NUMBER_ID: !Ref WhatsAppPhoneNumberId
           GRAPH_VERSION: !Ref GraphApiVersion
           JOURNEY_STATE_MACHINE: !Ref JourneyStateMachine
+          VOICE_BUCKET: !Ref VoiceBucket
       Policies:
+        - S3CrudPolicy:
+            BucketName: !Ref VoiceBucket
+        - Statement:
+            - Effect: Allow
+              Action: [transcribe:StartTranscriptionJob, transcribe:GetTranscriptionJob, polly:SynthesizeSpeech]
+              Resource: "*"
         - SSMParameterReadPolicy:
             ParameterName: surya-saathi/whatsapp/*
         - Statement:
@@ -192,6 +199,21 @@ Resources:
         - {AttributeName: pk, AttributeType: S}
       KeySchema:
         - {AttributeName: pk, KeyType: HASH}
+
+  # Voice notes in and out; everything is deleted after a day
+  VoiceBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      LifecycleConfiguration:
+        Rules:
+          - Id: delete-after-a-day
+            Status: Enabled
+            ExpirationInDays: 1
 
   # Application journey: one Step Functions execution per household, a task token per stage
   JourneyFunction:

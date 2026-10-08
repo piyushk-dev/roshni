@@ -80,6 +80,13 @@ class Client:
             with urllib.request.urlopen(req, timeout=20) as r:
                 log.info("sent %s", json.load(r).get("sid"))
 
+    def send_media(self, to: str, media_url: str, text: str = "") -> None:
+        url = f"{API}/Accounts/{secret('twilio-account-sid')}/Messages.json"
+        data = urllib.parse.urlencode({"From": self.from_number, "To": to, "MediaUrl": media_url, **({"Body": text} if text else {})}).encode()
+        req = urllib.request.Request(url, data=data, headers={"Authorization": self._auth()})
+        with urllib.request.urlopen(req, timeout=20) as r:
+            log.info("sent media %s", json.load(r).get("sid"))
+
     def mark_read(self, message_id: str) -> None:
         """Twilio's sandbox has no read receipts."""
 

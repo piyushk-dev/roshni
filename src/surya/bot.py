@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import re
 
-from . import doctor, journey, quote
+from . import doctor, journey, qa, quote, voice
 from .format import BillProblem, message
 
 DEVANAGARI = re.compile(r"[ऀ-ॿ]")
@@ -33,9 +33,10 @@ TEXT = {
         "en": "📍 Got it. Estimates will use the sunlight at this spot. Now send your bill.",
         "hi": "📍 लोकेशन मिल गई। अब इसी जगह की धूप से अनुमान लगेगा। अब अपना बिल भेजें।",
     },
-    "voice_soon": {
-        "en": "Voice notes are coming soon. For now, send a photo of your bill.",
-        "hi": "वॉइस नोट जल्द आ रहे हैं। अभी के लिए अपने बिल की फोटो भेजें।",
+    "heard": {"en": "🎙️ You said: “{text}”", "hi": "🎙️ आपने कहा: “{text}”"},
+    "not_heard": {
+        "en": "Sorry, that voice note didn't come through clearly. Try again a little closer to the phone, or type your question.",
+        "hi": "वॉइस नोट साफ़ समझ नहीं आया। फ़ोन के थोड़ा पास से फिर कोशिश करें, या सवाल लिखकर भेजें।",
     },
     "deleted": {
         "en": "🗑️ Done. Everything stored about you has been deleted. Send a bill any time to start again.",
@@ -50,6 +51,7 @@ TEXT = {
 ENGLISH_WORDS = {"english", "eng", "en"}
 HINDI_WORDS = {"hindi", "हिंदी", "हिन्दी"}
 DELETE_WORDS = {"delete my data", "delete", "मेरा डेटा मिटाओ"}
+GREETINGS = {"hi", "hii", "hello", "hey", "namaste", "namaskar", "नमस्ते", "नमस्कार", "menu", "start over"}
 COMMANDS = {
     "apply": {"apply", "start", "apply demo", "आवेदन", "aavedan"},
     "done": {"done", "हो गया", "ho gaya", "हो गया है"},
@@ -108,7 +110,10 @@ def handle(msg: dict, user: dict, wa, pipeline) -> dict | None:
         if cmd:
             wa.send_text(to, journey_reply(cmd, text, user, to, user["lang"]))
             return user
-        wa.send_text(to, TEXT["welcome"][user["lang"]])
+        if text.lower().strip(" !.") in GREETINGS or len(text) < 4:
+            wa.send_text(to, TEXT["welcome"][user["lang"]])
+            return user
+        wa.send_text(to, qa.answer(text, user, "hi" if DEVANAGARI.search(text) else user["lang"]))
         return user
 
     lang = user.get("lang", DEFAULT_LANG)
@@ -138,7 +143,18 @@ def handle(msg: dict, user: dict, wa, pipeline) -> dict | None:
         o = a.recommended
         user["last"] = {"verdict": a.verdict, "kw": o.kw if o else None, "discom": request["discom"]}
     elif kind == "audio":
-        wa.send_text(to, TEXT["voice_soon"][lang])
+        data, media_type = wa.download_media(msg["audio"]["id"])
+        text, heard_lang = voice.transcribe(data, media_type)
+        if not text.strip():
+            wa.send_text(to, TEXT["not_heard"][lang])
+            return user
+        user.setdefault("lang", heard_lang)
+        wa.send_text(to, TEXT["heard"][heard_lang].format(text=text))
+        cmd = _command(text)
+        reply = journey_reply(cmd, text, user, to, heard_lang) if cmd else qa.answer(text, user, heard_lang)
+        wa.send_text(to, reply)
+        if hasattr(wa, "send_media"):  # answer a voice note with a voice note
+            wa.send_media(to, voice.speak(reply, heard_lang))
     else:
         wa.send_text(to, TEXT["welcome"][lang])
     return user
