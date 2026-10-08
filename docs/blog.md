@@ -36,7 +36,7 @@ Parallel reads cost about the same time as one. The real bill, WhatsApp-compress
 - **From people:** facts on a public board can be confirmed, or reported as changed with evidence.
 - **From a watcher:** a weekly job flags official pages that changed.
 
-**Being honest.** Sunlight comes from PVGIS, scaled down wherever NASA's satellite data is lower, which matters in north India's smoggy winters. The calculator prefers a smaller system when it gets within 10% of the best 25-year value, and says "don't" when solar won't pay. On my own family's bill it found ₹5,500 a year of savings before any solar: the sanctioned load was double the actual peak.
+**Being honest.** Sunlight comes from PVGIS, scaled down wherever NASA's satellite data is lower, which matters in north India's smoggy winters. The calculator prefers a smaller system when it gets within 10% of the best 25-year value, and says "don't" when solar won't pay. On a real Delhi bill it found ₹5,500 a year of savings before any solar: the sanctioned load was double the actual peak.
 
 ## Try it
 

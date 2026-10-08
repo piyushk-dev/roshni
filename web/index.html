@@ -160,6 +160,22 @@
       <ul class="facts" id="facts"><li class="fact-empty" data-t="factsLoading"></li></ul>
     </section>
 
+    <section class="band split" id="ask">
+      <div>
+        <h2 data-t="askTitle"></h2>
+        <p class="section-lede" data-t="askSub"></p>
+        <form id="ask-form" class="ask-form">
+          <input id="ask-input" type="text" maxlength="300" required>
+          <button class="chip chip-strong" type="submit" data-t="askSend"></button>
+        </form>
+        <div class="filters" id="ask-examples"></div>
+      </div>
+      <div class="phone ask-answer" aria-live="polite">
+        <div class="bubble in" id="ask-q" hidden></div>
+        <div class="bubble out" id="ask-a" data-t="askEmpty"></div>
+      </div>
+    </section>
+
     <section class="band split" id="flats">
       <div>
         <h2 data-t="flatTitle"></h2>
@@ -285,6 +301,7 @@
     <div class="next-actions">
       <button id="to-quote" class="chip cta" type="button" data-t="checkQuoteCta"></button>
       <a class="chip cta" href="#whatsapp" id="to-apply" data-t="applyCta"></a>
+      <a class="chip cta" id="share" target="_blank" rel="noopener" data-t="share"></a>
     </div>
     <button class="again chip" type="button" data-t="again"></button>
   </section>

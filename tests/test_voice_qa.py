@@ -72,3 +72,15 @@ def test_answers_are_grounded_in_the_household():
     assert qa.answer("When will the net meter come?", user, "en", client=Fake()) == "Ask your provider."
     system = seen["system"][0]["text"]
     assert "2 kW recommended" in system and "step 6: Net meter and inspection" in system and "15555" in system
+
+
+def test_ask_route(monkeypatch):
+    import json
+
+    from surya import handler
+
+    monkeypatch.setattr(qa, "answer", lambda q, user, lang: f"[{lang}] {q} {user.get('last', {}).get('kw')}")
+    ev = lambda body: {"requestContext": {"http": {"method": "POST"}}, "rawPath": "/ask", "body": json.dumps(body)}
+    out = json.loads(handler.lambda_handler(ev({"question": "Loan?", "lang": "hi", "last": {"kw": 2}}), None)["body"])
+    assert out["answer"] == "[hi] Loan? 2"
+    assert handler.lambda_handler(ev({"question": "  "}), None)["statusCode"] == 400

@@ -182,6 +182,9 @@ a:focus-visible, button:focus-visible, input:focus-visible, label:focus-within {
 .pill.ok { background: var(--go-soft); color: var(--go); border-color: transparent; }
 .pill.warn { background: var(--warn-soft); color: var(--warn); border-color: transparent; }
 
+.ask-form { display: flex; gap: 8px; flex-wrap: wrap; }
+.ask-form input { flex: 1 1 16rem; min-width: 0; font: inherit; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); }
+.ask-answer .bubble.out { white-space: pre-wrap; max-width: 100%; }
 .field { display: grid; gap: 6px; font-size: var(--step--1); color: var(--muted); max-width: 22rem; }
 .field input { font: 400 1.3rem var(--font-meter); padding: 10px 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); }
 .society { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin: 0; }

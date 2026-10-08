@@ -57,6 +57,15 @@ def lambda_handler(event: dict, context) -> dict:
     fact = _fact_route(route)
     if fact:
         return _fact_action(fact, event)
+    if route == "POST /ask":
+        from . import qa
+
+        body = json.loads(event.get("body") or "{}")
+        question = str(body.get("question", "")).strip()
+        if not question:
+            return _response(400, {"error": "ask a question"})
+        context = {"last": body["last"]} if isinstance(body.get("last"), dict) else {}
+        return _response(200, {"answer": qa.answer(question[:500], context, body.get("lang", "en"))})
     if route not in ("POST /analyze", "POST /bill", "POST /quote"):
         return _response(404, {"error": f"no route {route}"})
 

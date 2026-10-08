@@ -266,6 +266,26 @@ Object.assign(T.hi, {
   c10d: "हाउसिंग सोसाइटी के कॉमन एरिया के लिए सोलर", c11d: "उत्पादन जाँच के लिए सिस्टम का असली साइज़",
 });
 
+
+Object.assign(T.en, {
+  share: "Share on WhatsApp",
+  shareGo: (kw, net, payback, url) => `Our home could go solar: ${kw} kW, ${net} after the PM Surya Ghar subsidy, paying for itself in ${payback} years. Check yours with a photo of your electricity bill: ${url}`,
+  shareSkip: (url) => `Checked rooftop solar for our home with Surya Saathi. Check yours with a photo of your electricity bill: ${url}`,
+  askTitle: "Ask anything about rooftop solar",
+  askSub: "Loans, the subsidy, vendors, net metering, what to do when a step is stuck. Answers stick to the scheme's facts and say so when they don't know. On WhatsApp you can ask by voice note, in Hindi.",
+  askSend: "Ask", askEmpty: "Your answer will appear here.", askThinking: "Thinking…",
+  askExamples: ["Can I get a loan without collateral?", "My vendor wants 70% advance. Is that normal?", "Is my rented flat eligible?"],
+});
+Object.assign(T.hi, {
+  share: "WhatsApp पर शेयर करें",
+  shareGo: (kw, net, payback, url) => `हमारे घर पर सोलर लग सकता है: ${kw} kW, PM सूर्य घर सब्सिडी के बाद ${net}, ${payback} साल में लागत वसूल। अपने बिजली बिल की फोटो से अपना भी जाँचें: ${url}`,
+  shareSkip: (url) => `सूर्य साथी से अपने घर के लिए रूफ़टॉप सोलर जाँचा। अपने बिजली बिल की फोटो से अपना भी जाँचें: ${url}`,
+  askTitle: "रूफ़टॉप सोलर के बारे में कुछ भी पूछें",
+  askSub: "लोन, सब्सिडी, वेंडर, नेट मीटरिंग, कोई कदम अटके तो क्या करें। जवाब योजना की जानकारी पर टिके रहते हैं, और पता न हो तो साफ़ बताते हैं। WhatsApp पर हिंदी में वॉइस नोट से भी पूछ सकते हैं।",
+  askSend: "पूछें", askEmpty: "जवाब यहाँ दिखेगा।", askThinking: "सोचा जा रहा है…",
+  askExamples: ["क्या बिना गारंटी के लोन मिलेगा?", "वेंडर 70% एडवांस माँग रहा है, क्या यह ठीक है?", "क्या किराए के फ़्लैट पर सोलर लग सकता है?"],
+});
+
 const $ = (id) => document.getElementById(id);
 const state = { lang: initialLang(), lat: null, lon: null, last: null, lastBody: null, lastQuote: null };
 
@@ -291,7 +311,7 @@ function applyLang() {
   if (state.lat !== null) $("locate").textContent = t("locationOn");
   if (state.last) render(state.last);
   if (state.lastQuote) renderQuote(state.lastQuote);
-  if (typeof renderSteps === "function") { renderSteps(); renderFacts(); renderWhatsApp(); renderSociety(); }
+  if (typeof renderSteps === "function") { renderSteps(); renderFacts(); renderWhatsApp(); renderSociety(); renderAskExamples(); }
 }
 
 function show(id) {
@@ -439,6 +459,7 @@ function render(data) {
 
   optionsTable(a);
   billRead(data.bill);
+  $("share").href = shareLink(data);
   $("bonus").hidden = !data.bonus;
   $("bonus").textContent = data.bonus || "";
   renderDoctor(data.doctor);
@@ -834,6 +855,49 @@ $("copy-rwa").addEventListener("click", async () => {
     btn.textContent = t("copyFallback");
   }
   setTimeout(() => { btn.textContent = t("copy"); }, 2500);
+});
+
+
+// --- share a result; ask a question ------------------------------------------------------
+function shareLink(data) {
+  const a = data.analysis;
+  const o = a.recommended;
+  const url = location.origin + location.pathname;
+  const text = o ? t("shareGo", o.kw, rupees(o.net_cost), o.payback_years.toFixed(1), url) : t("shareSkip", url);
+  return "https://wa.me/?text=" + encodeURIComponent(text);
+}
+
+function renderAskExamples() {
+  const box = $("ask-examples");
+  box.innerHTML = "";
+  for (const q of t("askExamples")) {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "chip";
+    b.textContent = q;
+    b.addEventListener("click", () => { $("ask-input").value = q; ask(q); });
+    box.append(b);
+  }
+}
+
+async function ask(question) {
+  $("ask-q").hidden = false;
+  $("ask-q").textContent = question;
+  $("ask-a").textContent = t("askThinking");
+  try {
+    const last = state.last && state.last.analysis.recommended
+      ? { verdict: state.last.analysis.verdict, kw: state.last.analysis.recommended.kw, discom: state.last.analysis.discom_name } : undefined;
+    const r = await post("/ask", { question, last });
+    $("ask-a").textContent = r.answer;
+  } catch (e) {
+    $("ask-a").textContent = e.message || t("error");
+  }
+}
+
+$("ask-form").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const q = $("ask-input").value.trim();
+  if (q) ask(q);
 });
 
 $("privacy-link").href = API + "/privacy";
