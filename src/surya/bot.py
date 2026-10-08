@@ -172,6 +172,12 @@ def handle(msg: dict, user: dict, wa, pipeline) -> dict | None:
         if low.startswith("scam ") or low.startswith("check offer ") or scam.looks_like_offer(text):
             wa.send_text(to, scam.message(text, lang))
             return user
+        if low in ("dust", "clean", "cleaning", "धूल", "सफ़ाई", "सफाई"):
+            try:
+                wa.send_text(to, product.dust_message(product.dust(user.get("lat"), user.get("lon")), lang))
+            except Exception:
+                wa.send_text(to, "Dust forecast unavailable right now. Try again in a while." if lang == "en" else "धूल का अनुमान अभी नहीं मिल रहा। थोड़ी देर बाद फिर कोशिश करें।")
+            return user
         if low in ("passport", "handover", "checklist", "पासपोर्ट"):
             groups = product.checklists()["groups"]
             wa.send_text(to, "\n\n".join(g["title"][lang]+"\n"+"\n".join("☐ "+i["text"][lang] for i in g["items"]) for g in groups))

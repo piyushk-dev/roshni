@@ -48,6 +48,13 @@ def _handle(event: dict, context) -> dict:
         return _response(200, product.schemes(params.get("state", "DL"), params.get("kw", 3), params.get("dcr", "yes")))
     if route == "POST /finance/plan":
         return _response(200, product.finance(body))
+    if route == "GET /care/dust":
+        try:
+            return _response(200, product.dust(params.get("lat"), params.get("lon")))
+        except ValueError:
+            raise
+        except Exception:  # the forecast service is down or slow; the rest of the page still works
+            return _response(502, {"error": "dust forecast unavailable right now"})
     if route == "GET /care/checklists":
         return _response(200, product.checklists())
     if route == "POST /care/check":

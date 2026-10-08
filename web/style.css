@@ -683,6 +683,23 @@ code { font: 500 0.9rem/1.4 var(--font-code); background: var(--tint); color: va
   .phone { height: auto; width: min(100%, 330px); }
 }
 
+/* dust this week: pixel bars, the cleaning day outlined in green */
+.dust { display: grid; gap: 18px; margin-top: clamp(24px, 3vw, 36px); padding: clamp(22px, 3vw, 30px); background: var(--surface); border: 1px solid var(--line); border-radius: 16px; }
+.dust-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: 12px 24px; }
+.dust-head h2 { font-size: clamp(1.4rem, 2.2vw, 1.75rem); margin-bottom: 4px; }
+.dust-days { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; }
+.dday { position: relative; display: grid; grid-template-rows: auto auto 128px auto auto; gap: 6px; justify-items: center; padding: 18px 8px 14px; border: 1px solid var(--line); border-radius: 12px; text-align: center; }
+.dday.clean { border-color: var(--green); box-shadow: inset 0 0 0 1px var(--green); }
+.dday .dname { font-weight: 600; }
+.dday .ddate { font-size: 0.9rem; color: var(--muted); }
+.dbar { align-self: end; width: 30px; min-height: 6px; background: repeating-linear-gradient(0deg, var(--bar) 0 8px, transparent 8px 11px); transition: height 0.7s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.dday.clear .dbar { --bar: var(--green); } .dday.dusty .dbar { --bar: var(--sun); } .dday.high .dbar { --bar: #a0611a; }
+.dday .dlevel { font-weight: 600; font-size: 0.95rem; }
+.dday .dval { font-size: 0.85rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.tag-clean { position: absolute; top: -12px; padding: 2px 9px; border-radius: 5px; background: var(--green); color: var(--on-dark); font-size: 0.8rem; font-weight: 600; }
+.dust-advice { display: flex; gap: 10px; align-items: flex-start; font-weight: 600; font-size: 1.05rem; }
+.dust-advice .sq { margin-top: 8px; }
+
 /* ---------- responsive: tools ---------- */
 @media (max-width: 1080px) {
   .board { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -704,4 +721,8 @@ code { font: 500 0.9rem/1.4 var(--font-code); background: var(--tint); color: va
   .passport-head .btn { grid-column: 1 / -1; justify-self: start; }
   .gauge { grid-template-columns: minmax(0, 1fr); justify-items: start; }
   .figs dd { font-size: 1.25rem; }
+  .dust-days { gap: 6px; }
+  .dday { padding: 16px 2px 10px; grid-template-rows: auto auto 96px auto auto; }
+  .dbar { width: 20px; }
+  .dday .dval { font-size: 0.75rem; }
 }

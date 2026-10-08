@@ -22,23 +22,15 @@ Delhi's newest deal goes unnoticed too. Homes using up to 400 units a month can 
 
 ## What it does
 
-This branch adds the purchase and ownership tools described in the [PM research brief](docs/product-research.md) and [three-minute demo guide](docs/hackathon-demo.md). The brief links Reddit discovery, enterprise workflows, official rules and the rollout priorities.
-
-- **Find & compare:** sourced real business profiles, sample comparisons, anonymous quote-risk examples, a manual quote preview with scope and payment terms, and a forwarded-offer warning check. Sample replies are explicitly simulated. Saving a preference does not contact an installer or share a number; no real business is ranked on fabricated terms.
-- **Schemes & budget:** all 36 states and union territories, conditional DCR assistance, sourced state help, and a cash/EMI calculation for a 0–12 month subsidy wait. State top-ups are excluded from the budget. Reduced EMI is an illustration conditional on lender recasting. A checked quote can populate this budget.
-- **Solar passport:** signing and handover evidence checks, the on-grid outage limitation, comparable monthly promise versus actual generation, a service-note draft, and first-bill import/export reconciliation. Explicit browser saving, text export and clearing are available in Hindi and English.
-- **WhatsApp:** `QUOTES`, `CHOOSE 1`, `SCAM <offer>`, `PASSPORT`, and `SCHEMES AS` connect to the same deterministic checks. Existing bill, voice and application flows remain available on the cloud backend.
-
-Delhi's state top-up now uses the official per-kW cap rather than automatically matching the central subsidy. Assam's assistance entry links APDCL's official ULA document. Secondary state-policy sources remain labelled for official confirmation. Supporting every national assistance region does not imply audited tariffs, settlement rules or local installer coverage in every region.
-
 | Stage | What Surya Saathi does |
 |---|---|
 | **Decide** | **Bill photo → right size, cost after subsidy, EMI, payback, CO₂**, or an honest "skip". Months missing from the bill are estimated from local temperature. A smaller system wins when it gets within 10% of the best 25-year value. Delhi's ₹0-upfront and state top-up are flagged when they apply |
 | **Save now** | **Bill doctor**: flags sanctioned load far above your actual peak (₹5,500/yr on our test bill), estimated readings, one-off charges, and missing export credit |
-| **Choose** | **Quote checker**: non-DCR panels, subsidy over the cap, ₹/kW against live local prices, fewer panels than quoted, undersized inverter, short warranties, big advances, plus questions to ask the vendor |
+| **Know your help** | **Schemes**: the central subsidy for all 36 states and UTs (higher in hill and North-East states), each state's top-up shown separately with its conditions and source (Delhi: ₹26,000/kW up to ₹78,000, from solar.delhi.gov.in), the 5.75% collateral-free loan, and a **budget planner** for the months of EMI before the subsidy arrives |
+| **Choose** | **Get quotes**: one request; every vendor's quote is checked by the same rules and compared by what you pay **after subsidy**, so a cheap quote with imported panels shows up as the most expensive. Requests from one PIN code pool into a group price at five homes. The **quote checker** reads quotes you already have, and the **scam check** flags forwarded offers (fees, look-alike portals, OTP requests, subsidy over the cap, "free solar", pressure to decide today) |
 | **Apply** | **8-step plan on Step Functions**, starting with a pre-flight check for the common rejections. A nudge when a step runs long. **STUCK** drafts a complaint for whoever is holding things up: helpline, then nodal officer, then grievance portal, then RTI. The household sends it |
 | **Get paid** | E-token and claim-deadline reminders inside the same plan |
-| **Keep it running** | **Inverter or app photo → output against what the panels should make** this month at this location: clean, check, or keep as warranty evidence |
+| **Keep it running** | **Dust this week**: a live CAMS forecast (via Open-Meteo) picks the day to clean the panels, after the dust settles. A **solar passport** of signing and handover checks, **promised vs actual** generation with a note for the installer, the **first bill's energy flow** (generation is not export), and **support requests** with the evidence to attach. On WhatsApp, an inverter photo is checked against what the panels should make |
 | **No roof of your own** | **Flats and societies**: common-area solar at ₹18,000/kW, a calculator, and a ready message for the RWA |
 | **Any question** | Typed or spoken, in Hindi or English. Voice note in (Transcribe), voice note out (Polly). Answers are grounded in the household's own estimate and the facts board |
 
@@ -63,7 +55,8 @@ flowchart LR
   API --> BR
   WORK --> TR[Transcribe] & PO[Polly] & S3[(S3 voice<br/>1-day TTL)]
   WORK --> SF[Step Functions<br/>8-stage journey] --> JL[Lambda<br/>nudges]
-  WORK & API --> DDB[(DynamoDB<br/>knowledge · sessions · sunlight)]
+  WORK & API --> DDB[(DynamoDB<br/>knowledge · sessions · sunlight · marketplace)]
+  API --> AQ[Open-Meteo<br/>dust forecast]
   SCH[EventBridge Scheduler<br/>weekly] --> WATCH[Lambda<br/>watcher] --> DDB
   API --> SUN[PVGIS + NASA POWER]
 ```
@@ -90,7 +83,7 @@ flowchart LR
 
 ```bash
 python -m venv .venv && .venv/Scripts/pip install pytest boto3 aws-sam-cli
-.venv/Scripts/python -m pytest            # 173 tests, offline
+.venv/Scripts/python -m pytest            # 179 tests, offline
 sam build && sam deploy --guided          # the whole backend
 python scripts/deploy_web.py              # the website, to Amplify
 ```
@@ -107,10 +100,11 @@ The local server runs the deterministic tools and uses captured Delhi sunlight f
 ## Honest limits
 
 - **The PM Surya Ghar portal has no API.** The journey guides and tracks the application; the household submits it.
+- **WhatsApp commands:** `QUOTES` and `CHOOSE 1` (compare and pick), `SCAM <offer>`, `SCHEMES UP`, `PASSPORT`, `DUST`, plus `APPLY`, `DONE`, `STUCK`, `FLAT`, `SYSTEM 3.3` and `DELETE MY DATA`.
 - **WhatsApp:** Meta's Cloud API integration is built, but Meta only lets verified businesses reply, so the demo runs on Twilio's sandbox.
 - **Nudges days apart** would need an approved WhatsApp template in production. Demo mode (`APPLY DEMO`) shortens a day to 4 seconds.
 - **State assistance needs local confirmation.** The schemes selector covers central rules for all 36 states and union territories. Delhi, Uttar Pradesh and Assam have government source links; other reviewed entries distinguish secondary reports from official guidance. Unreviewed local support is shown as unknown.
-- **Installer profiles are research, not registration verification.** Confirm your PIN code, DISCOM list, written scope and contract with the actual business. Instant quotes and group discounts are samples.
+- **The demo vendors are fictional.** The marketplace's four vendors, their replies and scorecards are sample data, labelled on every screen, each showing a different trap. Real vendors can answer requests, and their scores come only from the quotes they actually send. No real company is shown with prices it didn't quote.
 - **Ownership checks are evidence aids.** They do not certify equipment safety, DCR compliance, warranty liability or a monetary bill settlement. Generation review is manual and uses a completed month; low output alone does not diagnose dust.
 - **Support packs prepare the next conversation.** They distinguish monitoring, generation, billing, documents and maintenance, record dates and list relevant evidence. They do not submit tickets. Elapsed days are dated records, not regulatory deadlines.
 
@@ -124,6 +118,7 @@ The local server runs the deterministic tools and uses captured Delhi sunlight f
 - Sunlight: [PVGIS](https://re.jrc.ec.europa.eu/pvg_tools/en/) and [NASA POWER](https://power.larc.nasa.gov/)
 - Grid emissions: [CEA CO₂ database v22](https://cea.nic.in/wp-content/uploads/baseline/2026/09/User_Guide__Version_22.0.pdf)
 - Adoption: [CEEW rooftop solar study](https://www.ceew.in/sites/default/files/final-ceew-rts-study-press-release-4june26.pdf)
+- Dust and smog forecast: [Open-Meteo air quality](https://open-meteo.com/en/docs/air-quality-api) (CAMS); soiling losses from the Delhi study summarised by [Renewable Watch](https://renewablewatch.in/2018/12/22/soiling-analysis/)
 - Scheme and policy facts: listed with their sources in [`facts.json`](src/surya/data/facts.json)
 
 MIT licensed.

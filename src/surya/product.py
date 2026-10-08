@@ -216,3 +216,85 @@ def bill_balance(body: dict) -> dict:
             "status": "review" if abs(difference) > 1 else "matched",
             "note": {"en": "Use readings for the same billing dates and a system without battery storage. Generation is not export. A positive difference means meter export exceeds bill export; a negative one means the reverse. Check periods and carried credits. These are energy balances, not a bill calculation; banking, fixed charges and settlement follow your DISCOM’s rules. A mismatch needs review, not an automatic refund.",
                      "hi": "एक ही बिल अवधि की रीडिंग और बिना बैटरी वाला सिस्टम लें। उत्पादन और निर्यात अलग हैं। धनात्मक अंतर में मीटर का निर्यात बिल से ज़्यादा है; ऋणात्मक में उलटा। अवधि और पुराने क्रेडिट जाँचें। यह ऊर्जा का हिसाब है, रुपये का बिल नहीं; बैंकिंग और भुगतान बिजली कंपनी के नियमों से तय होंगे। अंतर पर जाँच चाहिए, अपने-आप रिफंड नहीं।"}}
+
+
+# --- dust and smog: when to clean the panels ----------------------------------------------------
+# Delhi's dust cuts output by 0.3-0.6% a day (EU PVSEC 2018 study); cleaning is worth doing after
+# a dusty spell, not during one. The forecast is CAMS data served free by Open-Meteo.
+DUST_URL = "https://air-quality-api.open-meteo.com/v1/air-quality"
+DUST_SOURCE = "https://open-meteo.com/en/docs/air-quality-api"
+DUST_CACHE_S = 3 * 3600
+DELHI = (28.6, 77.2)
+_dust_cache: dict[tuple[float, float], tuple[float, dict]] = {}
+
+
+def _fetch_json(url: str) -> dict:
+    import json
+    import urllib.request
+
+    req = urllib.request.Request(url, headers={"User-Agent": "surya-saathi"})
+    with urllib.request.urlopen(req, timeout=10) as r:
+        return json.loads(r.read())
+
+
+def dust(lat=None, lon=None, fetch=None, now: float | None = None) -> dict:
+    """Five days of PM10 and dust for a place, and the first clear day after the dust settles."""
+    import time
+
+    lat = round(number(lat if lat not in (None, "") else DELHI[0], "latitude", 6, 38), 1)
+    lon = round(number(lon if lon not in (None, "") else DELHI[1], "longitude", 68, 98), 1)
+    now = now or time.time()
+    hit = _dust_cache.get((lat, lon))
+    if hit and now - hit[0] < DUST_CACHE_S:
+        return hit[1]
+    raw = (fetch or _fetch_json)(f"{DUST_URL}?latitude={lat}&longitude={lon}&hourly=pm10,dust&timezone=Asia%2FKolkata&forecast_days=5")
+    hours = raw["hourly"]
+    by_day: dict[str, dict[str, list[float]]] = {}
+    for t, pm, du in zip(hours["time"], hours["pm10"], hours["dust"]):
+        day = by_day.setdefault(t[:10], {"pm10": [], "dust": []})
+        if pm is not None:
+            day["pm10"].append(pm)
+        if du is not None:
+            day["dust"].append(du)
+    days = []
+    for d, v in sorted(by_day.items()):
+        pm = round(sum(v["pm10"]) / len(v["pm10"])) if v["pm10"] else None
+        du = round(max(v["dust"])) if v["dust"] else None
+        # India's 24-hour PM10 standard is 100 µg/m³
+        level = "high" if (pm or 0) > 250 or (du or 0) > 300 else "dusty" if (pm or 0) > 100 or (du or 0) > 150 else "clear"
+        days.append({"date": d, "pm10": pm, "dust_max": du, "level": level})
+    dusty = [i for i, d in enumerate(days) if d["level"] != "clear"]
+    if not dusty:
+        advice, clean = "clear_week", None
+    elif dusty[-1] == len(days) - 1:
+        advice, clean = "dusty_week", None
+    else:
+        advice, clean = "clean_after", days[dusty[-1] + 1]["date"]
+    result = {"lat": lat, "lon": lon, "days": days, "advice": advice, "clean_on": clean, "source": DUST_SOURCE}
+    _dust_cache[(lat, lon)] = (now, result)
+    return result
+
+
+DUST_TEXT = {
+    "en": {"head": "🌫️ Dust and smog near you, next {n} days:", "clear": "low", "dusty": "dusty", "high": "very dusty",
+           "row": "{day}: {level} (dust {du} µg/m³)",
+           "clean_after": "🧽 Clean the panels on {day}, after the dust settles. Use plain water early in the morning; never spray the inverter.",
+           "dusty_week": "🧽 Dust stays high all week. Wait for a clear day to clean, or the panels just get dusty again.",
+           "clear_week": "🧽 Low dust this week, so your usual cleaning schedule is fine.",
+           "why": "Dust in Delhi can cut solar output by 0.3–0.6% a day."},
+    "hi": {"head": "🌫️ आपके इलाके में अगले {n} दिन धूल और स्मॉग:", "clear": "कम", "dusty": "धूल", "high": "बहुत धूल",
+           "row": "{day}: {level} (धूल {du} µg/m³)",
+           "clean_after": "🧽 {day} को पैनल साफ़ करें, धूल बैठने के बाद। सुबह-सुबह सादे पानी से; इन्वर्टर पर कभी पानी न डालें।",
+           "dusty_week": "🧽 पूरे हफ़्ते धूल ज़्यादा रहेगी। साफ़ दिन का इंतज़ार करें, वरना पैनल फिर धूल से भर जाएँगे।",
+           "clear_week": "🧽 इस हफ़्ते धूल कम है, सफ़ाई का सामान्य समय ठीक है।",
+           "why": "दिल्ली में धूल से सोलर उत्पादन रोज़ 0.3–0.6% घट सकता है।"},
+}
+
+
+def dust_message(result: dict, lang: str = "en") -> str:
+    t = DUST_TEXT[lang if lang in DUST_TEXT else "en"]
+    label = lambda iso: date.fromisoformat(iso).strftime("%a %d %b")
+    lines = [t["head"].format(n=len(result["days"]))]
+    lines += [t["row"].format(day=label(d["date"]), level=t[d["level"]], du=d["dust_max"] if d["dust_max"] is not None else d["pm10"]) for d in result["days"]]
+    lines += ["", t[result["advice"]].format(day=label(result["clean_on"]) if result["clean_on"] else ""), t["why"]]
+    return "\n".join(lines)

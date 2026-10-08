@@ -73,6 +73,12 @@ Object.assign(T.en, {
   spKind: "Problem", spNoticed: "First noticed", spContacted: "Last contacted (optional)", spGo: "Prepare request",
   spEvidence: "Attach", spDraft: "Your note", spDays: (d) => `${d} days since you last contacted them.`,
   copy: "Copy", copied: "Copied", toolError: "That didn't work. Check the numbers and try again.",
+  dTitle: "Dust this week", dSub: "Dust and smog cut solar output. A live forecast for your area, and the best day to clean.",
+  dLocate: "Use my location", dClean: "Clean", dLevels: { clear: "Low", dusty: "Dusty", high: "Very dusty" },
+  dAdvice: { clean_after: (day) => `Clean the panels on ${day}, after the dust settles. Plain water, early morning; never spray the inverter.`,
+    dusty_week: () => "Dust stays high all week. Wait for a clear day, or the panels just get dusty again.",
+    clear_week: () => "Low dust this week, so your usual cleaning schedule is fine." },
+  dWhy: "In Delhi, dust can cut output by 0.3–0.6% a day.", dSource: "Forecast: CAMS, via", dDown: "The dust forecast isn't available right now.",
 });
 
 Object.assign(T.hi, {
@@ -145,6 +151,12 @@ Object.assign(T.hi, {
   spKind: "समस्या", spNoticed: "पहली बार कब देखा", spContacted: "आखिरी बार कब संपर्क किया (वैकल्पिक)", spGo: "अनुरोध तैयार करें",
   spEvidence: "साथ लगाएँ", spDraft: "आपका नोट", spDays: (d) => `आखिरी संपर्क को ${d} दिन हुए।`,
   copy: "कॉपी करें", copied: "कॉपी हो गया", toolError: "यह नहीं चला। संख्याएँ जाँचकर फिर कोशिश करें।",
+  dTitle: "इस हफ़्ते धूल", dSub: "धूल और स्मॉग से सोलर उत्पादन घटता है। आपके इलाके का लाइव अनुमान, और सफ़ाई का सबसे अच्छा दिन।",
+  dLocate: "मेरी लोकेशन लें", dClean: "सफ़ाई", dLevels: { clear: "कम", dusty: "धूल", high: "बहुत धूल" },
+  dAdvice: { clean_after: (day) => `${day} को पैनल साफ़ करें, धूल बैठने के बाद। सुबह-सुबह सादे पानी से; इन्वर्टर पर कभी पानी न डालें।`,
+    dusty_week: () => "पूरे हफ़्ते धूल ज़्यादा रहेगी। साफ़ दिन का इंतज़ार करें, वरना पैनल फिर धूल से भर जाएँगे।",
+    clear_week: () => "इस हफ़्ते धूल कम है, सफ़ाई का सामान्य समय ठीक है।" },
+  dWhy: "दिल्ली में धूल से उत्पादन रोज़ 0.3–0.6% घट सकता है।", dSource: "अनुमान: CAMS, स्रोत", dDown: "धूल का अनुमान अभी उपलब्ध नहीं है।",
 });
 
 const tools = { states: null, q: { rid: null, view: null, timer: null, ran: false, chosen: null, seen: new Set() },
@@ -691,6 +703,7 @@ function fillSupportKinds() {
 }
 
 async function openCare() {
+  if (!tools.care.dust) loadDust(state.lat, state.lon);
   if (!tools.care.lists) {
     try { tools.care.lists = await getJSON("/care/checklists"); } catch (_) { return; }
     renderPassport();
@@ -706,6 +719,44 @@ async function openCare() {
     if (est && est.analysis && est.analysis.recommended) $("g-kw").value = est.analysis.recommended.kw;
   }
 }
+
+
+// --- dust this week -------------------------------------------------------------------------------
+function dayName(iso, opts) { return new Date(iso + "T00:00:00").toLocaleDateString(state.lang === "hi" ? "hi-IN" : "en-IN", opts); }
+function renderDust() {
+  const d = tools.care.dust, wrap = $("d-days"), advice = $("d-advice");
+  if (!d) return;
+  wrap.innerHTML = "";
+  // bars and numbers use the dust reading, the same measure that sets each day's level
+  const val = (x) => x.dust_max ?? x.pm10 ?? 0;
+  const max = Math.max(300, ...d.days.map(val));
+  for (const day of d.days) {
+    const box = el("div", `dday ${day.level}` + (day.date === d.clean_on ? " clean" : ""));
+    if (day.date === d.clean_on) box.append(el("span", "tag-clean", t("dClean")));
+    const bar = el("i", "dbar");
+    bar.style.height = `${Math.max(6, Math.round(100 * val(day) / max))}%`;
+    bar.title = `PM10 ${day.pm10 ?? "–"} µg/m³`;
+    box.append(el("span", "dname", dayName(day.date, { weekday: "short" })), el("span", "ddate", dayName(day.date, { day: "numeric", month: "short" })),
+      bar, el("span", "dlevel", t("dLevels")[day.level]), el("span", "dval", `${val(day)} µg/m³`));
+    wrap.append(box);
+  }
+  advice.innerHTML = "";
+  const when = d.clean_on ? dayName(d.clean_on, { weekday: "long", day: "numeric", month: "long" }) : "";
+  advice.append(el("span", "sq " + (d.advice === "dusty_week" ? "amber" : "ok")), el("span", null, t("dAdvice")[d.advice](when)));
+}
+async function loadDust(lat, lon) {
+  const q = lat !== null && lat !== undefined ? `?lat=${lat}&lon=${lon}` : "";
+  try { tools.care.dust = await getJSON(`/care/dust${q}`); renderDust(); }
+  catch (_) { $("d-advice").textContent = t("dDown"); }
+}
+$("d-locate").addEventListener("click", () => {
+  if (!navigator.geolocation) return;
+  navigator.geolocation.getCurrentPosition((p) => {
+    state.lat = Math.round(p.coords.latitude * 100) / 100;
+    state.lon = Math.round(p.coords.longitude * 100) / 100;
+    loadDust(state.lat, state.lon);
+  }, () => { $("d-advice").textContent = t("locationOff"); }, { timeout: 10000 });
+});
 
 // --- wiring ---------------------------------------------------------------------------------------
 $("q-form").addEventListener("submit", requestQuotes);
@@ -754,7 +805,7 @@ window.renderProduct = () => {
   renderSchemes();
   renderPlan();
   if (tools.care.lists) { renderPassport(); fillSupportKinds(); }
-  renderGen(); renderBill(); renderSupport();
+  renderGen(); renderBill(); renderSupport(); renderDust();
 };
 const firstView = (location.hash || "").replace("#", "");
 if (["quotes", "schemes", "care"].includes(firstView)) window.productRoute(firstView);

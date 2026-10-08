@@ -115,6 +115,9 @@ Resources:
         CareSupport:
           Type: HttpApi
           Properties: {ApiId: !Ref Api, Path: /care/support, Method: POST}
+        CareDust:
+          Type: HttpApi
+          Properties: {ApiId: !Ref Api, Path: /care/dust, Method: GET}
         Scam:
           Type: HttpApi
           Properties: {ApiId: !Ref Api, Path: /scam-check, Method: POST}

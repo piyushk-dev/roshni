@@ -83,9 +83,9 @@ Next rollout: Delhi for the existing bill pipeline, UP for a sourced top-up, Ass
 - [UPNEDA brochure](https://upneda.org.in/MediaGallery/Documents/GridConnected_RSS.pdf): ₹15,000/kW state help capped at ₹30,000, separate from central assistance.
 - [APDCL ULA bidding document](https://apdcl.org/website/docs/tender_2024_25/BidDocumentRTSPMSGMBY.pdf): identifies special-category central rates and a state assistance component. Display route conditions separately.
 
-## Real business profiles
+## Vendors in the demo
 
-[SolarSquare Delhi](https://www.solarsquare.in/rooftop-solar-in-delhi/), [Alien Energy Delhi NCR](https://alienenergy.in/solar-energy-company-delhi/), [Bridgeway Power](https://bridgewaypower.in/), [Freyr Energy Hyderabad](https://freyrenergy.com/hyderabad/) and [Tata Power Solaroof](https://www.tatapower.com/solaroof). Profiles describe published offerings and enquiry regions. There is no partnership, contact exchange, verified registration, imported-panel allegation, fabricated portal grade or invented customer outcome.
+An earlier draft listed real installers (SolarSquare, Alien Energy, Bridgeway Power, Freyr Energy, Tata Power Solaroof) next to simulated prices and instant replies. That was dropped: showing a real company beside numbers it never quoted misleads, however it is labelled. The demo marketplace uses four fictional vendors instead, each showing one trap, and every screen labels them as demo. Real vendors can answer requests through the vendor path; their scorecards come only from the quotes they send.
 
 ## Pilot and business model
 

@@ -22,7 +22,11 @@ outputs = {
 }
 # the Twilio sandbox number; set WA_JOIN to the sandbox's "join xxx-yyy" phrase to show it on the page
 wa = {"number": "+1 415 523 8886", "join": os.environ.get("WA_JOIN", "")}
-(WEB / "config.js").write_text(f'window.SURYA_API = "{outputs["ApiUrl"]}";\nwindow.SURYA_WA = {json.dumps(wa)};\n', encoding="utf-8")
+# local previews (scripts/serve_local.py) answer the API at /api; everywhere else uses the deployed one
+api = json.dumps(outputs["ApiUrl"])
+(WEB / "config.js").write_text(
+    f'window.SURYA_API = ["localhost", "127.0.0.1"].includes(location.hostname) ? "/api" : {api};\n'
+    f"window.SURYA_WA = {json.dumps(wa)};\n", encoding="utf-8")
 
 archive = io.BytesIO()
 with zipfile.ZipFile(archive, "w", zipfile.ZIP_DEFLATED) as z:
