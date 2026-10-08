@@ -13,7 +13,7 @@ Parameters:
     Description: Phone number ID from Meta's WhatsApp API Setup page
   GraphApiVersion:
     Type: String
-    Default: v23.0
+    Default: v25.0
 
 Globals:
   Function:

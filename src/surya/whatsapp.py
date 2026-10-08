@@ -12,7 +12,7 @@ import os
 import urllib.request
 from collections.abc import Iterator
 
-GRAPH = f"https://graph.facebook.com/{os.environ.get('GRAPH_VERSION', 'v23.0')}"
+GRAPH = f"https://graph.facebook.com/{os.environ.get('GRAPH_VERSION', 'v25.0')}"
 _secrets: dict[str, str] = {}
 
 
