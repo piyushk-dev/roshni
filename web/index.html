@@ -51,7 +51,7 @@
               <span data-t="upload"></span>
             </label>
             <input id="file" class="sr-only" type="file" accept="image/*,application/pdf">
-            <button id="sample" class="link-btn" type="button" data-t="sample"></button>
+            <button id="sample" class="btn btn-line btn-lg" type="button" data-t="sample"></button>
           </div>
           <p class="hero-note" data-t="heroNote"></p>
           <details class="tune">
@@ -71,7 +71,7 @@
           <div class="phone-screen">
             <div class="wa-status" aria-hidden="true">
               <span>9:41</span>
-              <span class="island"></span>
+              <span class="cam" aria-hidden="true"></span>
               <span class="sys">
                 <svg viewBox="0 0 18 12"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5" width="3" height="7" rx="1"/><rect x="10" y="2" width="3" height="10" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg>
                 <svg viewBox="0 0 16 12"><path d="M8 11.5l2.4-3a3.4 3.4 0 0 0-4.8 0zM3.6 6.4a6.3 6.3 0 0 1 8.8 0l1.5-1.8a8.7 8.7 0 0 0-11.8 0zM.2 2.6l1.5 1.8a9.3 9.3 0 0 1 12.6 0l1.5-1.8a11.7 11.7 0 0 0-15.6 0z"/></svg>
@@ -148,6 +148,7 @@
               </div>
               <span class="wa-mic"><svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/></svg></span>
             </div>
+            <div class="gesture" aria-hidden="true"></div>
           </div>
         </figure>
       </div>
@@ -349,35 +350,43 @@
       </header>
       <div class="sec" id="aws">
         <div class="diagram">
-          <svg viewBox="0 0 860 400" role="img" aria-label="Architecture: WhatsApp and the website reach API Gateway; Lambda functions read bills with Amazon Bedrock, keep state in DynamoDB, run the application journey on Step Functions, and a weekly EventBridge Scheduler job watches official sources.">
+          <svg viewBox="0 0 980 556" role="img" aria-label="Three flows. Every message: WhatsApp or the website reaches API Gateway, then Lambda, which reads the bill on Amazon Bedrock, keeps data in DynamoDB and handles voice with Transcribe and Polly, then answers on WhatsApp. Each application: replying APPLY starts a Step Functions run of 8 steps; a Lambda sends each step and a reminder when one runs late. Every week: EventBridge Scheduler runs a Lambda that re-reads official pages and flags changed facts in DynamoDB, shown on the rates and rules page.">
             <defs><marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="d-arrowhead"/></marker></defs>
+            <g class="d-lanes">
+              <text x="20" y="30">Every message</text>
+              <text x="20" y="320">Each application</text>
+              <text x="20" y="460">Every week</text>
+              <line x1="20" x2="960" y1="288" y2="288"/><line x1="20" x2="960" y1="428" y2="428"/>
+            </g>
             <g class="d-edge">
-              <path d="M150 78H246" marker-end="url(#arr)"/><path d="M150 182H246" marker-end="url(#arr)"/>
-              <path d="M376 130H452" marker-end="url(#arr)"/>
-              <path d="M582 92H650" marker-end="url(#arr)"/><path d="M582 130H650" marker-end="url(#arr)"/><path d="M582 168H650" marker-end="url(#arr)"/>
-              <path d="M517 175V262" marker-end="url(#arr)"/><path d="M582 300H650" marker-end="url(#arr)"/>
-              <path d="M200 330H452" marker-end="url(#arr)"/>
+              <path d="M190 156H241" marker-end="url(#arr)"/><path d="M412 156H463" marker-end="url(#arr)"/>
+              <path d="M654 146H680V80H705" marker-end="url(#arr)"/><path d="M654 156H705" marker-end="url(#arr)"/><path d="M654 166H680V232H705" marker-end="url(#arr)"/>
+              <path d="M559 186V228H105V187" marker-end="url(#arr)"/>
+              <path d="M190 366H241" marker-end="url(#arr)"/><path d="M412 366H463" marker-end="url(#arr)"/><path d="M654 366H705" marker-end="url(#arr)"/>
+              <path d="M190 506H241" marker-end="url(#arr)"/><path d="M412 506H463" marker-end="url(#arr)"/><path d="M654 506H705" marker-end="url(#arr)"/>
             </g>
             <g class="d-box">
-              <rect x="20" y="50" width="130" height="56" rx="4"/><rect x="20" y="154" width="130" height="56" rx="4"/>
-              <rect x="246" y="102" width="130" height="56" rx="4"/>
-              <rect x="452" y="70" width="130" height="105" rx="4" class="d-core"/>
-              <rect x="650" y="64" width="190" height="40" rx="4"/><rect x="650" y="110" width="190" height="40" rx="4"/><rect x="650" y="156" width="190" height="40" rx="4"/>
-              <rect x="452" y="262" width="130" height="76" rx="4" class="d-core"/>
-              <rect x="650" y="276" width="190" height="48" rx="4"/>
-              <rect x="20" y="302" width="180" height="56" rx="4"/>
+              <rect x="20" y="126" width="170" height="60" rx="6"/><rect x="242" y="126" width="170" height="60" rx="6"/><rect x="464" y="126" width="190" height="60" rx="6" class="d-core"/>
+              <rect x="706" y="50" width="254" height="60" rx="6"/><rect x="706" y="126" width="254" height="60" rx="6"/><rect x="706" y="202" width="254" height="60" rx="6"/>
+              <rect x="20" y="336" width="170" height="60" rx="6"/><rect x="242" y="336" width="170" height="60" rx="6" class="d-core"/><rect x="464" y="336" width="190" height="60" rx="6" class="d-core"/><rect x="706" y="336" width="254" height="60" rx="6"/>
+              <rect x="20" y="476" width="170" height="60" rx="6"/><rect x="242" y="476" width="170" height="60" rx="6" class="d-core"/><rect x="464" y="476" width="190" height="60" rx="6"/><rect x="706" y="476" width="254" height="60" rx="6"/>
             </g>
             <g class="d-text">
-              <text x="85" y="74">WhatsApp</text><text x="85" y="94" class="d-sub">via Twilio</text>
-              <text x="85" y="178">Website</text><text x="85" y="198" class="d-sub">Amplify Hosting</text>
-              <text x="311" y="126">API Gateway</text><text x="311" y="146" class="d-sub">HTTP API</text>
-              <text x="517" y="108" class="d-on">AWS Lambda</text><text x="517" y="128" class="d-sub d-on">webhook and worker</text><text x="517" y="146" class="d-sub d-on">bill and quote API</text>
-              <text x="745" y="89">Amazon Bedrock (Nova 2 Lite)</text>
-              <text x="745" y="135">DynamoDB, 4 tables</text>
-              <text x="745" y="181">PVGIS and NASA POWER</text>
-              <text x="517" y="294" class="d-on">Step Functions</text><text x="517" y="314" class="d-sub d-on">8-step journey</text>
-              <text x="745" y="297">Lambda: reminders, drafts</text><text x="745" y="315" class="d-sub">Transcribe, Polly, S3</text>
-              <text x="110" y="326">EventBridge Scheduler</text><text x="110" y="346" class="d-sub">weekly source check</text>
+              <text x="105" y="152">WhatsApp or web</text><text x="105" y="171" class="d-sub">Twilio, Amplify Hosting</text>
+              <text x="327" y="152">API Gateway</text><text x="327" y="171" class="d-sub">HTTP API</text>
+              <text x="559" y="152" class="d-on">AWS Lambda</text><text x="559" y="171" class="d-sub d-on">webhook, then worker</text>
+              <text x="833" y="76">Amazon Bedrock</text><text x="833" y="95" class="d-sub">Nova 2 Lite reads each bill 3 times</text>
+              <text x="833" y="152">Amazon DynamoDB</text><text x="833" y="171" class="d-sub">tariffs, prices, sessions, sun data</text>
+              <text x="833" y="228">Transcribe and Polly</text><text x="833" y="247" class="d-sub">Hindi voice notes, kept in S3 a day</text>
+              <text x="332" y="220" class="d-label">answer on WhatsApp in about 10 seconds</text>
+              <text x="105" y="362">You reply APPLY</text><text x="105" y="381" class="d-sub">on WhatsApp</text>
+              <text x="327" y="362" class="d-on">Step Functions</text><text x="327" y="381" class="d-sub d-on">8 steps, one at a time</text>
+              <text x="559" y="362" class="d-on">AWS Lambda</text><text x="559" y="381" class="d-sub d-on">sends each step</text>
+              <text x="833" y="362">Reminder on WhatsApp</text><text x="833" y="381" class="d-sub">when a step runs past its usual time</text>
+              <text x="105" y="502">EventBridge Scheduler</text><text x="105" y="521" class="d-sub">runs every 7 days</text>
+              <text x="327" y="502" class="d-on">AWS Lambda</text><text x="327" y="521" class="d-sub d-on">re-reads official pages</text>
+              <text x="559" y="502">DynamoDB facts</text><text x="559" y="521" class="d-sub">changed pages are flagged</text>
+              <text x="833" y="502">Rates and rules page</text><text x="833" y="521" class="d-sub">shows each fact's status</text>
             </g>
           </svg>
         </div>

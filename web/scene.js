@@ -74,11 +74,17 @@
     const S = this.S = Math.min(H, Math.round(bandPx / px));
     this.ground = H - Math.max(4, Math.round(S * 0.08));
     const skyTop = H - S;
-    this.clouds = Array.from({ length: Math.ceil(W / 60) + 2 }, (_, i) => ({
-      x: (i * 60 + r() * 40) % (W + 60) - 30, y: 4 + r() * Math.max(10, skyTop + S * 0.2) * 0.8, w: 16 + r() * 22, h: 5 + r() * 4, speed: 0.04 + r() * 0.05,
+    // clouds drift low, over the rooftops, never behind the text above them
+    this.clouds = Array.from({ length: Math.ceil(W / 80) + 2 }, (_, i) => ({
+      x: (i * 80 + r() * 40) % (W + 60) - 30, y: skyTop + 2 + r() * S * 0.3, w: 16 + r() * 22, h: 5 + r() * 4, speed: 0.04 + r() * 0.05,
     }));
     this.stars = Array.from({ length: Math.round(W * H / 220) }, () => ({ x: Math.floor(r() * W), y: Math.floor(r() * (skyTop + S * 0.5)), tw: r() * 6.28 }));
-    this.sunAt = wide ? [Math.round(W * 0.575), Math.round(Math.max(skyTop * 0.16, S * 0.2))] : [Math.round(W * 0.86), Math.round(Math.max(10, S * 0.18))];
+    this.sunAt = null;
+    const copy = document.querySelector(".hero-copy"), phone = document.querySelector(".phone");
+    if (wide && copy && phone) {
+      const a = copy.getBoundingClientRect(), b = phone.getBoundingClientRect();
+      if (b.left - a.right > 120) this.sunAt = [Math.round(((a.right + b.left) / 2 - box.left) / px), Math.round(H - S * 0.6)];
+    }
     this.far = [];
     for (let x = -4; x < W + 8;) {
       const w = 6 + Math.floor(r() * 12), h = Math.round(S * (0.14 + r() * 0.2));
@@ -123,18 +129,19 @@
     }
   };
 
-  // The dithered sky is the same every frame, so it is drawn once into a buffer and copied.
+  // Flat bands of sky with a short dithered step between them, so text set on the sky stays clean.
+  // The sky is the same every frame, so it is drawn once into a buffer and copied.
   Scene.prototype.sky = function (p, night) {
     if (this.skyFor !== night) {
       const buf = this.skyBuf || (this.skyBuf = document.createElement("canvas"));
       buf.width = this.W;
       buf.height = this.ground;
-      const c = buf.getContext("2d"), bands = p.sky.length, H = this.ground;
+      const c = buf.getContext("2d"), bands = p.sky.length, H = this.ground, EDGE = 0.82;
       for (let y = 0; y < H; y++) {
-        const f = (y / H) * (bands - 1), i = Math.floor(f), frac = f - i;
+        const f = (y / H) * (bands - 1), i = Math.floor(f), mix = Math.max(0, (f - i - EDGE) / (1 - EDGE));
+        if (mix === 0) { c.fillStyle = p.sky[i]; c.fillRect(0, y, this.W, 1); continue; }
         for (let x = 0; x < this.W; x++) {
-          const k = BAYER[y % 4][x % 4] / 16;
-          c.fillStyle = p.sky[Math.min(bands - 1, frac > k ? i + 1 : i)];
+          c.fillStyle = p.sky[Math.min(bands - 1, mix > BAYER[y % 4][x % 4] / 16 ? i + 1 : i)];
           c.fillRect(x, y, 1, 1);
         }
       }
@@ -143,8 +150,10 @@
     this.ctx.drawImage(this.skyBuf, 0, 0);
   };
 
+  // a sun rising behind the rooftops, in the gap between the page's text and the phone
   Scene.prototype.sun = function (p, night) {
-    const [cx, cy] = this.sunAt, R = Math.max(5, Math.round(this.S * 0.085));
+    if (!this.sunAt) return;
+    const [cx, cy] = this.sunAt, R = Math.max(5, Math.round(this.S * 0.12));
     if (!night) {
       const n = 8, pulse = Math.round(Math.sin(this.t / 9) + 1);
       for (let k = 0; k < n; k++) {
