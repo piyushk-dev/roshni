@@ -158,41 +158,57 @@
     <div class="wrap frame">
       <section class="sec uses" id="uses" aria-labelledby="uses-title">
         <h2 id="uses-title" data-t="usesTitle"></h2>
-        <div class="use-grid">
+        <div class="use-grid quad">
           <article class="use" id="quote">
-            <div class="snip">
-              <div class="m out"><p class="wa-text">QUOTES</p><span class="meta">11:05 <svg class="ticks" viewBox="0 0 18 11"><path d="M1 6l3 3 6-7M7 8l1 1 6-7"/></svg></span></div>
-              <div class="m in"><p class="wa-text" data-t="u1reply"></p><span class="meta">11:06</span></div>
+            <div class="use-visual">
+              <div class="snip">
+                <div class="m out"><p class="wa-text">QUOTES</p><span class="meta">11:05 <svg class="ticks" viewBox="0 0 18 11"><path d="M1 6l3 3 6-7M7 8l1 1 6-7"/></svg></span></div>
+                <div class="m in"><p class="wa-text" data-t="u1reply"></p><span class="meta">11:06</span></div>
+              </div>
             </div>
-            <h3 data-t="u1t"></h3>
-            <p data-t="u1d"></p>
-            <div class="use-actions"><a class="link-btn" href="#quotes" data-t="u1a"></a></div>
+            <div class="use-text">
+              <h3 data-t="u1t"></h3>
+              <p data-t="u1d"></p>
+              <a class="link-btn" href="#quotes" data-t="u1a"></a>
+            </div>
           </article>
           <article class="use">
-            <div class="snip">
-              <div class="m in"><p class="wa-text" data-t="u2nudge"></p><span class="meta">10:00</span></div>
-              <div class="m out"><p class="wa-text">STUCK</p><span class="meta">10:12 <svg class="ticks" viewBox="0 0 18 11"><path d="M1 6l3 3 6-7M7 8l1 1 6-7"/></svg></span></div>
-              <div class="m in"><p class="wa-text" data-t="u2reply"></p><span class="meta">10:12</span></div>
+            <div class="use-visual mini-scheme" aria-hidden="true">
+              <p class="big-label" data-t="msCentral"></p>
+              <p class="big-amount">₹78,000</p>
+              <div class="sbar"><i class="c" style="width:50%"></i><i class="s" style="width:50%"></i></div>
+              <dl class="legend-rows">
+                <div><span class="sw c"></span><dt data-t="msCentralShort"></dt><dd>₹78,000</dd></div>
+                <div><span class="sw s"></span><dt data-t="msTop"></dt><dd>₹78,000</dd></div>
+              </dl>
             </div>
-            <h3 data-t="u2t"></h3>
-            <p data-t="u2d"></p>
-            <div class="use-actions"><a class="link-btn" href="#guide" data-t="u2a"></a></div>
+            <div class="use-text">
+              <h3 data-t="u4t"></h3>
+              <p data-t="u4d"></p>
+              <a class="link-btn" href="#schemes" data-t="u4a"></a>
+            </div>
           </article>
           <article class="use">
-            <div class="snip">
-              <div class="m out voice">
-                <span class="play"></span><span class="wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
-                <span class="dur">0:06</span><span class="meta">8:30 <svg class="ticks" viewBox="0 0 18 11"><path d="M1 6l3 3 6-7M7 8l1 1 6-7"/></svg></span>
+            <div class="use-visual">
+              <div class="snip">
+                <div class="m in"><p class="wa-text" data-t="u2nudge"></p><span class="meta">10:00</span></div>
+                <div class="m out"><p class="wa-text">STUCK</p><span class="meta">10:12 <svg class="ticks" viewBox="0 0 18 11"><path d="M1 6l3 3 6-7M7 8l1 1 6-7"/></svg></span></div>
+                <div class="m in"><p class="wa-text" data-t="u2reply"></p><span class="meta">10:12</span></div>
               </div>
-              <div class="m in voice">
-                <span class="play"></span><span class="wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
-                <span class="dur">0:14</span><span class="meta">8:30</span>
-              </div>
-              <div class="m in"><p class="wa-text" lang="hi">हाँ। ₹2 लाख तक का सोलर लोन बिना गारंटी के मिलता है, लगभग 5.75% ब्याज पर, 10 साल के लिए।</p><span class="meta">8:30</span></div>
             </div>
-            <h3 data-t="u3t"></h3>
-            <p data-t="u3d"></p>
-            <div class="use-actions"><a class="link-btn" href="#ask" data-t="u3a"></a></div>
+            <div class="use-text">
+              <h3 data-t="u2t"></h3>
+              <p data-t="u2d"></p>
+              <a class="link-btn" href="#guide" data-t="u2a"></a>
+            </div>
+          </article>
+          <article class="use">
+            <div class="use-visual mini-dust" id="home-dust" aria-label="Dust forecast"></div>
+            <div class="use-text">
+              <h3 data-t="u5t"></h3>
+              <p data-t="u5d"></p>
+              <a class="link-btn" href="#care" data-t="u5a"></a>
+            </div>
           </article>
         </div>
       </section>
@@ -417,6 +433,7 @@
         <div class="group-meter" id="q-group"></div>
         <button class="link-btn" type="button" id="q-delete" data-t="qDelete"></button>
       </div>
+      <p class="vendor-link"><span data-t="qVendor"></span> <a href="#vendors" data-t="qVendorLink"></a></p>
 
       <div class="sec two-up" id="quote-card">
         <div class="tool-card">
@@ -559,6 +576,52 @@
     </div>
   </section>
 
+  <!-- ============ for vendors ============ -->
+  <section id="vendors" class="page" data-view hidden>
+    <div class="wrap frame">
+      <header class="page-head">
+        <h1 data-t="vTitle"></h1>
+        <p class="sec-lede" data-t="vSub"></p>
+      </header>
+      <form class="toolbar vtoolbar" id="v-form" novalidate>
+        <label class="field-col"><span data-t="vName"></span><input id="v-name" type="text" maxlength="80" autocomplete="organization"></label>
+        <label class="field-col"><span data-t="fState"></span><select id="v-state"></select></label>
+        <button class="btn btn-primary" type="submit" data-t="vShow"></button>
+      </form>
+      <p class="form-error" id="v-error" role="alert" hidden></p>
+      <p class="board-status" id="v-status" hidden></p>
+      <div class="vlist" id="v-list"></div>
+
+      <div class="sec split" id="v-quote" hidden>
+        <div>
+          <h2 id="v-quote-title"></h2>
+          <form class="form-grid vq-grid" id="vq-form" novalidate>
+            <label class="field-col"><span data-t="vTotal"></span><input id="vq-total" type="number" min="10000" step="1000" inputmode="numeric"></label>
+            <label class="field-col"><span data-t="vGst"></span><select id="vq-gst"><option value="yes" data-t="dcrYes"></option><option value="no" data-t="dcrNo"></option></select></label>
+            <label class="field-col"><span data-t="fSize"></span><input id="vq-kw" type="number" min="0.5" max="500" step="0.1" inputmode="decimal"></label>
+            <label class="field-col"><span data-t="vDcr"></span><select id="vq-dcr"><option value="yes" data-t="dcrYes"></option><option value="no" data-t="dcrNo"></option></select></label>
+            <label class="field-col"><span data-t="vWatt"></span><input id="vq-watt" type="number" min="100" max="1000" step="5" value="545" inputmode="numeric"></label>
+            <label class="field-col"><span data-t="vCount"></span><input id="vq-count" type="number" min="1" step="1" inputmode="numeric"></label>
+            <label class="field-col"><span data-t="vInverter"></span><input id="vq-inv" type="number" min="0.1" step="0.1" inputmode="decimal"></label>
+            <label class="field-col"><span data-t="vAdvance"></span><input id="vq-adv" type="number" min="0" max="100" step="5" value="20" inputmode="numeric"></label>
+            <label class="field-col"><span data-t="vDays"></span><input id="vq-days" type="number" min="1" max="730" step="1" value="21" inputmode="numeric"></label>
+            <label class="field-col"><span data-t="vPanelW"></span><input id="vq-pw" type="number" min="0" max="40" step="1" value="25" inputmode="numeric"></label>
+            <label class="field-col"><span data-t="vInvW"></span><input id="vq-iw" type="number" min="0" max="25" step="1" value="8" inputmode="numeric"></label>
+            <label class="field-col"><span data-t="vSysW"></span><input id="vq-sw" type="number" min="0" max="25" step="1" value="5" inputmode="numeric"></label>
+            <label class="field-col"><span data-t="vMeter"></span><select id="vq-meter"><option value="yes" data-t="dcrYes"></option><option value="no" data-t="dcrNo"></option></select></label>
+            <label class="field-col"><span data-t="vStructure"></span><select id="vq-structure"><option value="yes" data-t="dcrYes"></option><option value="no" data-t="dcrNo"></option></select></label>
+            <label class="field-col"><span data-t="vEarthing"></span><select id="vq-earthing"><option value="yes" data-t="dcrYes"></option><option value="no" data-t="dcrNo"></option></select></label>
+            <div class="row-actions wide">
+              <button class="btn btn-line" type="button" id="vq-preview" data-t="vPreview"></button>
+              <button class="btn btn-primary" type="submit" data-t="vSend"></button>
+            </div>
+          </form>
+        </div>
+        <div class="tool-out sticky" id="vq-out" aria-live="polite" hidden></div>
+      </div>
+    </div>
+  </section>
+
   <!-- ============ results ============ -->
   <div class="wrap views">
     <section id="busy" hidden>
@@ -621,7 +684,7 @@
   <div class="wrap foot-inner">
     <span data-t="footer"></span>
     <span class="foot-links">
-      <a href="#schemes" data-t="navSchemes"></a><a href="#guide" data-t="navApply"></a><a href="#rules" data-t="navRules"></a><a href="#built" data-t="navAws"></a>
+      <a href="#schemes" data-t="navSchemes"></a><a href="#vendors" data-t="navVendors"></a><a href="#guide" data-t="navApply"></a><a href="#rules" data-t="navRules"></a><a href="#built" data-t="navAws"></a>
       <a id="privacy-link" data-t="privacyLink"></a><a href="https://github.com/piyushk-dev/surya-saathi">GitHub</a>
     </span>
   </div>

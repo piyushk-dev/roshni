@@ -9,6 +9,22 @@ Object.assign(T.en, {
   u1d: "Ask once. Every vendor's quote is checked and compared by what you'll really pay after subsidy.",
   u1reply: "🧾 Quotes for 3 kW, compared after subsidy:\n1. Jhatpat Solar (demo): ₹1,32,000, you pay ₹1,32,000 after subsidy. 🔴 Imported panels: no subsidy.\n2. Dhoop Rooftop Co. (demo): ₹1,95,000, you pay ₹1,17,000 after subsidy. ✅ No problems found.",
   u1a: "Compare quotes",
+  u4t: "Every subsidy for your state", u4d: "The central subsidy, your state's top-up and the 5.75% loan, each with its source and the date it was checked.",
+  u4a: "See your schemes", msCentral: "Central subsidy, 3 kW", msCentralShort: "Central subsidy", msTop: "Delhi top-up, if you qualify",
+  u5t: "Clean the panels on the right day", u5d: "Dust and smog cut solar output. A live air-quality forecast picks the day to clean, after the dust settles.",
+  u5a: "See this week's forecast",
+  navVendors: "For vendors", qVendor: "Are you a registered vendor?", qVendorLink: "Answer requests",
+  vTitle: "Answer quote requests", vSub: "Households near you have asked for quotes, sized from their bills. You see the size and the area, never their name or number. Your quote is checked the way the household will see it.",
+  vName: "Company name", vShow: "Show requests", vNoName: "Enter your company name first.",
+  vOpen: (n) => `${n} open request${n === 1 ? "" : "s"}`, vNone: "No open requests here right now.",
+  vArea: (a) => (a ? `Area ${a}` : "Area not given"), vQuotes: (n) => `${n} quote${n === 1 ? "" : "s"} so far`,
+  vAgo: (m) => (m < 1 ? "just now" : m < 60 ? `${m} min ago` : m < 1440 ? `${Math.round(m / 60)} h ago` : `${Math.round(m / 1440)} days ago`),
+  vQuote: "Quote", vQuoted: "Quoted", vQuoteTitle: (kw, d) => `Your quote for ${kw} kW${d ? `, ${d}` : ""}`,
+  vTotal: "Total price (₹)", vGst: "GST included?", vDcr: "Made-in-India (DCR) panels?", vWatt: "Each panel (W)", vCount: "Panel count",
+  vInverter: "Inverter (kW)", vAdvance: "Advance (%)", vDays: "Install time (days)", vPanelW: "Panel warranty (yrs)", vInvW: "Inverter warranty (yrs)",
+  vSysW: "System warranty (yrs)", vMeter: "Net meter included?", vStructure: "Structure included?", vEarthing: "Earthing included?",
+  vPreview: "Preview what they'll see", vSend: "Send quote", vSent: "Sent. It's in the household's comparison now.",
+  vAfter: "what the household pays after subsidy",
   fState: "State", fSize: "System size (kW)", fPin: "PIN code (optional)", fDcr: "Panels made in India (DCR)?",
   dcrYes: "Yes", dcrUnsure: "Not sure", dcrNo: "No",
   qTitle: "Compare quotes by what you'll really pay",
@@ -78,7 +94,7 @@ Object.assign(T.en, {
   dAdvice: { clean_after: (day) => `Clean the panels on ${day}, after the dust settles. Plain water, early morning; never spray the inverter.`,
     dusty_week: () => "Dust stays high all week. Wait for a clear day, or the panels just get dusty again.",
     clear_week: () => "Low dust this week, so your usual cleaning schedule is fine." },
-  dWhy: "In Delhi, dust can cut output by 0.3–0.6% a day.", dSource: "Forecast: CAMS, via", dDown: "The dust forecast isn't available right now.",
+  dWhy: "In Delhi, dust can cut output by 0.3–0.6% a day.", dSource: "Bars show dust in µg/m³, forecast by CAMS via", dDown: "The dust forecast isn't available right now.",
 });
 
 Object.assign(T.hi, {
@@ -87,6 +103,22 @@ Object.assign(T.hi, {
   u1d: "एक बार माँगें। हर वेंडर का कोटेशन जाँचा जाता है और सब्सिडी के बाद असली कीमत पर मिलाया जाता है।",
   u1reply: "🧾 3 kW के कोटेशन, सब्सिडी के बाद की तुलना:\n1. Jhatpat Solar (डेमो): ₹1,32,000, सब्सिडी के बाद आप देंगे ₹1,32,000। 🔴 विदेशी पैनल: सब्सिडी नहीं मिलेगी।\n2. Dhoop Rooftop Co. (डेमो): ₹1,95,000, सब्सिडी के बाद आप देंगे ₹1,17,000। ✅ कोई दिक्कत नहीं।",
   u1a: "कोटेशन मिलाएँ",
+  u4t: "आपके राज्य की हर सब्सिडी", u4d: "केंद्रीय सब्सिडी, राज्य की अतिरिक्त सब्सिडी और 5.75% वाला लोन, हर एक के स्रोत और जाँच की तारीख के साथ।",
+  u4a: "अपनी योजनाएँ देखें", msCentral: "केंद्रीय सब्सिडी, 3 kW", msCentralShort: "केंद्रीय सब्सिडी", msTop: "दिल्ली की अतिरिक्त सब्सिडी, अगर पात्र हों",
+  u5t: "सही दिन पैनल साफ़ करें", u5d: "धूल और स्मॉग से सोलर उत्पादन घटता है। हवा की गुणवत्ता का लाइव अनुमान सफ़ाई का दिन चुनता है, धूल बैठने के बाद।",
+  u5a: "इस हफ़्ते का अनुमान देखें",
+  navVendors: "वेंडर के लिए", qVendor: "क्या आप रजिस्टर्ड वेंडर हैं?", qVendorLink: "अनुरोधों का जवाब दें",
+  vTitle: "कोटेशन अनुरोधों का जवाब दें", vSub: "आपके आस-पास के घरों ने बिल के हिसाब से कोटेशन माँगे हैं। आपको साइज़ और इलाका दिखता है, नाम या नंबर कभी नहीं। आपका कोटेशन वैसे ही जाँचा जाता है जैसे घर वाले देखेंगे।",
+  vName: "कंपनी का नाम", vShow: "अनुरोध देखें", vNoName: "पहले अपनी कंपनी का नाम लिखें।",
+  vOpen: (n) => `${n} खुले अनुरोध`, vNone: "अभी यहाँ कोई खुला अनुरोध नहीं है।",
+  vArea: (a) => (a ? `इलाका ${a}` : "इलाका नहीं बताया"), vQuotes: (n) => `अब तक ${n} कोटेशन`,
+  vAgo: (m) => (m < 1 ? "अभी" : m < 60 ? `${m} मिनट पहले` : m < 1440 ? `${Math.round(m / 60)} घंटे पहले` : `${Math.round(m / 1440)} दिन पहले`),
+  vQuote: "कोटेशन दें", vQuoted: "कोटेशन दिया", vQuoteTitle: (kw, d) => `${kw} kW के लिए आपका कोटेशन${d ? `, ${d}` : ""}`,
+  vTotal: "कुल कीमत (₹)", vGst: "GST शामिल?", vDcr: "भारत में बने (DCR) पैनल?", vWatt: "हर पैनल (W)", vCount: "पैनलों की संख्या",
+  vInverter: "इन्वर्टर (kW)", vAdvance: "एडवांस (%)", vDays: "लगने में समय (दिन)", vPanelW: "पैनल वारंटी (साल)", vInvW: "इन्वर्टर वारंटी (साल)",
+  vSysW: "सिस्टम वारंटी (साल)", vMeter: "नेट मीटर शामिल?", vStructure: "स्ट्रक्चर शामिल?", vEarthing: "अर्थिंग शामिल?",
+  vPreview: "देखें कि घर वालों को क्या दिखेगा", vSend: "कोटेशन भेजें", vSent: "भेज दिया। यह घर वालों की तुलना में अब दिख रहा है।",
+  vAfter: "सब्सिडी के बाद घर वाले इतना देंगे",
   fState: "राज्य", fSize: "सिस्टम साइज़ (kW)", fPin: "पिन कोड (वैकल्पिक)", fDcr: "भारत में बने पैनल (DCR)?",
   dcrYes: "हाँ", dcrUnsure: "पता नहीं", dcrNo: "नहीं",
   qTitle: "कोटेशन को असली खर्च से मिलाएँ",
@@ -156,7 +188,7 @@ Object.assign(T.hi, {
   dAdvice: { clean_after: (day) => `${day} को पैनल साफ़ करें, धूल बैठने के बाद। सुबह-सुबह सादे पानी से; इन्वर्टर पर कभी पानी न डालें।`,
     dusty_week: () => "पूरे हफ़्ते धूल ज़्यादा रहेगी। साफ़ दिन का इंतज़ार करें, वरना पैनल फिर धूल से भर जाएँगे।",
     clear_week: () => "इस हफ़्ते धूल कम है, सफ़ाई का सामान्य समय ठीक है।" },
-  dWhy: "दिल्ली में धूल से उत्पादन रोज़ 0.3–0.6% घट सकता है।", dSource: "अनुमान: CAMS, स्रोत", dDown: "धूल का अनुमान अभी उपलब्ध नहीं है।",
+  dWhy: "दिल्ली में धूल से उत्पादन रोज़ 0.3–0.6% घट सकता है।", dSource: "बार धूल µg/m³ में दिखाते हैं, अनुमान CAMS का, स्रोत", dDown: "धूल का अनुमान अभी उपलब्ध नहीं है।",
 });
 
 const tools = { states: null, q: { rid: null, view: null, timer: null, ran: false, chosen: null, seen: new Set() },
@@ -326,7 +358,7 @@ function renderBoard() {
   if (tools.q.chosen || v.request.chosen) {
     const p = el("p", "trap-note");
     p.id = "q-chosen-note";
-    p.style.background = "var(--green-soft)";
+    p.classList.add("ok-note");
     p.append(el("span", "sq ok"), el("span", null, t("qChosenNote")));
     (document.getElementById("q-trap") || board).after(p);
   }
@@ -396,6 +428,7 @@ async function openQuotes() {
   if (!$("q-state").options.length) fillStates($("q-state"), "DL");
   if (est && est.analysis && est.analysis.recommended) $("q-kw").value = Math.min(10, Math.max(1, est.analysis.recommended.kw));
   if (!tools.q.ran) { tools.q.ran = true; requestQuotes(); }
+  else if (tools.q.rid) pollQuotes();  // pick up quotes vendors sent while the household was away
 }
 
 // scam check
@@ -737,7 +770,7 @@ function renderDust() {
     bar.style.height = `${Math.max(6, Math.round(100 * val(day) / max))}%`;
     bar.title = `PM10 ${day.pm10 ?? "–"} µg/m³`;
     box.append(el("span", "dname", dayName(day.date, { weekday: "short" })), el("span", "ddate", dayName(day.date, { day: "numeric", month: "short" })),
-      bar, el("span", "dlevel", t("dLevels")[day.level]), el("span", "dval", `${val(day)} µg/m³`));
+      bar, el("span", "dlevel", t("dLevels")[day.level]), el("span", "dval", String(val(day))));
     wrap.append(box);
   }
   advice.innerHTML = "";
@@ -746,7 +779,7 @@ function renderDust() {
 }
 async function loadDust(lat, lon) {
   const q = lat !== null && lat !== undefined ? `?lat=${lat}&lon=${lon}` : "";
-  try { tools.care.dust = await getJSON(`/care/dust${q}`); renderDust(); }
+  try { tools.care.dust = await getJSON(`/care/dust${q}`); renderDust(); renderHomeDust(); }
   catch (_) { $("d-advice").textContent = t("dDown"); }
 }
 $("d-locate").addEventListener("click", () => {
@@ -757,6 +790,114 @@ $("d-locate").addEventListener("click", () => {
     loadDust(state.lat, state.lon);
   }, () => { $("d-advice").textContent = t("locationOff"); }, { timeout: 10000 });
 });
+
+
+// the home page's mini forecast: the same live data, bars only
+function renderHomeDust() {
+  const d = tools.care.dust, wrap = document.getElementById("home-dust");
+  if (!d || !wrap) return;
+  wrap.innerHTML = "";
+  const val = (x) => x.dust_max ?? x.pm10 ?? 0, max = Math.max(300, ...d.days.map(val));
+  for (const day of d.days) {
+    const box = el("div", `dday ${day.level}` + (day.date === d.clean_on ? " clean" : ""));
+    if (day.date === d.clean_on) box.append(el("span", "tag-clean", t("dClean")));
+    const bar = el("i", "dbar");
+    bar.style.height = `${Math.max(6, Math.round(100 * val(day) / max))}%`;
+    box.append(el("span", "dname", dayName(day.date, { weekday: "short" })), bar, el("span", "dlevel", t("dLevels")[day.level]));
+    wrap.append(box);
+  }
+}
+
+
+// --- for vendors ----------------------------------------------------------------------------------
+tools.v = { list: [], rid: null };
+function vendorQuote() {
+  const num = (id) => { const v = parseFloat($(id).value); return Number.isFinite(v) ? v : undefined; };
+  return {
+    total_price_rs: num("vq-total"), gst_included: $("vq-gst").value, system_kw: num("vq-kw"), dcr: $("vq-dcr").value,
+    module_watt: num("vq-watt"), module_count: num("vq-count"), inverter_kw: num("vq-inv"), advance_pct: num("vq-adv"),
+    timeline_days: num("vq-days"), module_performance_warranty_years: num("vq-pw"), inverter_warranty_years: num("vq-iw"),
+    system_warranty_years: num("vq-sw"), net_meter_included: $("vq-meter").value, structure_included: $("vq-structure").value,
+    earthing_included: $("vq-earthing").value,
+  };
+}
+function renderVendorCheck(res, sent) {
+  const out = $("vq-out"), c = res.check, v = c.views[state.lang] || c.views.en;
+  out.innerHTML = "";
+  const title = el("p", "q-verdict");
+  title.append(el("span", "sq " + c.verdict), el("span", null, v.title.replace(/^[^\p{L}\p{N}]+/u, "")));
+  out.append(title, el("p", "q-net", rupees(c.net_rs)), el("p", "hint", t("vAfter")));
+  const issues = [...v.red, ...v.amber];
+  if (issues.length) {
+    const ul = el("ul", "evidence");
+    for (const i of issues) { const li = el("li"); li.append(el("span", "sq " + (v.red.includes(i) ? "red" : "amber")), el("span", null, i)); ul.append(li); }
+    out.append(ul);
+  }
+  if (sent) out.append(el("p", "trap-note ok-note", t("vSent")));
+  out.hidden = false;
+}
+function renderVendorList() {
+  const list = $("v-list");
+  list.innerHTML = "";
+  const st = $("v-status");
+  st.hidden = false;
+  st.textContent = tools.v.list.length ? t("vOpen", tools.v.list.length) : t("vNone");
+  for (const r of tools.v.list) {
+    const row = el("div", "vrow" + (r.id === tools.v.rid ? " active" : ""));
+    const where = el("div", "vwhere");
+    where.append(el("b", null, r.discom || tx(tools.states && tools.states[r.state]) || r.state), el("span", null, t("vArea", r.area)));
+    const mins = Math.max(0, Math.round((Date.now() / 1000 - r.created) / 60));
+    const btn = el("button", "btn " + (r.you_quoted ? "btn-quiet" : "btn-line"), r.you_quoted ? t("vQuoted") : t("vQuote"));
+    btn.type = "button";
+    btn.disabled = r.you_quoted;
+    btn.addEventListener("click", () => openVendorQuote(r));
+    row.append(el("span", "vkw", `${r.kw} kW`), where, el("span", "vcount", `${t("vQuotes", r.quotes)}, ${t("vAgo", mins)}`), btn);
+    list.append(row);
+  }
+}
+async function loadVendorRequests(e) {
+  if (e) e.preventDefault();
+  const err = $("v-error");
+  err.hidden = true;
+  if (!$("v-name").value.trim()) { err.textContent = t("vNoName"); err.hidden = false; return; }
+  try {
+    const d = await getJSON(`/market/open?state=${encodeURIComponent($("v-state").value)}&vendor=${encodeURIComponent($("v-name").value.trim())}`);
+    tools.v.list = d.requests;
+    renderVendorList();
+  } catch (ex) { err.textContent = ex.message; err.hidden = false; }
+}
+function openVendorQuote(r) {
+  tools.v.rid = r.id;
+  $("v-quote").hidden = false;
+  $("vq-out").hidden = true;
+  $("v-quote-title").textContent = t("vQuoteTitle", r.kw, r.discom);
+  $("vq-kw").value = r.kw;
+  $("vq-inv").value = r.kw;
+  $("vq-count").value = Math.ceil(r.kw * 1000 / (parseFloat($("vq-watt").value) || 545));
+  if (!$("vq-total").value) $("vq-total").value = Math.round(r.kw * 65000 / 1000) * 1000;
+  renderVendorList();
+  $("v-quote").scrollIntoView({ behavior: "smooth", block: "start" });
+}
+$("v-form").addEventListener("submit", loadVendorRequests);
+$("vq-preview").addEventListener("click", async () => {
+  try { renderVendorCheck(await postJSON("/market/preview", { state: $("v-state").value, name: $("v-name").value.trim() || "Your quote", quote: vendorQuote() }), false); }
+  catch (ex) { $("vq-out").hidden = false; $("vq-out").textContent = ex.message; }
+});
+$("vq-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  if (!tools.v.rid) return;
+  try {
+    const res = await postJSON(`/market/requests/${tools.v.rid}/quotes`, { vendor_name: $("v-name").value.trim(), quote: vendorQuote() });
+    renderVendorCheck(res, true);
+    const row = tools.v.list.find((x) => x.id === tools.v.rid);
+    if (row) { row.you_quoted = true; row.quotes += 1; }
+    renderVendorList();
+  } catch (ex) { $("vq-out").hidden = false; $("vq-out").textContent = ex.message; }
+});
+async function openVendors() {
+  await loadStates();
+  if (!$("v-state").options.length) fillStates($("v-state"), "DL");
+}
 
 // --- wiring ---------------------------------------------------------------------------------------
 $("q-form").addEventListener("submit", requestQuotes);
@@ -797,17 +938,20 @@ window.productRoute = (view) => {
   if (view === "quotes") openQuotes();
   else if (view === "schemes") openSchemes();
   else if (view === "care") openCare();
+  else if (view === "vendors") openVendors();
 };
 window.renderProduct = () => {
-  if (tools.states) { fillStates($("q-state"), $("q-state").value); fillStates($("s-state"), $("s-state").value); }
+  if (tools.states) { fillStates($("q-state"), $("q-state").value); fillStates($("s-state"), $("s-state").value); if ($("v-state").options.length) fillStates($("v-state"), $("v-state").value); }
+  if (tools.v && tools.v.list.length) renderVendorList();
   if (tools.q.view) renderBoard();
   if (tools.scam) renderScam(tools.scam);
   renderSchemes();
   renderPlan();
   if (tools.care.lists) { renderPassport(); fillSupportKinds(); }
-  renderGen(); renderBill(); renderSupport(); renderDust();
+  renderGen(); renderBill(); renderSupport(); renderDust(); renderHomeDust();
 };
+loadDust(state.lat, state.lon);  // feeds the home page's mini forecast and the After install page
 const firstView = (location.hash || "").replace("#", "");
-if (["quotes", "schemes", "care"].includes(firstView)) window.productRoute(firstView);
+if (["quotes", "schemes", "care", "vendors"].includes(firstView)) window.productRoute(firstView);
 
 applyLang();  // app.js applied the language before these strings existed

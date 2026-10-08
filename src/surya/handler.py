@@ -69,6 +69,9 @@ def _handle(event: dict, context) -> dict:
             raise ValueError("paste an offer of 1–10,000 characters")
         flags = scam.check(text)
         return _response(200, {"flags": flags, "views": {lang: scam.render(flags, lang) for lang in ("en", "hi")}})
+    if route == "GET /market/open":
+        return _response(200, {"requests": market.open_requests(product.state_code(params.get("state", "DL")),
+                                                                 knowledge.slug(params["vendor"]) if params.get("vendor") else None)})
     if route == "POST /market/requests":
         return _response(201, market.create_request(body))
     if route == "POST /market/preview":
@@ -91,6 +94,11 @@ def _handle(event: dict, context) -> dict:
             return _response(200, {"deleted": True})
         if method == "POST" and len(parts) == 4 and parts[3] == "choose":
             return _response(200, market.choose(rid, str(body.get("vendor_id", ""))))
+        if method == "POST" and len(parts) == 4 and parts[3] == "quotes":
+            raw = body.get("quote")
+            if not isinstance(raw, dict):
+                raise ValueError("quote fields are required")
+            return _response(201, market.submit_quote(rid, str(body.get("vendor_name", "")), raw))
     if route == "GET /health":
         return _response(200, {"ok": True})
     if route == "GET /privacy":

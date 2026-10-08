@@ -138,9 +138,9 @@ def register_vendor(name: str, state: str) -> dict:
         raise ValueError("vendor name is too short")
     vid = knowledge.slug(name)[:40]
     state = state_code(state)
-    v = _vendor(vid)
-    if v and v.get("demo"):
+    if any(vid in (d["id"], knowledge.slug(d["name"])[:40]) for d in demo_vendors()):
         raise ValueError("that name belongs to a demo vendor")
+    v = _vendor(vid)
     if not v:
         v = {"id": vid, "name": name, "demo": False, "areas": [state], "since": None, "verified": False}
         _put(f"VENDOR#{vid}", "PROFILE", v)
@@ -359,7 +359,8 @@ def open_requests(state: str, vendor_id: str | None = None, limit: int = 20) -> 
         out.append({"id": req["id"], "kw": req["kw"], "state": req["state"], "discom": req["discom"],
                     "area": (req["pincode"][:3] + "xxx") if req["pincode"] else "", "created": req["created"],
                     "quotes": len(quoted), "you_quoted": bool(vendor_id and vendor_id in quoted),
-                    "group": req.get("group")})
+                    # the group size helps a vendor price; the exact PIN code stays with the household
+                    "group": {k: v for k, v in (req.get("group") or {}).items() if k != "pincode"} or None})
         if len(out) >= limit:
             break
     return out

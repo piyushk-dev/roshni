@@ -418,7 +418,7 @@ Object.assign(T.en, {
   whyNowBody: "Most families stop before they apply. They can't tell if solar will pay, which vendor to trust, or what to do next (CEEW survey, June 2026). Surya Saathi answers all three.",
   cellsNote: "Each square is 1 lakh homes.",
   waTitle: "Try it on WhatsApp",
-  waSub: "Send a bill or quote photo, in Hindi or English. During the hackathon the bot runs on Twilio's WhatsApp sandbox, so send the join code first.",
+  waSub: "Send a bill or quote photo, or ask with a voice note, in Hindi or English. During the hackathon the bot runs on Twilio's WhatsApp sandbox, so send the join code first.",
   waOpen: "Open WhatsApp",
   cmdTitle: "Everything you can send on WhatsApp",
   applyCta: "See the application guide",
@@ -450,7 +450,7 @@ Object.assign(T.hi, {
   whyNowBody: "ज़्यादातर परिवार आवेदन से पहले ही रुक जाते हैं। उन्हें पता नहीं होता कि सोलर से फ़ायदा होगा या नहीं, किस वेंडर पर भरोसा करें, या आगे क्या करें (CEEW सर्वे, जून 2026)। सूर्य साथी इन तीनों का जवाब देता है।",
   cellsNote: "हर खाना 1 लाख घर है।",
   waTitle: "WhatsApp पर आज़माएँ",
-  waSub: "हिंदी या अंग्रेज़ी में बिल या कोटेशन की फोटो भेजें। हैकथॉन के दौरान बॉट Twilio के WhatsApp सैंडबॉक्स पर चलता है, इसलिए पहले जॉइन कोड भेजें।",
+  waSub: "हिंदी या अंग्रेज़ी में बिल या कोटेशन की फोटो भेजें, या वॉइस नोट से पूछें। हैकथॉन के दौरान बॉट Twilio के WhatsApp सैंडबॉक्स पर चलता है, इसलिए पहले जॉइन कोड भेजें।",
   waOpen: "WhatsApp खोलें",
   cmdTitle: "WhatsApp पर क्या-क्या भेज सकते हैं",
   applyCta: "आवेदन गाइड देखें",
@@ -486,7 +486,7 @@ function applyLang() {
 }
 
 function show(id) {
-  for (const s of ["start", "busy", "problem", "result", "quote-result", "guide", "rules", "built", "quotes", "schemes", "care"]) if ($(s)) $(s).hidden = s !== id;
+  for (const s of ["start", "busy", "problem", "result", "quote-result", "guide", "rules", "built", "quotes", "schemes", "care", "vendors"]) if ($(s)) $(s).hidden = s !== id;
   window.scrollTo({ top: 0, behavior: "instant" });
 }
 

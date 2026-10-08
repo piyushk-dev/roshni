@@ -509,7 +509,7 @@ code { font: 500 0.9rem/1.4 var(--font-code); background: var(--tint); color: va
 .board-status.waiting::before { background: var(--sun); animation: blink 1s steps(2, jump-none) infinite; }
 @keyframes blink { 50% { opacity: 0.2; } }
 .board-demo { font-size: 0.95rem; color: var(--muted); }
-.board { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0 16px; margin-top: 18px; align-items: stretch; }
+.board { display: grid; grid-template-columns: repeat(auto-fit, minmax(196px, 1fr)); gap: 0 16px; margin-top: 18px; align-items: stretch; }
 .board:empty { display: none; }
 /* every card shares the board's row tracks, so name, price, bar, verdict and terms line up across cards */
 .qcard {
@@ -522,7 +522,7 @@ code { font: 500 0.9rem/1.4 var(--font-code); background: var(--tint); color: va
 .ribbon { position: absolute; top: -13px; left: 20px; padding: 3px 10px; border-radius: 6px; background: var(--green); color: var(--on-dark); font-size: 0.85rem; font-weight: 600; }
 .q-name { display: grid; gap: 4px; }
 .q-name h3 { font-size: 1.2rem; display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
-.q-tag { flex: none; padding: 1px 7px; border: 1px solid var(--line-strong); border-radius: 5px; font: 500 0.78rem var(--font-body); color: var(--muted); }
+.q-tag { flex: none; padding: 1px 7px; border: 1px solid var(--line-strong); border-radius: 5px; font: 500 0.82rem var(--font-body); color: var(--muted); }
 .q-meta { display: flex; flex-wrap: wrap; gap: 2px 14px; font-size: 0.9rem; color: var(--muted); }
 .q-price { display: grid; gap: 4px; }
 .q-net { font: 300 clamp(1.9rem, 2.6vw, 2.35rem)/1 var(--font-display); letter-spacing: -0.01em; font-variant-numeric: tabular-nums; }
@@ -559,6 +559,7 @@ code { font: 500 0.9rem/1.4 var(--font-code); background: var(--tint); color: va
 .houses .on { fill: var(--green); } .houses .off { fill: var(--line-strong); }
 .trap-note { display: flex; gap: 10px; align-items: flex-start; margin-top: 16px; padding: 14px 18px; border-radius: 10px; background: var(--stop-soft); color: var(--ink); }
 .trap-note .sq { margin-top: 8px; }
+.trap-note.ok-note { background: var(--green-soft); }
 .scam-out { display: grid; gap: 12px; padding-top: 16px; border-top: 1px solid var(--line); }
 .scam-out ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
 .scam-out li { display: grid; grid-template-columns: 10px 1fr; gap: 12px; color: var(--ink-2); line-height: 1.5; }
@@ -696,9 +697,37 @@ code { font: 500 0.9rem/1.4 var(--font-code); background: var(--tint); color: va
 .dday.clear .dbar { --bar: var(--green); } .dday.dusty .dbar { --bar: var(--sun); } .dday.high .dbar { --bar: #a0611a; }
 .dday .dlevel { font-weight: 600; font-size: 0.95rem; }
 .dday .dval { font-size: 0.85rem; color: var(--muted); font-variant-numeric: tabular-nums; }
-.tag-clean { position: absolute; top: -12px; padding: 2px 9px; border-radius: 5px; background: var(--green); color: var(--on-dark); font-size: 0.8rem; font-weight: 600; }
+.tag-clean { position: absolute; top: -12px; padding: 2px 9px; border-radius: 5px; background: var(--green); color: var(--on-dark); font-size: 0.82rem; font-weight: 600; }
 .dust-advice { display: flex; gap: 10px; align-items: flex-start; font-weight: 600; font-size: 1.05rem; }
 .dust-advice .sq { margin-top: 8px; }
+
+/* home: four things it does after the estimate, each with a real visual on top */
+.use-grid.quad { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+.quad .use { grid-template-columns: minmax(0, 1fr); grid-template-rows: 248px auto; gap: 20px; align-items: start; padding: 14px 14px 24px; background: var(--surface); border: 1px solid var(--line); border-radius: 18px; }
+.quad .use-visual { height: 248px; min-width: 0; border-radius: 12px; overflow: hidden; }
+.quad .use-visual .snip { height: 100%; margin: 0; overflow: hidden; justify-content: flex-end; border-radius: 12px; }
+.quad .use-text { display: grid; gap: 10px; justify-items: start; padding: 0 10px; }
+.quad .use-text p { color: var(--ink-2); }
+.mini-scheme { display: grid; gap: 14px; align-content: center; padding: 26px 28px; background: var(--page); }
+.mini-scheme .big-amount { font-size: 2.8rem; }
+.mini-dust { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; align-content: end; padding: 30px 22px 18px; background: var(--page); }
+.mini-dust .dday { grid-template-rows: auto 104px auto; padding: 16px 4px 10px; background: var(--surface); }
+.mini-dust .dbar { width: 26px; }
+
+/* vendors: open requests as rows, then the quote form */
+.vtoolbar { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) auto; }
+.vendor-link { margin-top: 18px; color: var(--muted); }
+.vlist { display: grid; margin-top: 18px; border-top: 1px solid var(--line-strong); }
+.vlist:empty { display: none; }
+.vrow { display: grid; grid-template-columns: 110px minmax(0, 1fr) 150px 150px; gap: 8px 24px; align-items: center; padding: 16px 0; border-bottom: 1px solid var(--line); }
+.vrow .vkw { font: 400 1.7rem/1 var(--font-display); font-variant-numeric: tabular-nums; }
+.vrow .vwhere { display: grid; gap: 2px; min-width: 0; }
+.vrow .vwhere b { font-weight: 600; }
+.vrow .vwhere span, .vrow .vcount { color: var(--muted); font-size: 0.95rem; }
+.vrow .btn { justify-self: end; width: 100%; }
+.vrow.active { background: var(--green-soft); box-shadow: -12px 0 0 var(--green-soft), 12px 0 0 var(--green-soft); }
+.vq-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.vq-grid .row-actions { margin-top: 6px; }
 
 /* ---------- responsive: tools ---------- */
 @media (max-width: 1080px) {
@@ -707,13 +736,22 @@ code { font: 500 0.9rem/1.4 var(--font-code); background: var(--tint); color: va
 @media (max-width: 900px) {
   .toolbar { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .toolbar .field-col:first-child, .toolbar .btn { grid-column: 1 / -1; }
-  .calc, .plan-grid, .two-up, .pp-groups { grid-template-columns: minmax(0, 1fr); }
+  .calc, .plan-grid, .two-up, .pp-groups, .use-grid.quad { grid-template-columns: minmax(0, 1fr); }
   .srow { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
   .srow .src { grid-column: 1 / -1; justify-items: start; text-align: left; }
   .calc-in { border-right: 0; border-bottom: 1px solid var(--line); }
 }
 @media (max-width: 680px) {
   .board { grid-template-columns: minmax(0, 1fr); }
+  .vtoolbar, .vq-grid { grid-template-columns: minmax(0, 1fr); }
+  .vrow { grid-template-columns: 80px minmax(0, 1fr); }
+  .vrow .vcount { grid-column: 2; }
+  .vrow .btn { grid-column: 1 / -1; }
+  .quad .use { grid-template-rows: 236px auto; }
+  .quad .use-visual { height: 236px; }
+  .mini-dust { gap: 6px; padding: 28px 10px 14px; }
+  .mini-dust .dday { grid-template-rows: auto 96px auto; }
+  .mini-dust .dbar { width: 18px; }
   .srow { grid-template-columns: minmax(0, 1fr); gap: 6px; }
   .srow .src { justify-items: start; text-align: left; }
   .form-grid { grid-template-columns: minmax(0, 1fr); }
@@ -724,5 +762,5 @@ code { font: 500 0.9rem/1.4 var(--font-code); background: var(--tint); color: va
   .dust-days { gap: 6px; }
   .dday { padding: 16px 2px 10px; grid-template-rows: auto auto 96px auto auto; }
   .dbar { width: 20px; }
-  .dday .dval { font-size: 0.75rem; }
+  .dday .dval { font-size: 0.82rem; }
 }

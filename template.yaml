@@ -136,6 +136,12 @@ Resources:
         MarketPreview:
           Type: HttpApi
           Properties: {ApiId: !Ref Api, Path: /market/preview, Method: POST}
+        MarketOpen:
+          Type: HttpApi
+          Properties: {ApiId: !Ref Api, Path: /market/open, Method: GET}
+        MarketSubmit:
+          Type: HttpApi
+          Properties: {ApiId: !Ref Api, Path: "/market/requests/{id}/quotes", Method: POST}
 
   # Acknowledges Meta within milliseconds, then hands the message to the worker
   WhatsAppWebhookFunction:
