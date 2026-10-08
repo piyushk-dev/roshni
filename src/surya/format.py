@@ -138,7 +138,8 @@ class BillProblem(ValueError):
         return PROBLEMS[self.code][lang if lang in ("en", "hi") else "en"].format(**self.values)
 
 
-def message(a: Analysis, lang: str = "en") -> str:
+def explain(a: Analysis, lang: str = "en") -> tuple[str, list[str]]:
+    """The verdict's reason and the notes, as sentences in `lang`."""
     lang = lang if lang in GO else "en"
     o = a.recommended
     values = {
@@ -156,7 +157,13 @@ def message(a: Analysis, lang: str = "en") -> str:
             export=o.export_kwh,
         )
     reason = REASONS[a.reason][lang].format(**values)
-    notes = [NOTES[n][lang].format(**{**values, "rate": a.export_rate}) for n in a.notes]
+    return reason, [NOTES[n][lang].format(**values) for n in a.notes]
+
+
+def message(a: Analysis, lang: str = "en") -> str:
+    lang = lang if lang in GO else "en"
+    o = a.recommended
+    reason, notes = explain(a, lang)
 
     if a.verdict == "skip":
         text = SKIP[lang].format(discom=a.discom_name, reason=reason, bill_month=_hundreds(a.bill_now_rs_per_year / 12))

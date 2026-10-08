@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Surya Saathi</title>
+<meta name="description" content="Upload your electricity bill and get an honest rooftop-solar answer in seconds: size, PM Surya Ghar subsidy, EMI and payback.">
+<meta name="theme-color" content="#f59e0b">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>☀️</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Noto+Sans+Devanagari:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<script src="config.js"></script>
+</head>
+<body>
+<header class="bar">
+  <span class="brand">☀️ <span data-t="brand"></span></span>
+  <button id="lang" class="chip" type="button" aria-label="Switch language"></button>
+</header>
+
+<main>
+  <section id="start">
+    <h1 data-t="title"></h1>
+    <p class="lede" data-t="sub"></p>
+
+    <label class="upload" for="file">
+      <span class="upload-icon" aria-hidden="true">📷</span>
+      <span class="upload-text" data-t="upload"></span>
+      <span class="upload-hint" data-t="uploadHint"></span>
+      <input id="file" type="file" accept="image/*,application/pdf">
+    </label>
+
+    <div class="extras">
+      <button id="locate" class="chip" type="button" data-t="location"></button>
+      <label class="roof">
+        <span data-t="roof"></span>
+        <input id="roof" type="number" inputmode="numeric" min="50" step="10" placeholder="—">
+      </label>
+    </div>
+
+    <p class="privacy">🔒 <span data-t="privacy"></span></p>
+    <button id="sample" class="link" type="button" data-t="sample"></button>
+  </section>
+
+  <section id="busy" hidden>
+    <div class="sun" aria-hidden="true"></div>
+    <p id="busy-text" role="status"></p>
+  </section>
+
+  <section id="problem" hidden>
+    <p id="problem-text" class="problem" role="alert"></p>
+    <button class="again chip" type="button" data-t="again"></button>
+  </section>
+
+  <section id="result" hidden>
+    <div id="verdict" class="verdict"></div>
+    <div id="tiles" class="tiles"></div>
+    <p id="emi-note" class="small"></p>
+
+    <div class="card">
+      <h2 data-t="chartTitle"></h2>
+      <div id="chart"></div>
+      <p class="legend"><span class="key usage"></span><span data-t="usage"></span><span class="key solar"></span><span data-t="solar"></span></p>
+    </div>
+
+    <ul id="notes" class="notes"></ul>
+
+    <div class="card" id="why">
+      <h2 data-t="whyTitle"></h2>
+      <p class="small" data-t="whySub"></p>
+      <div class="scroll"><table id="options"></table></div>
+    </div>
+
+    <div class="card" id="read" hidden>
+      <h2 data-t="readTitle"></h2>
+      <dl id="read-list"></dl>
+    </div>
+
+    <p class="small" data-t="conservative"></p>
+    <button class="again chip" type="button" data-t="again"></button>
+  </section>
+</main>
+
+<footer>
+  <span data-t="footer"></span>
+  · <a id="privacy-link" data-t="privacyLink"></a>
+  · <a href="https://github.com/piyushk-dev/surya-saathi">GitHub</a>
+</footer>
+<script src="app.js"></script>
+</body>
+</html>

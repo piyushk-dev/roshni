@@ -8,7 +8,7 @@ from dataclasses import asdict
 from importlib import resources
 
 from . import pipeline
-from .format import message
+from .format import BillProblem, explain, message
 
 
 def _response(status: int, payload: dict) -> dict:
@@ -32,16 +32,21 @@ def lambda_handler(event: dict, context) -> dict:
     raw = event.get("body") or "{}"
     if event.get("isBase64Encoded"):
         raw = base64.b64decode(raw).decode("utf-8")
+    lang = "en"
     try:
         body = json.loads(raw)
+        lang = body.get("lang", "en")
         reading = None
         if route == "POST /bill":
             request, reading = pipeline.request_from_bill(base64.b64decode(body["file_base64"]), body.get("media_type", "image/jpeg"))
-            body = {**{k: body[k] for k in ("lat", "lon", "roof_sqft", "lang") if k in body}, **request}
+            body = {**{k: body[k] for k in ("lat", "lon", "roof_sqft") if k in body}, **request}
         a = pipeline.run(body)
+    except BillProblem as p:
+        return _response(422, {"error": p.text(lang), "code": p.code})
     except (KeyError, ValueError, TypeError) as e:
         return _response(400, {"error": str(e)})
-    result = {"analysis": a.to_dict(), "message": message(a, body.get("lang", "en"))}
+    reason, notes = explain(a, lang)
+    result = {"analysis": a.to_dict(), "reason": reason, "notes": notes, "message": message(a, lang)}
     if reading:
         result["bill"] = asdict(reading)
     return _response(200, result)

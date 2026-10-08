@@ -158,7 +158,25 @@ Resources:
       KeySchema:
         - {AttributeName: pk, KeyType: HASH}
 
+  # Static site in web/, uploaded by scripts/deploy_web.py (manual deploys, no repo connection)
+  WebApp:
+    Type: AWS::Amplify::App
+    Properties:
+      Name: surya-saathi
+      Platform: WEB
+
+  WebBranch:
+    Type: AWS::Amplify::Branch
+    Properties:
+      AppId: !GetAtt WebApp.AppId
+      BranchName: main
+      Stage: PRODUCTION
+
 Outputs:
+  WebAppId:
+    Value: !GetAtt WebApp.AppId
+  WebUrl:
+    Value: !Sub https://main.${WebApp.DefaultDomain}
   ApiUrl:
     Value: !Sub https://${Api}.execute-api.${AWS::Region}.amazonaws.com
   WhatsAppCallbackUrl:

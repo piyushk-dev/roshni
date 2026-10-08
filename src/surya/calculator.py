@@ -62,6 +62,8 @@ class Analysis:
     yield_optimistic_kwh_per_kw: float
     calibration: float
     estimated_months: list[int]
+    usage_by_month: list[float]  # Jan..Dec, with estimated months filled in
+    yield_by_month: list[float]  # Jan..Dec units per kW, conservative
     free_units: float
     export_rate: float
     notes: list[str] = field(default_factory=list)  # keys into format.NOTES
@@ -202,6 +204,8 @@ def analyze(h: Household, sy: SolarYield, tariff: Tariff | None = None) -> Analy
         yield_optimistic_kwh_per_kw=sy.annual_optimistic,
         calibration=calib,
         estimated_months=estimated,
+        usage_by_month=units,
+        yield_by_month=list(sy.monthly),
         free_units=free,
         export_rate=tariff.export_rate,
         notes=notes,
