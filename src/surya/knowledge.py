@@ -161,6 +161,27 @@ def watch(fetch=None) -> list[str]:
     return changed
 
 
+# --- journeys teach how long each step really takes -------------------------------------------
+
+def record_stage(provider: str, stage: str, days: float) -> None:
+    _put(f"STAGE#{slug(provider)}#{stage}", {"provider": provider, "stage": stage, "days": round(days, 1)})
+
+
+def stage_times() -> list[dict]:
+    """Median days per provider and stage, from households that finished the step."""
+    t = _t()
+    if not t:
+        return []
+    from boto3.dynamodb.conditions import Attr
+
+    items = t.scan(FilterExpression=Attr("pk").begins_with("STAGE#"))["Items"]
+    groups: dict[tuple[str, str], list[float]] = {}
+    for item in items:
+        d = json.loads(item["data"])
+        groups.setdefault((d["provider"], d["stage"]), []).append(d["days"])
+    return [{"provider": p, "stage": s, "median_days": median(v), "households": len(v)} for (p, s), v in sorted(groups.items())]
+
+
 # --- live impact ---------------------------------------------------------------------------
 
 def count(**increments: float) -> None:

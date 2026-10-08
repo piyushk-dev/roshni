@@ -91,6 +91,11 @@ def journey_reply(cmd: str, text: str, user: dict, to: str, lang: str) -> str:
         return journey.draft(j["stage"], lang, max(journey.days_since(j), journey.STAGES[j["stage"]]["days"] * 1.2))
     if not j.get("token"):
         return t["wait_a_moment"]
+    if not j.get("demo"):  # demo days last seconds; they would distort the real timings
+        from . import knowledge
+
+        provider = (user.get("last") or {}).get("provider") or (user.get("last") or {}).get("discom") or "unknown"
+        knowledge.record_stage(provider, journey.STAGES[j["stage"]]["id"], journey.days_since(j))
     journey.advance(j)
     st = journey.STAGES[j["stage"]]
     j["token"] = None
@@ -175,7 +180,7 @@ def handle(msg: dict, user: dict, wa, pipeline) -> dict | None:
         if a.verdict == "go" and not (user.get("journey") and not user["journey"].get("done")):
             wa.send_text(to, journey.TEXT[lang if lang in journey.TEXT else "en"]["cta"])
         o = a.recommended
-        user["last"] = {"verdict": a.verdict, "kw": o.kw if o else None, "discom": request["discom"]}
+        user["last"] = {"verdict": a.verdict, "kw": o.kw if o else None, "discom": request["discom"], "provider": a.discom_name}
     elif kind == "audio":
         data, media_type = wa.download_media(msg["audio"]["id"])
         text, heard_lang = voice.transcribe(data, media_type)

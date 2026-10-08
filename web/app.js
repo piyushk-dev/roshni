@@ -286,6 +286,18 @@ Object.assign(T.hi, {
   askExamples: ["क्या बिना गारंटी के लोन मिलेगा?", "वेंडर 70% एडवांस माँग रहा है, क्या यह ठीक है?", "क्या किराए के फ़्लैट पर सोलर लग सकता है?"],
 });
 
+
+Object.assign(T.en, {
+  timesTitle: "How long steps really take",
+  timesEmpty: "Every household that finishes a step adds its time here, by electricity provider, so slow offices become visible. No real applications have finished a step yet.",
+  timesCols: ["Provider", "Step", "Usual", "Median so far", "Households"],
+});
+Object.assign(T.hi, {
+  timesTitle: "कदमों में असल में कितना समय लगता है",
+  timesEmpty: "हर घर जो कोई कदम पूरा करता है, उसका समय यहाँ बिजली कंपनी के हिसाब से जुड़ता है, ताकि धीमे दफ़्तर सबको दिखें। अभी तक किसी असली आवेदन ने कोई कदम पूरा नहीं किया है।",
+  timesCols: ["बिजली कंपनी", "कदम", "आम तौर पर", "अब तक का औसत", "घर"],
+});
+
 const $ = (id) => document.getElementById(id);
 const state = { lang: initialLang(), lat: null, lon: null, last: null, lastBody: null, lastQuote: null };
 
@@ -311,7 +323,7 @@ function applyLang() {
   if (state.lat !== null) $("locate").textContent = t("locationOn");
   if (state.last) render(state.last);
   if (state.lastQuote) renderQuote(state.lastQuote);
-  if (typeof renderSteps === "function") { renderSteps(); renderFacts(); renderWhatsApp(); renderSociety(); renderAskExamples(); }
+  if (typeof renderSteps === "function") { renderSteps(); renderFacts(); renderWhatsApp(); renderSociety(); renderAskExamples(); renderTimes(); }
 }
 
 function show(id) {
@@ -900,8 +912,36 @@ $("ask-form").addEventListener("submit", (e) => {
   if (q) ask(q);
 });
 
+
+// --- the accountability table: real step durations by provider ----------------------------
+landing.times = [];
+
+function renderTimes() {
+  const table = $("times");
+  const rows = landing.times || [];
+  $("times-empty").hidden = rows.length > 0;
+  table.hidden = rows.length === 0;
+  if (!rows.length || !landing.journey) return;
+  const byId = Object.fromEntries(landing.journey.stages.map((s) => [s.id, s]));
+  table.innerHTML = "";
+  const head = table.createTHead().insertRow();
+  for (const c of t("timesCols")) { const th = document.createElement("th"); th.textContent = c; head.append(th); }
+  const body = table.createTBody();
+  for (const r of rows) {
+    const st = byId[r.stage];
+    const row = body.insertRow();
+    for (const c of [r.provider, st ? st.title[state.lang] || st.title.en : r.stage, st ? t("usual", st.days) : "",
+                     t("usual", Math.round(r.median_days)), String(r.households)]) row.insertCell().textContent = c;
+  }
+}
+
+async function loadTimes() {
+  try { landing.times = (await getJSON("/stats/stages")).stages; } catch (_) { landing.times = []; }
+  renderTimes();
+}
+
 $("privacy-link").href = API + "/privacy";
 applyLang();
 loadStats();
-loadJourney();
+loadJourney().then(loadTimes);
 loadFacts();

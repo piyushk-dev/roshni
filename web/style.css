@@ -156,6 +156,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, label:focus-within {
 .steps .who { font-size: 0.78rem; color: var(--muted); white-space: nowrap; }
 .steps .who b { font-weight: 600; color: var(--ink); }
 
+.sub-h { font: 700 var(--step-1) var(--font-display); margin: 8px 0 0; }
 .phone { background: var(--surface); border: 1px solid var(--line); border-radius: 26px; padding: 18px; display: grid; gap: 10px; max-width: 380px; width: 100%; justify-self: center; }
 .bubble { padding: 10px 12px; border-radius: 14px; font-size: var(--step--1); max-width: 88%; display: grid; gap: 4px; }
 .bubble.in { justify-self: end; background: var(--go-soft); font-weight: 600; }

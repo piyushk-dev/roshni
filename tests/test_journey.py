@@ -82,3 +82,18 @@ def test_task_handler_stores_the_token_and_messages(monkeypatch):
     assert sent[0].startswith("⏰")  # a nudge, because the stage timed out once already
     journey.task_handler({"action": "finish", "journey": j}, None)
     assert "All 8 steps done" in sent[-1] and saved["w1"]["journey"]["done"]
+
+
+def test_real_done_records_how_long_the_step_took(monkeypatch):
+    from surya import knowledge
+
+    recorded = []
+    monkeypatch.setattr(knowledge, "record_stage", lambda provider, stage, days: recorded.append((provider, stage)))
+    monkeypatch.setattr(journey, "advance", lambda j: None)
+    wa = Wa()
+    user = {"lang": "en", "last": {"provider": "BSES Rajdhani"}, "journey": {"stage": 3, "token": "t", "since": 0, "seconds_per_day": 86400}}
+    bot.handle(_text("DONE"), user, wa, None)
+    assert recorded == [("BSES Rajdhani", "feasibility")]
+    demo = {"lang": "en", "journey": {"stage": 3, "token": "t", "since": 0, "seconds_per_day": 4, "demo": True}}
+    bot.handle(_text("DONE"), demo, wa, None)
+    assert len(recorded) == 1  # demo runs never count
