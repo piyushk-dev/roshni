@@ -486,7 +486,7 @@ function applyLang() {
 }
 
 function show(id) {
-  for (const s of ["start", "busy", "problem", "result", "quote-result", "guide", "rules", "built", "market", "schemes", "passport"]) if ($(s)) $(s).hidden = s !== id;
+  for (const s of ["start", "busy", "problem", "result", "quote-result", "guide", "rules", "built", "quotes", "schemes", "care"]) if ($(s)) $(s).hidden = s !== id;
   window.scrollTo({ top: 0, behavior: "instant" });
 }
 
@@ -762,9 +762,8 @@ $("sample-quote").addEventListener("click", () => runQuote(async () => {
 }, true));
 
 $("to-quote").addEventListener("click", () => {
-  state.last = null;
-  show("start");
-  $("quote-card").scrollIntoView({ behavior: "smooth" });
+  history.pushState(null, "", "#quote-card");
+  route("#quote-card", true);
 });
 
 $("sample").addEventListener("click", () => {

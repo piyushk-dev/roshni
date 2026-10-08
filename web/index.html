@@ -12,7 +12,6 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Anek+Devanagari:wdth,wght@100..125,400..800&family=Anek+Latin:wdth,wght@100..125,300..800&family=Mukta:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
-<link rel="stylesheet" href="product.css?v=20261008-2">
 <script src="config.js"></script>
 </head>
 <body>
@@ -25,9 +24,10 @@
       <span data-t="brand"></span>
     </a>
     <nav class="nav" aria-label="Pages">
-      <a href="#quote" data-t="navQuote"></a>
+      <a href="#quotes" data-t="navQuotes"></a>
+      <a href="#schemes" data-t="navSchemes"></a>
       <a href="#guide" data-t="navApply"></a>
-      <a href="#rules" data-t="navRules"></a>
+      <a href="#care" data-t="navCare"></a>
       <a href="#built" data-t="navAws"></a>
     </nav>
     <div class="top-actions">
@@ -161,20 +161,12 @@
         <div class="use-grid">
           <article class="use" id="quote">
             <div class="snip">
-              <div class="m out doc">
-                <span class="pdf">PDF</span>
-                <span class="doc-name"><b>Quotation_3kW.pdf</b><small data-t="docMeta"></small></span>
-                <span class="meta">11:05 <svg class="ticks" viewBox="0 0 18 11"><path d="M1 6l3 3 6-7M7 8l1 1 6-7"/></svg></span>
-              </div>
-              <div class="m in"><p class="wa-text" data-t="u1reply"></p><span class="meta">11:05</span></div>
+              <div class="m out"><p class="wa-text">QUOTES</p><span class="meta">11:05 <svg class="ticks" viewBox="0 0 18 11"><path d="M1 6l3 3 6-7M7 8l1 1 6-7"/></svg></span></div>
+              <div class="m in"><p class="wa-text" data-t="u1reply"></p><span class="meta">11:06</span></div>
             </div>
             <h3 data-t="u1t"></h3>
             <p data-t="u1d"></p>
-            <div class="use-actions" id="quote-card">
-              <label class="btn btn-line btn-sm" for="quote-file" data-t="quoteUpload"></label>
-              <input id="quote-file" class="sr-only" type="file" accept="image/*,application/pdf">
-              <button id="sample-quote" class="link-btn" type="button" data-t="sampleQuote"></button>
-            </div>
+            <div class="use-actions"><a class="link-btn" href="#quotes" data-t="u1a"></a></div>
           </article>
           <article class="use">
             <div class="snip">
@@ -402,6 +394,161 @@
     </div>
   </section>
 
+  <!-- ============ get quotes ============ -->
+  <section id="quotes" class="page" data-view hidden>
+    <div class="wrap frame">
+      <header class="page-head">
+        <h1 data-t="qTitle"></h1>
+        <p class="sec-lede" data-t="qSub"></p>
+      </header>
+      <form class="toolbar" id="q-form" novalidate>
+        <label class="field-col"><span data-t="fState"></span><select id="q-state"></select></label>
+        <label class="field-col"><span data-t="fSize"></span><input id="q-kw" type="number" min="1" max="10" step="0.5" value="3" inputmode="decimal"></label>
+        <label class="field-col"><span data-t="fPin"></span><input id="q-pin" type="text" inputmode="numeric" maxlength="6" autocomplete="postal-code" placeholder="110075"></label>
+        <button class="btn btn-primary" type="submit" data-t="qGo"></button>
+      </form>
+      <p class="form-error" id="q-error" role="alert" hidden></p>
+      <div class="board-head" id="q-head" hidden>
+        <p class="board-status" id="q-status" aria-live="polite"></p>
+        <p class="board-demo" data-t="qDemo"></p>
+      </div>
+      <div class="board" id="q-board"></div>
+      <div class="board-foot" id="q-foot" hidden>
+        <div class="group-meter" id="q-group"></div>
+        <button class="link-btn" type="button" id="q-delete" data-t="qDelete"></button>
+      </div>
+
+      <div class="sec two-up" id="quote-card">
+        <div class="tool-card">
+          <h2 data-t="qOwnTitle"></h2>
+          <p class="sec-lede" data-t="qOwnSub"></p>
+          <div class="use-actions">
+            <label class="btn btn-primary" for="quote-file" data-t="quoteUpload"></label>
+            <input id="quote-file" class="sr-only" type="file" accept="image/*,application/pdf">
+            <button id="sample-quote" class="btn btn-line" type="button" data-t="sampleQuote"></button>
+          </div>
+        </div>
+        <div class="tool-card" id="scam">
+          <h2 data-t="scamTitle"></h2>
+          <p class="sec-lede" data-t="scamSub"></p>
+          <form id="scam-form" class="stack" novalidate>
+            <textarea id="scam-text" rows="4" maxlength="10000" aria-label="Offer text"></textarea>
+            <div class="use-actions">
+              <button class="btn btn-line" type="submit" data-t="scamGo"></button>
+              <button class="link-btn" type="button" id="scam-example" data-t="scamExample"></button>
+            </div>
+          </form>
+          <div class="scam-out" id="scam-out" aria-live="polite" hidden></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ schemes ============ -->
+  <section id="schemes" class="page" data-view hidden>
+    <div class="wrap frame">
+      <header class="page-head">
+        <h1 data-t="sTitle"></h1>
+        <p class="sec-lede" data-t="sSub"></p>
+      </header>
+      <div class="calc">
+        <div class="calc-in">
+          <label class="field-col"><span data-t="fState"></span><select id="s-state"></select></label>
+          <div class="field-col"><span data-t="fSize"></span>
+            <div class="seg" id="s-kw" role="group"><button type="button" data-v="1">1 kW</button><button type="button" data-v="2">2 kW</button><button type="button" data-v="3" aria-pressed="true">3 kW</button><button type="button" data-v="5">5 kW</button></div>
+          </div>
+          <div class="field-col"><span data-t="fDcr"></span>
+            <div class="seg" id="s-dcr" role="group"><button type="button" data-v="yes" aria-pressed="true" data-t="dcrYes"></button><button type="button" data-v="not_stated" data-t="dcrUnsure"></button><button type="button" data-v="no" data-t="dcrNo"></button></div>
+          </div>
+        </div>
+        <div class="calc-out" id="s-out" aria-live="polite"></div>
+      </div>
+      <div class="scheme-groups" id="s-cards"></div>
+      <p class="hint sources-line"><span data-t="sSourcesNote"></span> <a href="#rules" data-t="sSourcesLink"></a></p>
+
+      <div class="sec plan" id="plan">
+        <header class="sec-head">
+          <h2 data-t="pTitle"></h2>
+          <p class="sec-lede" data-t="pSub"></p>
+        </header>
+        <div class="plan-grid">
+          <form class="form-grid" id="p-form" novalidate>
+            <label class="field-col"><span data-t="pCost"></span><input id="p-cost" type="number" min="10000" step="1000" value="195000" inputmode="numeric"></label>
+            <label class="field-col"><span data-t="pSaving"></span><input id="p-saving" type="number" min="0" step="100" value="1200" inputmode="numeric"></label>
+            <label class="field-col"><span data-t="pOwn"></span><input id="p-own" type="number" min="10" max="100" step="5" value="10" inputmode="numeric"></label>
+            <label class="field-col"><span data-t="pRate"></span><input id="p-rate" type="number" min="0" max="30" step="0.05" value="5.75" inputmode="decimal"></label>
+            <label class="field-col wide"><span class="range-label"><span data-t="pWait"></span><b id="p-wait-v">3</b></span><input id="p-wait" type="range" min="0" max="12" step="1" value="3"></label>
+          </form>
+          <div class="plan-out" id="p-out" aria-live="polite"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ after installation ============ -->
+  <section id="care" class="page" data-view hidden>
+    <div class="wrap frame">
+      <header class="page-head">
+        <h1 data-t="cTitle"></h1>
+        <p class="sec-lede" data-t="cSub"></p>
+      </header>
+      <div class="passport">
+        <div class="passport-head">
+          <svg class="ring" viewBox="0 0 44 44" aria-hidden="true"><circle cx="22" cy="22" r="18" class="ring-track"/><circle cx="22" cy="22" r="18" class="ring-fill" id="pp-ring"/></svg>
+          <div class="passport-title">
+            <h2 data-t="ppTitle"></h2>
+            <p class="hint"><span id="pp-count"></span>. <span data-t="ppLocal"></span></p>
+          </div>
+          <button class="btn btn-line btn-sm" type="button" id="pp-copy" data-t="ppCopy"></button>
+        </div>
+        <div class="pp-groups" id="pp-groups"></div>
+        <div class="callout"><b data-t="backupTitle"></b> <span data-t="backupBody"></span></div>
+      </div>
+
+      <div class="sec two-up care-tools">
+        <div class="tool-card" id="gen">
+          <h2 data-t="gTitle"></h2>
+          <p class="sec-lede" data-t="gSub"></p>
+          <form class="form-grid" id="g-form" novalidate>
+            <label class="field-col"><span data-t="gMonth"></span><input id="g-month" type="month"></label>
+            <label class="field-col"><span data-t="fSize"></span><input id="g-kw" type="number" min="0.5" max="500" step="0.5" value="3" inputmode="decimal"></label>
+            <label class="field-col"><span data-t="gActual"></span><input id="g-actual" type="number" min="0" step="1" value="280" inputmode="numeric"></label>
+            <label class="field-col"><span data-t="gPromised"></span><input id="g-promised" type="number" min="1" step="1" value="400" inputmode="numeric"></label>
+            <label class="field-col wide"><span data-t="gClean"></span><input id="g-clean" type="date"></label>
+            <button class="btn btn-primary wide" type="submit" data-t="gGo"></button>
+          </form>
+          <div class="tool-out" id="g-out" aria-live="polite" hidden></div>
+        </div>
+        <div class="tool-card" id="firstbill">
+          <h2 data-t="bTitle"></h2>
+          <p class="sec-lede" data-t="bSub"></p>
+          <form class="form-grid" id="b-form" novalidate>
+            <label class="field-col"><span data-t="bGen"></span><input id="b-gen" type="number" min="0" value="400" inputmode="numeric"></label>
+            <label class="field-col"><span data-t="bImport"></span><input id="b-import" type="number" min="0" value="300" inputmode="numeric"></label>
+            <label class="field-col"><span data-t="bExport"></span><input id="b-export" type="number" min="0" value="150" inputmode="numeric"></label>
+            <label class="field-col"><span data-t="bBillExport"></span><input id="b-billexport" type="number" min="0" value="100" inputmode="numeric"></label>
+            <button class="btn btn-primary wide" type="submit" data-t="bGo"></button>
+          </form>
+          <div class="tool-out" id="b-out" aria-live="polite" hidden></div>
+        </div>
+      </div>
+
+      <div class="sec split support" id="support">
+        <div>
+          <h2 data-t="spTitle"></h2>
+          <p class="sec-lede" data-t="spSub"></p>
+          <form class="form-grid" id="sp-form" novalidate>
+            <label class="field-col wide"><span data-t="spKind"></span><select id="sp-kind"></select></label>
+            <label class="field-col"><span data-t="spNoticed"></span><input id="sp-noticed" type="date"></label>
+            <label class="field-col"><span data-t="spContacted"></span><input id="sp-contacted" type="date"></label>
+            <button class="btn btn-primary wide" type="submit" data-t="spGo"></button>
+          </form>
+        </div>
+        <div class="tool-out sticky" id="sp-out" aria-live="polite" hidden></div>
+      </div>
+    </div>
+  </section>
+
   <!-- ============ results ============ -->
   <div class="wrap views">
     <section id="busy" hidden>
@@ -464,13 +611,13 @@
   <div class="wrap foot-inner">
     <span data-t="footer"></span>
     <span class="foot-links">
-      <a href="#guide" data-t="navApply"></a><a href="#rules" data-t="navRules"></a><a href="#built" data-t="navAws"></a>
+      <a href="#schemes" data-t="navSchemes"></a><a href="#guide" data-t="navApply"></a><a href="#rules" data-t="navRules"></a><a href="#built" data-t="navAws"></a>
       <a id="privacy-link" data-t="privacyLink"></a><a href="https://github.com/piyushk-dev/surya-saathi">GitHub</a>
     </span>
   </div>
 </footer>
 <script src="scene.js"></script>
 <script src="app.js"></script>
-<script src="product.js?v=20261008-2"></script>
+<script src="tools.js"></script>
 </body>
 </html>
