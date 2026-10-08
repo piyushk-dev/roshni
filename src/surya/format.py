@@ -54,6 +54,10 @@ NOTES = {
         "en": "About {export:,.0f} units a year would go to the grid unused, and those earn only about ₹{rate:g} each.",
         "hi": "सालाना लगभग {export:,.0f} यूनिट ग्रिड में बिना इस्तेमाल के जाएँगी, जिनके सिर्फ़ लगभग ₹{rate:g} प्रति यूनिट मिलते हैं।",
     },
+    "tariff_learned": {
+        "en": "We don't have {provider}'s tariff on file yet, so this uses the rates printed on your bill. Your bill now helps the next household on {provider}.",
+        "hi": "{provider} का टैरिफ अभी हमारे पास नहीं था, इसलिए आपके बिल पर छपे रेट इस्तेमाल किए गए। आपका बिल अब {provider} के अगले घर की मदद करेगा।",
+    },
     "estimated_months_temp": {
         "en": "Your bill showed {known} months of usage. We estimated the rest from how your usage rises with local temperature, so an older bill would sharpen this.",
         "hi": "आपके बिल में {known} महीनों की खपत थी। बाकी महीनों का अनुमान इससे लगाया गया कि गर्मी बढ़ने पर आपकी खपत कितनी बढ़ती है; पुराना बिल भेजेंगे तो अनुमान और सटीक होगा।",
@@ -121,8 +125,8 @@ PROBLEMS = {
         "hi": "यह बिजली का बिल नहीं लग रहा। कृपया पूरे बिल की साफ़ फोटो भेजें।",
     },
     "unsupported_provider": {
-        "en": "Sorry, only Delhi bills work for now (BSES Rajdhani, BSES Yamuna, Tata Power-DDL). This one is from {provider}.",
-        "hi": "माफ़ कीजिए, अभी सिर्फ़ दिल्ली के बिल (BSES राजधानी, BSES यमुना, टाटा पावर-DDL) पढ़े जा सकते हैं। यह बिल {provider} का है।",
+        "en": "We don't have {provider}'s tariff on file yet and couldn't read the rates on this bill. Please send a clearer photo that includes the charges table.",
+        "hi": "{provider} का टैरिफ अभी हमारे पास नहीं है, और इस बिल पर रेट पढ़े नहीं जा सके। कृपया चार्ज वाली टेबल समेत बिल की साफ़ फोटो भेजें।",
     },
     "unreadable": {
         "en": "I couldn't read the sanctioned load or the usage history. Please send a clearer photo that shows the whole bill.",
@@ -181,6 +185,7 @@ def explain(a: Analysis, lang: str = "en") -> tuple[str, list[str]]:
         "known": 12 - len(a.estimated_months),
         "rate": a.export_rate,
         "load": a.sanctioned_kw,
+        "provider": a.discom_name,
     }
     if o:
         values.update(

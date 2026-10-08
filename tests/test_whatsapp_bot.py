@@ -68,7 +68,16 @@ def test_bill_from_elsewhere_gets_a_clear_answer(wa, monkeypatch):
     other = {**FIELDS, "discom": "OTHER", "discom_name": "UPPCL"}
     monkeypatch.setattr(FakeBedrock, "converse", lambda self, modelId, **r: {"output": {"message": {"content": [{"toolUse": {"input": dict(other)}}]}}})
     bot.handle(_msg("image", image={"id": "media1"}), {"lang": "en"}, wa, pipeline)
-    assert "only Delhi bills" in wa.sent[-1] and "UPPCL" in wa.sent[-1]
+    assert "UPPCL" in wa.sent[-1] and "charges table" in wa.sent[-1]  # no rates on the bill to learn from
+
+
+def test_bill_from_elsewhere_with_rates_is_answered_from_its_own_tariff(wa, monkeypatch):
+    other = {**FIELDS, "discom": "OTHER", "discom_name": "UPPCL", "state": "UP",
+             "slab_rows": [{"units": 100, "rate": 5.5}, {"units": 50, "rate": 5.5}, {"units": 150, "rate": 6.0}, {"units": 262, "rate": 6.5}],
+             "fixed_charge_rs": 600}
+    monkeypatch.setattr(FakeBedrock, "converse", lambda self, modelId, **r: {"output": {"message": {"content": [{"toolUse": {"input": dict(other)}}]}}})
+    bot.handle(_msg("image", image={"id": "media1"}), {"lang": "en"}, wa, pipeline)
+    assert "UPPCL" in wa.sent[-1] and "rates printed on your bill" in wa.sent[-1]
 
 
 def test_signature_check(monkeypatch):

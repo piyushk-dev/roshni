@@ -48,6 +48,11 @@ Rules:
   Charge" or "Slabwise Energy Charge", the sum of the slab amounts). Not the bill total.
 - current_charges_rs: this billing period's total charges, before arrears, previous dues,
   late payment surcharge, subsidy or rebate.
+- slab_rows: every row of the energy charge table that shows units and a rate per unit, as
+  printed (the same rate may appear in more than one row). fixed_charge_rs: the fixed or
+  demand charge for this period.
+- state: the two-letter code of the Indian state the connection is in (DL, UP, MH, KA...),
+  from the provider or the bill.
 - Do not record the consumer's name, address, phone number, email or account/consumer number."""
 
 _ROW = {
@@ -79,6 +84,14 @@ TOOL = {
                 "energy_charge_rs": {"type": "number"},
                 "current_charges_rs": {"type": "number"},
                 "bill_date": {"type": "string", "description": "date the bill was issued, exactly as printed"},
+                "state": {"type": "string", "description": "two-letter Indian state code"},
+                "slab_rows": {"type": "array", "items": {"type": "object", "properties": {
+                    "units": {"type": "number"}, "rate": {"type": "number", "description": "rupees per unit"}},
+                    "required": ["units", "rate"]}},
+                "fixed_charge_rs": {"type": "number"},
+                "max_demand_kw": {"type": "number", "description": "MDI or maximum demand recorded, if printed"},
+                "reading_type": {"type": "string", "enum": ["actual", "estimated", "not_stated"],
+                                 "description": "whether this bill's meter reading is actual or estimated/provisional"},
                 "pincode": {"type": "string"},
             },
             "required": ["is_electricity_bill", "discom", "sanctioned_load_kw", "current_period", "usage_rows"],
@@ -100,6 +113,11 @@ class BillReading:
     amount_rs: float | None = None  # current period's total charges as printed
     monthly_units: dict[int, float] = field(default_factory=dict)  # calendar month -> units
     pincode: str | None = None
+    state: str | None = None
+    slabs: list[list[float | None]] | None = None  # [[up_to_units, rate], ...] per standard month, last open-ended
+    fixed_charge_rs: float | None = None  # per standard month
+    max_demand_kw: float | None = None
+    reading_type: str | None = None
     model_id: str | None = None
 
 
@@ -200,6 +218,27 @@ def monthly_units(rows: list[dict], current: dict | None, bill_date: str | None 
     return dict(sorted(out.items()))
 
 
+def slabs_from_rows(rows: list[dict], days: float | None) -> list[list[float | None]] | None:
+    """Slab ceilings and rates per standard month, from the bill's own energy charge table.
+
+    Bills split a period across slabs (sometimes twice, around a tariff change), so units are
+    pooled per rate in ascending order and the ceilings scaled from the period to a month."""
+    pooled: dict[float, float] = {}
+    for r in rows or []:
+        if r.get("units") and r.get("rate") and 0.5 <= r["rate"] <= 20:
+            pooled[round(r["rate"], 2)] = pooled.get(round(r["rate"], 2), 0) + r["units"]
+    if not pooled:
+        return None
+    scale = DAYS_PER_MONTH / days if days else 1.0
+    slabs, ceiling = [], 0.0
+    rates = sorted(pooled)
+    for rate in rates[:-1]:
+        ceiling += pooled[rate] * scale
+        slabs.append([round(ceiling, -1), rate])  # bills fill each slab before the next, so this is its ceiling
+    slabs.append([None, rates[-1]])
+    return slabs
+
+
 def _reading(f: dict, model: str) -> BillReading:
     reading = BillReading(
         is_electricity_bill=bool(f.get("is_electricity_bill")),
@@ -208,6 +247,9 @@ def _reading(f: dict, model: str) -> BillReading:
         category=f.get("category"),
         sanctioned_load_kw=f.get("sanctioned_load_kw"),
         pincode=f.get("pincode"),
+        state=(f.get("state") or "").upper()[:2] or None,
+        max_demand_kw=f.get("max_demand_kw"),
+        reading_type=f.get("reading_type"),
         model_id=model,
     )
     current = f.get("current_period") or None
@@ -223,6 +265,9 @@ def _reading(f: dict, model: str) -> BillReading:
         low, high = ENERGY_RS_PER_UNIT
         if energy and current.get("units") and low <= energy / current["units"] <= high:
             reading.energy_charge_rs = round(energy * DAYS_PER_MONTH / (days or DAYS_PER_MONTH), 2)
+        reading.slabs = slabs_from_rows(f.get("slab_rows"), days)
+        if f.get("fixed_charge_rs"):
+            reading.fixed_charge_rs = round(f["fixed_charge_rs"] * DAYS_PER_MONTH / (days or DAYS_PER_MONTH), 2)
     return reading
 
 
@@ -255,6 +300,13 @@ def consensus(readings: list[BillReading]) -> BillReading:
     energy = [r.energy_charge_rs for r in same_period if r.energy_charge_rs is not None]
     best.units_billed = median(units) if units else None
     best.energy_charge_rs = median(energy) if energy else None
+    best.state = _majority([r.state for r in bills]) or best.state
+    best.max_demand_kw = _majority([r.max_demand_kw for r in bills])
+    best.reading_type = _majority([r.reading_type for r in bills if r.reading_type != "not_stated"]) or best.reading_type
+    with_slabs = [r for r in same_period if r.slabs]
+    best.slabs = max(with_slabs, key=lambda r: len(r.slabs)).slabs if with_slabs else None
+    fixed = [r.fixed_charge_rs for r in same_period if r.fixed_charge_rs]
+    best.fixed_charge_rs = median(fixed) if fixed else None
     return best
 
 

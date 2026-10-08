@@ -41,10 +41,13 @@ Resources:
       Environment:
         Variables:
           YIELD_TABLE: !Ref YieldCache
+          KNOWLEDGE_TABLE: !Ref KnowledgeTable
           BEDROCK_MODEL_ID: !Ref BedrockModelId
       Policies:
         - DynamoDBCrudPolicy:
             TableName: !Ref YieldCache
+        - DynamoDBCrudPolicy:
+            TableName: !Ref KnowledgeTable
         - Statement:
             - Effect: Allow
               Action: [bedrock:InvokeModel]
@@ -67,6 +70,18 @@ Resources:
         Privacy:
           Type: HttpApi
           Properties: {ApiId: !Ref Api, Path: /privacy, Method: GET}
+        Stats:
+          Type: HttpApi
+          Properties: {ApiId: !Ref Api, Path: /stats, Method: GET}
+        Facts:
+          Type: HttpApi
+          Properties: {ApiId: !Ref Api, Path: /facts, Method: GET}
+        FactConfirm:
+          Type: HttpApi
+          Properties: {ApiId: !Ref Api, Path: "/facts/{id}/confirm", Method: POST}
+        FactReport:
+          Type: HttpApi
+          Properties: {ApiId: !Ref Api, Path: "/facts/{id}/report", Method: POST}
 
   # Acknowledges Meta within milliseconds, then hands the message to the worker
   WhatsAppWebhookFunction:
@@ -106,6 +121,7 @@ Resources:
           SSM_PREFIX: /surya-saathi/whatsapp
           SESSION_TABLE: !Ref SessionTable
           YIELD_TABLE: !Ref YieldCache
+          KNOWLEDGE_TABLE: !Ref KnowledgeTable
           BEDROCK_MODEL_ID: !Ref BedrockModelId
           WA_PHONE_NUMBER_ID: !Ref WhatsAppPhoneNumberId
           GRAPH_VERSION: !Ref GraphApiVersion
@@ -116,6 +132,8 @@ Resources:
             TableName: !Ref SessionTable
         - DynamoDBCrudPolicy:
             TableName: !Ref YieldCache
+        - DynamoDBCrudPolicy:
+            TableName: !Ref KnowledgeTable
         - Statement:
             - Effect: Allow
               Action: [bedrock:InvokeModel]
@@ -163,6 +181,46 @@ Resources:
         - {AttributeName: pk, AttributeType: S}
       KeySchema:
         - {AttributeName: pk, KeyType: HASH}
+
+  # Self-updating knowledge: tariffs learned from bills, prices from quotes, community-checked facts, counters
+  KnowledgeTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - {AttributeName: pk, AttributeType: S}
+        - {AttributeName: sk, AttributeType: S}
+      KeySchema:
+        - {AttributeName: pk, KeyType: HASH}
+        - {AttributeName: sk, KeyType: RANGE}
+      TimeToLiveSpecification:
+        AttributeName: expires
+        Enabled: true
+
+  # Weekly: re-read official sources and flag facts whose page changed
+  WatcherFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/
+      Handler: surya.knowledge.watch_handler
+      Timeout: 120
+      Environment:
+        Variables:
+          KNOWLEDGE_TABLE: !Ref KnowledgeTable
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref KnowledgeTable
+      Events:
+        Weekly:
+          Type: ScheduleV2
+          Properties:
+            ScheduleExpression: rate(7 days)
+
+  WatcherLogs:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${WatcherFunction}
+      RetentionInDays: 14
 
   # Static site in web/, uploaded by scripts/deploy_web.py (manual deploys, no repo connection)
   WebApp:

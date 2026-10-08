@@ -147,3 +147,12 @@ def test_bill_route(monkeypatch, delhi_yield):
     assert body["analysis"]["verdict"] == "go"
     assert body["analysis"]["calibration"] == pytest.approx(1.0, abs=0.02)  # the energy-charge model matches the bill
     assert "consumer" not in json.dumps(body["bill"]).lower()
+
+
+def test_slabs_are_learned_from_the_bill_itself():
+    """The real BRPL table: two tariff periods, each split over three slabs, 28 days."""
+    rows = [{"units": 7, "rate": 3.0}, {"units": 6, "rate": 4.5}, {"units": 7, "rate": 6.5},
+            {"units": 179, "rate": 3.0}, {"units": 178, "rate": 4.5}, {"units": 185, "rate": 6.5}]
+    slabs = bill_reader.slabs_from_rows(rows, 28)
+    assert slabs == [[200.0, 3.0], [400.0, 4.5], [None, 6.5]]  # DERC's 200/400 slabs, recovered
+    assert bill_reader.slabs_from_rows([], 28) is None

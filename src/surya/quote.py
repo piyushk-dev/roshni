@@ -55,6 +55,7 @@ TOOL = {
                 "structure_included": STATED,
                 "earthing_included": STATED,
                 "advance_pct": {"type": "number"},
+                "state": {"type": "string", "description": "two-letter Indian state code of the installation, if shown"},
             },
             "required": ["is_solar_quote", "dcr"],
         }},
@@ -68,7 +69,9 @@ TEXT = {
         "amber": "🟠 Negotiate before you sign:",
         "ok": "✅ This quote looks fair.",
         "ask": "Ask the vendor:",
-        "foot": "Prices are compared with typical 2026 rates of {low}–{high} per kW including GST.",
+        "foot": "Prices are compared with {low}–{high} per kW including GST: {basis}.",
+        "basis_live": "the middle half of {n} recent quotes in {state}",
+        "basis_seed": "typical 2026 market rates, until enough local quotes come in",
         "not_dcr": "These panels are not DCR (made with Indian cells). Under PM Surya Ghar that means no subsidy: you'd lose {subsidy}.",
         "dcr_unstated": "The quote doesn't say the panels are DCR. Without DCR panels the {subsidy} subsidy is rejected at inspection. Ask for \"DCR\" in writing, plus the DCR certificate.",
         "subsidy_overpromised": "The quote promises {promised} in subsidy, but the scheme maximum for {kw:g} kW is {max}.",
@@ -92,7 +95,9 @@ TEXT = {
         "amber": "🟠 साइन करने से पहले मोलभाव करें:",
         "ok": "✅ यह कोटेशन ठीक लग रहा है।",
         "ask": "वेंडर से पूछें:",
-        "foot": "कीमतों की तुलना 2026 के आम रेट {low}–{high} प्रति kW (GST सहित) से की गई है।",
+        "foot": "कीमतों की तुलना {low}–{high} प्रति kW (GST सहित) से की गई है: {basis}।",
+        "basis_live": "{state} के {n} हाल के कोटेशन का बीच का हिस्सा",
+        "basis_seed": "2026 के आम बाज़ार रेट, जब तक पर्याप्त स्थानीय कोटेशन नहीं आते",
         "not_dcr": "ये पैनल DCR (भारत में बने सेल) नहीं हैं। PM सूर्य घर में इसका मतलब है कोई सब्सिडी नहीं: आपके {subsidy} चले जाएँगे।",
         "dcr_unstated": "कोटेशन में पैनल के DCR होने की बात नहीं लिखी। DCR पैनल के बिना जाँच में {subsidy} की सब्सिडी खारिज हो जाती है। लिखित में \"DCR\" और DCR सर्टिफ़िकेट माँगें।",
         "subsidy_overpromised": "कोटेशन में {promised} सब्सिडी का वादा है, लेकिन {kw:g} kW के लिए योजना में अधिकतम {max} ही है।",
@@ -120,7 +125,7 @@ class Flag:
     values: dict
 
 
-def check(q: dict, state: str = "DL") -> list[Flag]:
+def check(q: dict, state: str = "DL", band: dict | None = None) -> list[Flag]:
     flags: list[Flag] = []
     count, watt = q.get("module_count"), q.get("module_watt")
     dc = round(count * watt / 1000, 2) if count and watt else None
@@ -140,7 +145,7 @@ def check(q: dict, state: str = "DL") -> list[Flag]:
         if q.get("gst_included") == "no":
             total *= 1 + GST_ON_SYSTEMS
             flags.append(Flag("note", "gst_excluded", {}))
-        band = SCHEME["cost_rs_per_kw"]["upto_3kw" if kw <= 3 else "above_3kw"]
+        band = band or SCHEME["cost_rs_per_kw"]["upto_3kw" if kw <= 3 else "above_3kw"]
         per_kw = total / kw
         prices = {"per_kw": inr(per_kw), "low": inr(band["low"]), "high": inr(band["high"])}
         if per_kw > band["high"]:
@@ -182,11 +187,12 @@ def lines(flags: list[Flag], lang: str) -> dict[str, list[str]]:
     return out
 
 
-def render(q: dict, flags: list[Flag], lang: str = "en") -> dict:
+def render(q: dict, flags: list[Flag], lang: str = "en", band: dict | None = None) -> dict:
     """The check as ready-made sentences: verdict, headline, issues, notes, questions, footnote."""
     t = TEXT[lang if lang in TEXT else "en"]
     kw = q.get("system_kw") or 0
-    band = SCHEME["cost_rs_per_kw"]["upto_3kw" if kw <= 3 else "above_3kw"]
+    band = band or SCHEME["cost_rs_per_kw"]["upto_3kw" if kw <= 3 else "above_3kw"]
+    basis = t["basis_live"].format(n=band["quotes"], state=q.get("state") or "your state") if band.get("live") else t["basis_seed"]
     v = verdict(flags)
     return {
         "verdict": v,
@@ -194,14 +200,14 @@ def render(q: dict, flags: list[Flag], lang: str = "en") -> dict:
         "head": t["head"].format(vendor=q.get("vendor_name") or "vendor", kw=kw, total=inr(q["total_price_rs"]) if q.get("total_price_rs") else "—"),
         **lines(flags, lang),
         "ask_title": t["ask"],
-        "foot": t["foot"].format(low=inr(band["low"]), high=inr(band["high"])),
+        "foot": t["foot"].format(low=inr(band["low"]), high=inr(band["high"]), basis=basis),
     }
 
 
-def message(q: dict, flags: list[Flag], lang: str = "en") -> str:
+def message(q: dict, flags: list[Flag], lang: str = "en", band: dict | None = None) -> str:
     if not q.get("is_solar_quote"):
         return TEXT[lang if lang in TEXT else "en"]["not_quote"]
-    r = render(q, flags, lang)
+    r = render(q, flags, lang, band)
     parts = [r["head"], "", r["title"]]
     parts += [f"• {x}" for x in r["red"] + r["amber"]]
     parts += [f"ⓘ {x}" for x in r["note"]]

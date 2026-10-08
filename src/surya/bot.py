@@ -84,9 +84,10 @@ def handle(msg: dict, user: dict, wa, pipeline) -> dict | None:
             if p.code != "not_a_bill":
                 wa.send_text(to, p.text(lang))
                 return user
-            q, flags = pipeline.check_quote(data, media_type)  # not a bill: maybe a vendor's quote
-            wa.send_text(to, quote.message(q, flags, lang) if q.get("is_solar_quote") else p.text(lang))
+            q, flags, band = pipeline.check_quote(data, media_type)  # not a bill: maybe a vendor's quote
+            wa.send_text(to, quote.message(q, flags, lang, band) if q.get("is_solar_quote") else p.text(lang))
             return user
+        pipeline.count_analysis(a)
         wa.send_text(to, message(a, lang))
         o = a.recommended
         user["last"] = {"verdict": a.verdict, "kw": o.kw if o else None, "discom": request["discom"]}

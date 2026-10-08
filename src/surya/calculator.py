@@ -248,6 +248,8 @@ def analyze(h: Household, sy: SolarYield, tariff: Tariff | None = None) -> Analy
             notes.append("export_heavy")
     if estimated:
         notes.append("estimated_months_temp" if fill == "temperature" else "estimated_months")
+    if tariff.learned:
+        notes.append("tariff_learned")
 
     return Analysis(
         verdict=verdict,

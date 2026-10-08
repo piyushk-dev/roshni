@@ -1,46 +1,53 @@
 # Surya Saathi: product plan
 
 Goal: win Track 3 (Waste and Energy) of WeMakeDevs × AWS Environmental Hacks, Oct 8–11 2026.
-Judges see only the 3-minute video (rules: "a feature shown only in the writeup, and not in the video, does not count").
+Judges see only the 3-minute video, so every feature below has to be showable.
 
-## What real households struggle with (research, 8 Oct)
+## One line
 
-| Pain | Evidence | What we do about it |
+A WhatsApp-first companion that takes an Indian household from "is solar worth it?" to panels on the roof, money in the bank and output that stays high. It gets more accurate with every bill and quote it sees.
+
+## Principle: knowledge that keeps itself current
+
+Exact rates change every month (fuel surcharges, state top-ups, prices), so hand-verified tables go stale. Instead:
+
+| Source | What it teaches | How |
 |---|---|---|
-| Don't know if it pays, or how to start | CEEW 2026 survey of 17,000 homes: the drop-off is *before* applying; 3 in 4 who think it's expensive don't know about loans | Bill photo → honest answer with EMI ✅ |
-| Delhi's new deal is invisible | Cabinet 2 Sep 2026: ≤400 units/month → up to 3 kW at **₹0 upfront**; others get **+₹78,000** from Delhi; only 10,073 of 2.3 lakh target done ([ANI via DesiTalk](https://desitalkchicago.com/delhi-solar-policy-gets-major-push-2-30-lakh-rooftops-targeted-by-march-2027/), [Bridgeway](https://bridgewaypower.in/delhi-solar-policy-2026)) | Delhi bonus check on every Delhi bill |
-| Vendor traps | Non-DCR panels void the subsidy; cash outside the portal; non-empanelled vendors | Quote checker ✅, then side-by-side quote comparison |
-| Paperwork rejections | Name mismatch across Aadhaar / bill / bank, Aadhaar not seeded to bank, bill older than 90 days, pending dues, rented roof without NOC, size above sanctioned load ([guide](https://righttoinformation.wiki/practical-guides/rooftop-solar-subsidy-not-credited-application-rejected)) | Pre-flight checklist before applying |
-| Stuck at net meter | Slowest step; 3–6 week backlogs at BSES/TPDDL ([guide](https://bridgewaypower.in/blog/pm-surya-ghar-yojana-2026-guide)) | Step tracker with nudges and an escalation ladder |
-| Subsidy never arrives | E-token must be redeemed; bank name mismatch; Phase II claims must reach MNRE by **30 Nov 2026** ([Energetica](https://www.energetica-india.net/news/mnre-extends-pm-surya-ghar-cfa-claim-deadline-to-november-30-2026)) | Reminders, plus drafted complaints (DISCOM nodal officer, portal grievance, 15555, CPGRAMS, RTI) |
-| Output quietly drops | Delhi dust costs 0.3–0.6%/day, ~10%/month uncleaned; smog another ~6–12% ([Renewable Watch](https://renewablewatch.in/2018/12/22/soiling-analysis/), [PMC study](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC12658225/)) | Monthly performance check against expected output, plus cleaning reminders |
+| **Every bill** | The provider's live tariff: slabs, surcharges, fixed charges | Bills print their own rates. An unknown provider uses its own bill's rates, so **any state works on day one** |
+| **Every quote** | Real ₹/kW prices by city | The "fair price" is a rolling median of recent quotes, with a seed value until enough arrive |
+| **People** | State schemes, deadlines, rule changes | Public "rates & rules" page: each fact shows source, last confirmed, confirmations. Anyone can confirm or report a change with evidence; changes go live after several confirmations or moderator review |
+| **Watchers** | Changes on official pages (MNRE, regulators, state portals) | Weekly scheduled check (EventBridge Scheduler); a changed page marks its facts "may be outdated" for review |
 
-Patterns from winners we reuse: one decision at one moment (AeroZee), work with existing systems (Kabadiwalla Connect), an agent that acts with the human in control (First Commit winners Suraksha and Beacon), voice in Indian languages, a live link anyone can open, real data and tests.
+Every number shown carries where it came from and how fresh it is. No personal data is kept, only rates and prices.
 
-## The product: from bill to subsidy, and after
+## Problems → features
 
-1. **Decide.** Bill photo → size, cost, subsidy, EMI, payback, an honest "skip". ✅ Delhi bonus check.
-2. **Choose a vendor.** Quote checker ✅. Compare up to 3 quotes side by side.
-3. **Apply.** Pre-flight checklist. Step-by-step tracker for the 8 portal stages (Step Functions), with nudges when a stage stalls (EventBridge Scheduler).
-4. **Get paid.** E-token reminder, the CFA claim deadline, and a drafted complaint for whoever is holding things up. The household sends it; we never act for them.
-5. **Keep it running.** Monthly check: photo of the inverter's monthly units vs what the panels should make that month; cleaning reminders.
+| Stage | Real problem (research) | Feature |
+|---|---|---|
+| Decide | Don't know if it pays; drop-off happens before applying (CEEW 2026) | Bill photo → honest answer ✅ |
+| Decide | Delhi's ₹0-upfront deal is unknown; only 10k of 2.3 lakh homes done | State bonus check ✅ (Delhi), more states via community facts |
+| Save now, solar or not | Paying for unused sanctioned load (fixed charges track it); estimated readings; unexplained "other charges" | **Bill doctor**: right-size sanctioned load from the bill's max demand, flag estimated readings, odd charges, missing subsidy |
+| Choose | Non-DCR panels void the subsidy; inflated subsidy promises; overpricing | Quote checker ✅, live price benchmark, compare quotes side by side |
+| Apply | Rejections from name mismatches, Aadhaar not seeded to bank, old bill, dues, no NOC | Pre-flight checklist |
+| Apply | Net meter is the slowest step | Step tracker (Step Functions) with nudges when a stage stalls |
+| Get paid | E-token not redeemed, bank mismatch, claim deadline 30 Nov 2026 | Reminders + drafted complaint for whoever is holding it up (DISCOM nodal officer, portal grievance, 15555, CPGRAMS, RTI). The household sends it |
+| Live with it | Dust and smog cut output 10%+ a month; export credits not applied (installer complaints) | Monthly check: inverter reading vs expected output; post-solar bill check for export credit; cleaning reminders |
+| No roof of your own | Most city homes are flats | Apartment / RWA mode: common-area solar (₹18,000/kW), virtual net metering explainer, a message to send the RWA |
 
-Channels: WhatsApp (Twilio Sandbox live; Meta Cloud API built, blocked on business verification), website on Amplify, Hindi voice notes (Transcribe in, Polly out).
+Channels: WhatsApp (Twilio Sandbox live; Meta Cloud API built, waiting on business verification), website on Amplify, Hindi voice notes.
 
-## Build order and status
+## Build order
 
-- [x] Calculator, Delhi tariff from a real bill, conservative sunlight, honest skip, size tie-break
-- [x] Bill reader: 3 parallel reads + consensus; temperature-based fill for missing months
-- [x] Quote checker (API, web, WhatsApp)
-- [x] WhatsApp via Twilio Sandbox, website on Amplify
-- [ ] Delhi bonus (zero-upfront eligibility, state top-up scenario)
-- [ ] Journey: pre-flight checklist, stage tracker (Step Functions + EventBridge), escalation drafts
-- [ ] Website redesign: landing, how it works, live impact counter, shareable result
-- [ ] Hindi voice notes + questions answered from the household's own result and a scheme FAQ
-- [ ] Compare quotes side by side
-- [ ] Monthly performance check + cleaning reminders
-- [ ] README, architecture diagram, Builder Center blog draft, video script; make repo public
+- [x] Calculator, bill reader (3-read consensus), quote checker, WhatsApp, website, Delhi bonus
+- [ ] Self-updating knowledge: bill-derived tariffs (any state), price observations, facts registry with confirm/report, weekly watcher
+- [ ] Journey: checklist, stage tracker with nudges, escalation drafts
+- [ ] Bill doctor
+- [ ] Website redesign around the whole journey, rates & rules page, live impact counter, share card
+- [ ] Hindi voice notes + answers to questions
+- [ ] Apartment / RWA mode, post-install monthly check
+- [ ] README, architecture diagram, blog draft, video script; make repo public
 
-## AWS used
+## AWS
 
-Lambda, API Gateway (HTTP), DynamoDB, Bedrock (Nova 2 Lite), Amplify Hosting, SSM Parameter Store, CloudWatch Logs, AWS SAM (open source). Planned: Step Functions, EventBridge Scheduler, Transcribe, Polly, S3.
+Live: Lambda, API Gateway, DynamoDB, Bedrock (Nova 2 Lite), Amplify Hosting, SSM Parameter Store, CloudWatch, AWS SAM.
+Adding: Step Functions (journey), EventBridge Scheduler (nudges, watcher), Transcribe + Polly (voice), S3 (voice audio).
