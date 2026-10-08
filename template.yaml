@@ -5,8 +5,8 @@ Description: Surya Saathi - rooftop solar copilot for PM Surya Ghar households
 Parameters:
   BedrockModelId:
     Type: String
-    Default: global.anthropic.claude-haiku-5-5
-    Description: Vision model for reading bills; falls back to Haiku 4.5 then Nova 2 Lite if access is denied
+    Default: global.amazon.nova-2-lite-v1:0
+    Description: Vision model for bills and quotes; others in bill_reader.MODELS are tried only if this one is denied
   WhatsAppPhoneNumberId:
     Type: String
     Default: ""
