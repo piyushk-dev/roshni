@@ -41,11 +41,13 @@ Channels: WhatsApp (Twilio Sandbox live; Meta Cloud API built, waiting on busine
 - [x] Calculator, bill reader (3-read consensus), quote checker, WhatsApp, website, Delhi bonus
 - [x] Self-updating knowledge: bill-derived tariffs (any state), price observations, facts registry with confirm/report, weekly watcher
 - [x] Journey: checklist, stage tracker with nudges, escalation drafts (verified live, incl. nudge on timeout)
-- [ ] Bill doctor
+- [x] Bill doctor (sanctioned load vs peak, estimated readings, one-off charges, missing exports)
 - [x] Website redesign around the whole journey, rates & rules board, live impact counter (share card still open)
-- [ ] Hindi voice notes + answers to questions
-- [ ] Apartment / RWA mode, post-install monthly check
-- [ ] README, architecture diagram, blog draft, video script; make repo public
+- [x] Hindi voice notes (Transcribe/Polly) + grounded answers, also on the website (POST /ask)
+- [x] Flats/RWA mode with calculator; post-install output check from an inverter photo; photo classifier
+- [x] README, architecture diagram, blog draft (docs/blog.md), video script (docs/video-script.md)
+- [x] Share result on WhatsApp; accountability board (real step times by provider)
+- [ ] Make the repo public before submitting; record the video; publish the blog
 
 ## AWS
 
