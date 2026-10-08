@@ -41,5 +41,9 @@ def get_user(wa_id: str) -> dict:
     return json.loads(item["data"]) if item else {}
 
 
+def delete_user(wa_id: str) -> None:
+    _t().delete_item(Key={"pk": f"USER#{wa_id}"})
+
+
 def put_user(wa_id: str, data: dict) -> None:
     _t().put_item(Item={"pk": f"USER#{wa_id}", "data": json.dumps(data), "expires": int(time.time()) + USER_TTL_DAYS * 86400})

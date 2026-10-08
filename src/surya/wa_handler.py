@@ -45,4 +45,7 @@ def worker(event: dict, context) -> None:
         except Exception:
             log.exception("failed on message %s", msg["id"])
             whatsapp.send_text(msg["from"], bot.TEXT["error"][user.get("lang", bot.DEFAULT_LANG)])
-        store.put_user(msg["from"], user)
+        if user is None:
+            store.delete_user(msg["from"])
+        else:
+            store.put_user(msg["from"], user)

@@ -36,6 +36,10 @@ TEXT = {
         "en": "Voice notes are coming soon. For now, send a photo of your bill.",
         "hi": "वॉइस नोट जल्द आ रहे हैं। अभी के लिए अपने बिल की फोटो भेजें।",
     },
+    "deleted": {
+        "en": "🗑️ Done. Everything stored about you has been deleted. Send a bill any time to start again.",
+        "hi": "🗑️ हो गया। आपसे जुड़ी सारी जानकारी मिटा दी गई है। दोबारा शुरू करने के लिए कभी भी बिल भेजें।",
+    },
     "error": {
         "en": "Something went wrong on our side. Please try again in a minute.",
         "hi": "हमारी तरफ़ से कुछ गड़बड़ हो गई। कृपया एक मिनट बाद फिर कोशिश करें।",
@@ -44,15 +48,19 @@ TEXT = {
 
 ENGLISH_WORDS = {"english", "eng", "en"}
 HINDI_WORDS = {"hindi", "हिंदी", "हिन्दी"}
+DELETE_WORDS = {"delete my data", "delete", "मेरा डेटा मिटाओ"}
 
 
-def handle(msg: dict, user: dict, wa, pipeline) -> dict:
-    """Reply to one incoming message. Returns the user's updated state."""
+def handle(msg: dict, user: dict, wa, pipeline) -> dict | None:
+    """Reply to one incoming message. Returns the user's updated state, or None if they asked to be forgotten."""
     to, kind = msg["from"], msg.get("type")
     wa.mark_read(msg["id"])
 
     if kind == "text":
         text = msg["text"]["body"].strip()
+        if text.lower() in DELETE_WORDS:
+            wa.send_text(to, TEXT["deleted"][user.get("lang", DEFAULT_LANG)])
+            return None
         if text.lower() in ENGLISH_WORDS or text in HINDI_WORDS or text.lower() in HINDI_WORDS:
             user["lang"] = "en" if text.lower() in ENGLISH_WORDS else "hi"
             wa.send_text(to, TEXT["lang_set"][user["lang"]])

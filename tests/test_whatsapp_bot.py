@@ -112,3 +112,16 @@ def test_webhook_verifies_and_hands_off(monkeypatch):
 
     post["headers"]["X-Hub-Signature-256"] = "sha256=bad"
     assert wa_handler.webhook(post, None)["statusCode"] == 401
+
+
+def test_delete_my_data_forgets_the_user(wa):
+    assert bot.handle(_msg("text", text={"body": "DELETE MY DATA"}), {"lang": "en", "lat": 28.6}, wa, pipeline) is None
+    assert "deleted" in wa.sent[-1]
+
+
+def test_privacy_page_is_served():
+    from surya import handler
+
+    out = handler.lambda_handler({"requestContext": {"http": {"method": "GET"}}, "rawPath": "/privacy"}, None)
+    assert out["statusCode"] == 200 and "text/html" in out["headers"]["content-type"]
+    assert "DELETE MY DATA" in out["body"]

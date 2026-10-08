@@ -5,6 +5,7 @@ from __future__ import annotations
 import base64
 import json
 from dataclasses import asdict
+from importlib import resources
 
 from . import pipeline
 from .format import message
@@ -22,6 +23,9 @@ def lambda_handler(event: dict, context) -> dict:
     route = f"{event['requestContext']['http']['method']} {event['rawPath']}"
     if route == "GET /health":
         return _response(200, {"ok": True})
+    if route == "GET /privacy":
+        page = resources.files("surya").joinpath("privacy.html").read_text(encoding="utf-8")
+        return {"statusCode": 200, "headers": {"content-type": "text/html; charset=utf-8"}, "body": page}
     if route not in ("POST /analyze", "POST /bill"):
         return _response(404, {"error": f"no route {route}"})
 
