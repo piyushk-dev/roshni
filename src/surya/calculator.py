@@ -70,6 +70,7 @@ class Analysis:
     free_units: float
     export_rate: float
     notes: list[str] = field(default_factory=list)  # keys into format.NOTES
+    bonus: dict | None = None  # state scheme on top of PM Surya Ghar, not counted in the numbers above
 
     def to_dict(self) -> dict:
         return asdict(self)
@@ -149,10 +150,11 @@ def _year(kw, year, units, monthly_yield, tariff, load_kw, bill_now, calib) -> t
     return saving, sum(generation), banked
 
 
-def evaluate(kw: float, h: Household, units: list[float], sy: SolarYield, tariff: Tariff, bill_now: float, calib: float) -> Option:
+def evaluate(kw: float, h: Household, units: list[float], sy: SolarYield, tariff: Tariff, bill_now: float, calib: float,
+             extra_subsidy: float = 0.0) -> Option:
     gross = system_cost(kw)
-    subsidy = central_subsidy(kw, tariff.state)
-    net_cost = gross - subsidy
+    subsidy = central_subsidy(kw, tariff.state) + extra_subsidy
+    net_cost = max(0.0, gross - subsidy)
 
     flows = []
     for year in range(1, ECON["lifetime_years"] + 1):
@@ -192,6 +194,27 @@ def evaluate(kw: float, h: Household, units: list[float], sy: SolarYield, tariff
         roof_sqft_needed=kw * ECON["roof_sqft_per_kw"],
         needs_load_increase=kw > h.sanctioned_kw,
     )
+
+
+def state_bonus(h: Household, units: list[float], sy: SolarYield, tariff: Tariff, bill_now: float, calib: float,
+                recommended: Option | None) -> dict | None:
+    """What a state scheme adds. Shown separately: these schemes are new and their guidelines still moving."""
+    scheme = SCHEME.get("state_schemes", {}).get(tariff.state)
+    if not scheme:
+        return None
+    avg = sum(units) / 12
+    zero = scheme.get("zero_upfront")
+    out = {"name": scheme["name"], "status": scheme["status"], "apply_at": scheme["apply_at"], "avg_units": avg}
+    if zero and avg <= zero["max_avg_units_per_month"]:
+        kw = zero["max_kw"]
+        o = evaluate(kw, h, units, sy, tariff, bill_now, calib, extra_subsidy=system_cost(kw))
+        out["zero_upfront"] = {"kw": kw, "savings_rs": o.savings_rs, "savings_25y_rs": o.savings_25y_rs,
+                               "free_maintenance_years": zero["free_maintenance_years"], "needs_load_increase": kw > h.sanctioned_kw}
+    elif recommended and scheme.get("top_up_matches_central_subsidy"):
+        o = evaluate(recommended.kw, h, units, sy, tariff, bill_now, calib, extra_subsidy=central_subsidy(recommended.kw, tariff.state))
+        out["top_up"] = {"kw": o.kw, "net_cost": o.net_cost, "net_cost_central_only": recommended.net_cost,
+                         "payback_years": o.payback_years, "extra_subsidy": o.subsidy - recommended.subsidy}
+    return out if ("zero_upfront" in out or "top_up" in out) else None
 
 
 def analyze(h: Household, sy: SolarYield, tariff: Tariff | None = None) -> Analysis:
@@ -245,4 +268,5 @@ def analyze(h: Household, sy: SolarYield, tariff: Tariff | None = None) -> Analy
         free_units=free,
         export_rate=tariff.export_rate,
         notes=notes,
+        bonus=state_bonus(h, units, sy, tariff, bill_now, calib, best),
     )

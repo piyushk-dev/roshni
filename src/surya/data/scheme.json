@@ -1,10 +1,33 @@
 {
   "pmsgy": {
     "central_subsidy": {
-      "general": {"per_kw_first_2": 30000, "per_kw_3rd": 18000, "cap": 78000},
-      "special_category": {"per_kw_first_2": 33000, "per_kw_3rd": 19800, "cap": 85800}
+      "general": {
+        "per_kw_first_2": 30000,
+        "per_kw_3rd": 18000,
+        "cap": 78000
+      },
+      "special_category": {
+        "per_kw_first_2": 33000,
+        "per_kw_3rd": 19800,
+        "cap": 85800
+      }
     },
-    "special_category_states": ["AR", "AS", "MN", "ML", "MZ", "NL", "SK", "TR", "HP", "UK", "JK", "LA", "AN", "LD"],
+    "special_category_states": [
+      "AR",
+      "AS",
+      "MN",
+      "ML",
+      "MZ",
+      "NL",
+      "SK",
+      "TR",
+      "HP",
+      "UK",
+      "JK",
+      "LA",
+      "AN",
+      "LD"
+    ],
     "requires_dcr_modules": true,
     "target": "1 crore homes by 31 March 2027",
     "loan": {
@@ -12,12 +35,20 @@
       "tenure_years": 10,
       "low_rate_pct": 5.75,
       "low_rate_upto_rs": 200000,
-      "standard_rate_pct": 7.90
+      "standard_rate_pct": 7.9
     }
   },
   "cost_rs_per_kw": {
-    "upto_3kw": {"low": 55000, "typical": 65000, "high": 70000},
-    "above_3kw": {"low": 50000, "typical": 58000, "high": 65000}
+    "upto_3kw": {
+      "low": 55000,
+      "typical": 65000,
+      "high": 70000
+    },
+    "above_3kw": {
+      "low": 50000,
+      "typical": 58000,
+      "high": 65000
+    }
   },
   "economics": {
     "lifetime_years": 25,
@@ -33,7 +64,29 @@
     "subsidy_and_target": "https://www.drishtiias.com/important-government-schemes/ministry-of-new-and-renewable-energy/pm-surya-ghar-muft-bijli-yojana-1",
     "dcr_rule": "https://www.securedengineers.com/insights/pm-surya-ghar-almm-non-dcr-module-exemption-explained/",
     "loans": "https://www.solarsquare.in/blog/solar-loan-interest-rates/",
-    "cost": ["https://bridgewaypower.in/blog/cost-of-solar-installation-delhi-ncr", "https://www.solarsquare.in/blog/3-kw-solar-plant-price/"],
+    "cost": [
+      "https://bridgewaypower.in/blog/cost-of-solar-installation-delhi-ncr",
+      "https://www.solarsquare.in/blog/3-kw-solar-plant-price/"
+    ],
     "grid_emission": "https://cea.nic.in/wp-content/uploads/baseline/2026/09/User_Guide__Version_22.0.pdf"
+  },
+  "state_schemes": {
+    "DL": {
+      "name": "Delhi Solar Energy Policy 2023, second amendment",
+      "approved": "2026-09-02",
+      "status": "Cabinet-approved; scheme guidelines and vendor list still being notified",
+      "zero_upfront": {
+        "max_avg_units_per_month": 400,
+        "max_kw": 3,
+        "free_maintenance_years": 5
+      },
+      "top_up_matches_central_subsidy": true,
+      "net_metering_days": 25,
+      "apply_at": "solar.delhi.gov.in",
+      "sources": [
+        "https://desitalkchicago.com/delhi-solar-policy-gets-major-push-2-30-lakh-rooftops-targeted-by-march-2027/",
+        "https://bridgewaypower.in/delhi-solar-policy-2026"
+      ]
+    }
   }
 }

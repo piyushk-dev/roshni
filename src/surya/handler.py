@@ -8,7 +8,7 @@ from dataclasses import asdict
 from importlib import resources
 
 from . import pipeline, quote
-from .format import BillProblem, explain, message
+from .format import BillProblem, bonus_text, explain, message
 
 
 def _response(status: int, payload: dict) -> dict:
@@ -56,7 +56,7 @@ def lambda_handler(event: dict, context) -> dict:
     except (KeyError, ValueError, TypeError) as e:
         return _response(400, {"error": str(e)})
     reason, notes = explain(a, lang)
-    result = {"analysis": a.to_dict(), "reason": reason, "notes": notes, "message": message(a, lang)}
+    result = {"analysis": a.to_dict(), "reason": reason, "notes": notes, "bonus": bonus_text(a, lang), "message": message(a, lang)}
     if reading:
         result["bill"] = asdict(reading)
     return _response(200, result)

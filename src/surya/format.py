@@ -142,6 +142,34 @@ class BillProblem(ValueError):
         return PROBLEMS[self.code][lang if lang in ("en", "hi") else "en"].format(**self.values)
 
 
+BONUS = {
+    "zero_upfront": {
+        "en": "🎁 Delhi bonus: your bill averages about {avg:,.0f} units a month, under Delhi's 400-unit limit. Under the September 2026 policy you may get up to {kw:g} kW installed at ₹0 upfront through government-empanelled vendors, with {years} years of free maintenance. That system would save about {save} a year. Guidelines are still being notified: ask your electricity provider or check {portal}.",
+        "hi": "🎁 दिल्ली बोनस: आपका औसत लगभग {avg:,.0f} यूनिट महीना है, जो दिल्ली की 400 यूनिट सीमा से कम है। सितंबर 2026 की नीति में आपको सरकारी सूचीबद्ध वेंडर से {kw:g} kW तक का सिस्टम बिना शुरुआती खर्च के, {years} साल के मुफ़्त रखरखाव के साथ मिल सकता है। इससे सालाना लगभग {save} की बचत होगी। नियम अभी जारी हो रहे हैं: अपनी बिजली कंपनी से पूछें या {portal} देखें।",
+    },
+    "top_up": {
+        "en": "🎁 Delhi bonus: Delhi now adds up to {extra} on top of the central subsidy (September 2026 policy). If it applies, this {kw:g} kW system costs you about {net} instead of {net_central}, paying for itself in {payback:.1f} years. Guidelines are still being notified, so it isn't counted above.",
+        "hi": "🎁 दिल्ली बोनस: दिल्ली अब केंद्र की सब्सिडी के ऊपर {extra} तक और देती है (सितंबर 2026 नीति)। लागू होने पर यह {kw:g} kW सिस्टम {net_central} की जगह लगभग {net} का पड़ेगा, और {payback:.1f} साल में लागत वसूल होगी। नियम अभी जारी हो रहे हैं, इसलिए ऊपर के हिसाब में इसे नहीं जोड़ा गया।",
+    },
+}
+
+
+def bonus_text(a: Analysis, lang: str = "en") -> str | None:
+    b = a.bonus
+    lang = lang if lang in GO else "en"
+    if not b:
+        return None
+    if "zero_upfront" in b:
+        z = b["zero_upfront"]
+        return BONUS["zero_upfront"][lang].format(avg=b["avg_units"], kw=z["kw"], years=z["free_maintenance_years"],
+                                                  save=_hundreds(z["savings_rs"]), portal=b["apply_at"])
+    t = b["top_up"]
+    if t["payback_years"] is None:
+        return None
+    return BONUS["top_up"][lang].format(extra=inr(t["extra_subsidy"]), kw=t["kw"], net=inr(t["net_cost"]),
+                                        net_central=inr(t["net_cost_central_only"]), payback=t["payback_years"])
+
+
 def explain(a: Analysis, lang: str = "en") -> tuple[str, list[str]]:
     """The verdict's reason and the notes, as sentences in `lang`."""
     lang = lang if lang in GO else "en"
@@ -190,4 +218,5 @@ def message(a: Analysis, lang: str = "en") -> str:
             co2=o.co2_t_per_year,
             reason=reason,
         )
-    return text + "".join(f"\n• {n}" for n in notes)
+    bonus = bonus_text(a, lang)
+    return text + "".join(f"\n• {n}" for n in notes) + (f"\n\n{bonus}" if bonus else "")
