@@ -18,7 +18,7 @@ _yields: dict[str, SolarYield] = {}
 def yield_for(lat: float, lon: float) -> SolarYield:
     """Sunlight barely changes within ~10 km, so results are cached per 0.1° cell in memory and DynamoDB."""
     lat, lon = round(lat, 1), round(lon, 1)
-    key = f"{lat}:{lon}"
+    key = f"v2:{lat}:{lon}"  # v2 added monthly temperature
     if key in _yields:
         return _yields[key]
 

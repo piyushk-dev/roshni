@@ -24,8 +24,8 @@ def _hundreds(x: float) -> str:
 
 REASONS = {
     "covers": {
-        "en": "This covers about {cover}% of your yearly usage.",
-        "hi": "इससे आपकी सालाना खपत का लगभग {cover}% हिस्सा पूरा होगा।",
+        "en": "This makes about {cover}% of the electricity you use in a year.",
+        "hi": "इससे आपकी सालाना खपत की लगभग {cover}% बिजली बनेगी।",
     },
     "subsidy_covers": {
         "en": "You use {free:g} units or fewer in most months, so the state subsidy already keeps your bill near zero. Solar would add little.",
@@ -53,6 +53,10 @@ NOTES = {
     "export_heavy": {
         "en": "About {export:,.0f} units a year would go to the grid unused, and those earn only about ₹{rate:g} each.",
         "hi": "सालाना लगभग {export:,.0f} यूनिट ग्रिड में बिना इस्तेमाल के जाएँगी, जिनके सिर्फ़ लगभग ₹{rate:g} प्रति यूनिट मिलते हैं।",
+    },
+    "estimated_months_temp": {
+        "en": "Your bill showed {known} months of usage. We estimated the rest from how your usage rises with local temperature, so an older bill would sharpen this.",
+        "hi": "आपके बिल में {known} महीनों की खपत थी। बाकी महीनों का अनुमान इससे लगाया गया कि गर्मी बढ़ने पर आपकी खपत कितनी बढ़ती है; पुराना बिल भेजेंगे तो अनुमान और सटीक होगा।",
     },
     "estimated_months": {
         "en": "Your bill showed {known} months of usage. We filled the rest with your average, so an older bill would sharpen this.",
@@ -153,7 +157,7 @@ def explain(a: Analysis, lang: str = "en") -> tuple[str, list[str]]:
     if o:
         values.update(
             kw=o.kw,
-            cover=min(100, round(o.generation_kwh / a.usage_units_per_year * 100)),
+            cover=round(o.generation_kwh / a.usage_units_per_year * 100),
             export=o.export_kwh,
         )
     reason = REASONS[a.reason][lang].format(**values)

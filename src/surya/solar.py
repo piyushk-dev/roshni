@@ -28,6 +28,7 @@ class SolarYield:
     optimistic: tuple[float, ...]  # PVGIS alone, the top of the range
     tilt_deg: float
     azimuth_deg: float
+    temp_c: tuple[float, ...] | None = None  # monthly mean air temperature, for estimating missing usage
 
     @property
     def annual(self) -> float:
@@ -54,7 +55,7 @@ def fetch_sources(lat: float, lon: float) -> dict:
             "lat": lat, "lon": lon, "horirrad": 1, "raddatabase": "PVGIS-ERA5", "outputformat": "json",
         }),
         "nasa_power": _get_json(NASA_POWER_API, {
-            "parameters": "ALLSKY_SFC_SW_DWN", "community": "RE",
+            "parameters": "ALLSKY_SFC_SW_DWN,T2M", "community": "RE",
             "latitude": lat, "longitude": lon, "format": "JSON",
         }),
     }
@@ -72,11 +73,13 @@ def solar_yield(sources: dict) -> SolarYield:
         counts[row["month"] - 1] += 1
     era5_daily = [totals[i] / counts[i] / DAYS[i] for i in range(12)]
 
-    nasa = sources["nasa_power"]["properties"]["parameter"]["ALLSKY_SFC_SW_DWN"]
+    params = sources["nasa_power"]["properties"]["parameter"]
+    nasa = params["ALLSKY_SFC_SW_DWN"]
+    temps = tuple(params["T2M"][m] for m in MONTHS) if "T2M" in params else None
     conservative = []
     for i in range(12):
         ratio = nasa[MONTHS[i]] / era5_daily[i] if nasa[MONTHS[i]] > 0 else 1.0
         conservative.append(pvgis[i] * min(1.0, ratio))
 
     mount = pv["inputs"]["mounting_system"]["fixed"]
-    return SolarYield(tuple(conservative), tuple(pvgis), mount["slope"]["value"], mount["azimuth"]["value"])
+    return SolarYield(tuple(conservative), tuple(pvgis), mount["slope"]["value"], mount["azimuth"]["value"], temps)

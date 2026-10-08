@@ -6,13 +6,15 @@ import math
 from dataclasses import asdict, dataclass, field
 
 from .scheme import SCHEME, central_subsidy, emi, loan_for, system_cost
-from .solar import SolarYield
+from .solar import DAYS, SolarYield
 from .tariff import Tariff
 
 ECON = SCHEME["economics"]
 EMISSION_T_PER_MWH = SCHEME["grid_emission_t_per_mwh"]
 FY_ORDER = (4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2, 3)  # surplus units are banked across one financial year
 MIN_YEARLY_SAVING_RS = 3000
+COOLING_BASE_C = 24.0
+SMALLER_IF_WITHIN = 0.90  # a smaller size within 10% of the best 25-year value wins  # above this monthly mean, Delhi homes run fans and ACs
 EXPORT_HEAVY_SHARE = 0.10
 
 
@@ -73,14 +75,41 @@ class Analysis:
         return asdict(self)
 
 
-def fill_months(monthly_units: dict) -> tuple[list[float], list[int]]:
+def cooling_degree_days(temps: tuple[float, ...]) -> list[float]:
+    return [max(0.0, t - COOLING_BASE_C) * d for t, d in zip(temps, DAYS)]
+
+
+def _cooling_fit(known: dict[int, float], temps: tuple[float, ...]) -> tuple[float, float] | None:
+    """Least squares of units = base + per_degree_day × cooling degree days, over the months on the bill."""
+    cdd = cooling_degree_days(temps)
+    xs, ys = [cdd[m - 1] for m in known], list(known.values())
+    if len(xs) < 3 or max(xs) - min(xs) < 50:  # not enough temperature spread to learn the AC load
+        return None
+    mx, my = sum(xs) / len(xs), sum(ys) / len(ys)
+    sxx = sum((x - mx) ** 2 for x in xs)
+    per_dd = sum((x - mx) * (y - my) for x, y in zip(xs, ys)) / sxx
+    if per_dd <= 0:
+        return None
+    return my - per_dd * mx, per_dd
+
+
+def fill_months(monthly_units: dict, temps: tuple[float, ...] | None = None) -> tuple[list[float], list[int], str]:
+    """12 months of usage: the bill's months as read, the rest estimated from the household's own
+    usage against local temperature when possible, otherwise its average."""
     known = {int(m): float(u) for m, u in monthly_units.items() if u is not None}
     if not known:
         raise ValueError("need at least one month of electricity usage")
     if any(not 1 <= m <= 12 for m in known):
         raise ValueError("months must be numbered 1-12")
+    missing = [m for m in range(1, 13) if m not in known]
+    fit = _cooling_fit(known, temps) if temps and missing else None
+    if fit:
+        base, per_dd = fit
+        floor = 0.8 * min(known.values())
+        cdd = cooling_degree_days(temps)
+        return [known.get(m, max(floor, base + per_dd * cdd[m - 1])) for m in range(1, 13)], missing, "temperature"
     mean = sum(known.values()) / len(known)
-    return [known.get(m, mean) for m in range(1, 13)], [m for m in range(1, 13) if m not in known]
+    return [known.get(m, mean) for m in range(1, 13)], missing, "average"
 
 
 def calibration_factor(h: Household, tariff: Tariff) -> float:
@@ -167,7 +196,7 @@ def evaluate(kw: float, h: Household, units: list[float], sy: SolarYield, tariff
 
 def analyze(h: Household, sy: SolarYield, tariff: Tariff | None = None) -> Analysis:
     tariff = tariff or Tariff.for_discom(h.discom)
-    units, estimated = fill_months(h.monthly_units)
+    units, estimated, fill = fill_months(h.monthly_units, sy.temp_c)
     calib = calibration_factor(h, tariff)
     bill_now = sum(tariff.bill(u, h.sanctioned_kw).net for u in units)
     usage = sum(units)
@@ -176,6 +205,9 @@ def analyze(h: Household, sy: SolarYield, tariff: Tariff | None = None) -> Analy
     options = [evaluate(kw, h, units, sy, tariff, bill_now, calib) for kw in range(1, top + 1)]
     fits = [o for o in options if h.roof_sqft is None or o.roof_sqft_needed <= h.roof_sqft]
     best = max(fits, key=lambda o: o.npv_rs, default=None)
+    if best and best.npv_rs > 0:
+        # nearly the same value for less money upfront: recommend the smaller system
+        best = min((o for o in fits if o.npv_rs >= SMALLER_IF_WITHIN * best.npv_rs), key=lambda o: o.kw)
     free = (tariff.subsidy or {}).get("free_upto_units", 0)
 
     notes = []
@@ -192,7 +224,7 @@ def analyze(h: Household, sy: SolarYield, tariff: Tariff | None = None) -> Analy
         if best.export_kwh > EXPORT_HEAVY_SHARE * best.generation_kwh:
             notes.append("export_heavy")
     if estimated:
-        notes.append("estimated_months")
+        notes.append("estimated_months_temp" if fill == "temperature" else "estimated_months")
 
     return Analysis(
         verdict=verdict,
