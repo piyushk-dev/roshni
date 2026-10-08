@@ -12,7 +12,13 @@ from dataclasses import dataclass, field
 import boto3
 from botocore.exceptions import ClientError
 
-MODELS = list(dict.fromkeys(m for m in (os.environ.get("BEDROCK_MODEL_ID"), "global.anthropic.claude-haiku-5-5", "global.amazon.nova-2-lite-v1:0") if m))
+# Tried in order until one is enabled on the account; the `in.` profile keeps the bill inside India
+MODELS = list(dict.fromkeys(m for m in (
+    os.environ.get("BEDROCK_MODEL_ID"),
+    "global.anthropic.claude-haiku-5-5",
+    "in.anthropic.claude-haiku-4-5-20251001-v1:0",
+    "global.amazon.nova-2-lite-v1:0",
+) if m))
 REGION = os.environ.get("BEDROCK_REGION", "ap-south-1")
 IMAGE_FORMATS = {"image/jpeg": "jpeg", "image/png": "png", "image/webp": "webp", "image/gif": "gif"}
 
