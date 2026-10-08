@@ -298,6 +298,97 @@ Object.assign(T.hi, {
   timesCols: ["बिजली कंपनी", "कदम", "आम तौर पर", "अब तक का औसत", "घर"],
 });
 
+
+// Copy for the redesigned page. Plain words: say what it does and who it's for.
+Object.assign(T.en, {
+  skipLink: "Skip to content",
+  skip: "Solar won't pay for you yet",
+  navAws: "How it's built",
+  title: "Is rooftop solar worth it for your home?",
+  sub: "Surya Saathi is a free WhatsApp assistant for families applying under the PM Surya Ghar scheme. Send a photo of your electricity bill and in about ten seconds it tells you the system size to buy, the subsidy you'll get, the EMI, and how many years it takes to pay for itself. If solar won't pay for you yet, it says so.",
+  sub2: "After that, it checks vendor quotes, takes you through the eight application steps, and follows up when the subsidy is late.",
+  upload: "Upload your bill",
+  sample: "See an example result",
+  uploadHint: "A photo or PDF works. Bills from any Indian electricity company can be read, and Delhi bills get the most detail.",
+  location: "Use my location", locationOn: "Using your location", locationOff: "Location not available",
+  dlLead: "In Delhi:",
+  dlTitle: "homes using up to 400 units a month may now get up to 3 kW with nothing to pay upfront, under a state decision from September 2026. Upload a Delhi bill to see if yours qualifies.",
+  devSent: "My bill for September", devVerdict: "Go solar",
+  devNote: "Reply APPLY to start your application. I'll take you through all 8 steps.",
+  devFoot: "An example reply for a home in Delhi",
+  yrs: "years", emiShort: "EMI a month", co2Short: "CO₂ avoided a year",
+  chatSub: "online",
+  whyNowTitle: "Why most families haven't applied yet",
+  whyNowBody: "PM Surya Ghar pays up to ₹78,000 towards a home rooftop system and aims to reach 1 crore homes by March 2027. About 41 lakh have one so far. In a June 2026 survey by CEEW, most households dropped out before applying: they couldn't tell whether solar would pay, which vendor to trust, or how the process works. Surya Saathi is built to answer those three questions.",
+  cellsNote: "Each square is 1 lakh homes. The 41 filled squares already have rooftop solar under the scheme; the target is all 100.",
+  sBills: "bills read", sKw: "kW of solar recommended", sCo2: "tonnes of CO₂ a year those systems would avoid", sFlags: "problems caught in vendor quotes",
+  howTitle: "From your first bill to the subsidy",
+  howSub: "Deciding is only the start. Then come a vendor, an online application, an inspection and a wait for the money. Surya Saathi helps at each stage.",
+  st1: "Decide", st1d: "Send your bill. You get the system size, the subsidy, the EMI and the payback, or a clear no if solar won't pay.",
+  st2: "Pick a vendor", st2d: "Send the vendor's quote. It flags panels that lose the subsidy, prices above what others paid nearby, short warranties and large advances.",
+  st3: "Apply", st3d: "It checks for the usual reasons applications get rejected, then gives you the portal steps one at a time.",
+  st4: "Get the subsidy", st4d: "If a step runs late, it reminds you and drafts a complaint to whoever is holding it up.",
+  st5: "After installation", st5d: "Send an inverter screenshot or a new bill to check the panels are producing what they should.",
+  quoteTitle: "Check a vendor's quote before you sign",
+  quoteSub: "Upload the quotation. Surya Saathi reads it the same way it reads a bill and looks for these problems:",
+  quoteUpload: "Upload the quote", quoteHint: "A photo or PDF of the quotation", sampleQuote: "Try it on a sample quote",
+  applySub: "On WhatsApp, Surya Saathi remembers where you are, reminds you when a step runs long, and writes the complaint when someone else is holding it up. You decide whether to send it.",
+  askTitle: "Ask a question about rooftop solar",
+  askSub: "Loans, the subsidy, vendors, net metering, or a step that's stuck. Answers come from the scheme rules listed further down this page, and it tells you when it doesn't know. On WhatsApp you can also ask with a voice note in Hindi.",
+  askTry: "Or try one of these:",
+  rulesTitle: "Where the numbers come from",
+  rulesSub: "Tariffs, state top-ups and vendor prices change every few months. Each figure below shows its source and when someone last confirmed it. If one has changed, report it with proof.",
+  factMeta: (n, d) => `Confirmed ${n} time${n === 1 ? "" : "s"}, most recently on ${d}`,
+  checkQuoteCta: "Check a vendor's quote", applyCta: "Start the application on WhatsApp",
+  again: "Start again",
+  footer: "Built on AWS for the WeMakeDevs × AWS Environmental Hacks, October 2026",
+  pixelCredit: "Skyline drawn in code",
+});
+Object.assign(T.hi, {
+  skipLink: "सीधे सामग्री पर जाएँ",
+  skip: "अभी सोलर से आपको फ़ायदा नहीं होगा",
+  navAws: "कैसे बना है",
+  title: "क्या आपके घर के लिए रूफ़टॉप सोलर फ़ायदेमंद है?",
+  sub: "सूर्य साथी PM सूर्य घर योजना में आवेदन करने वाले परिवारों के लिए एक मुफ़्त WhatsApp सहायक है। अपने बिजली बिल की फोटो भेजें, और लगभग दस सेकंड में पता चलेगा कि कितने kW का सिस्टम लें, कितनी सब्सिडी मिलेगी, EMI कितनी होगी और लागत कितने साल में वसूल होगी। अगर अभी सोलर से फ़ायदा नहीं है, तो यह साफ़ बता देगा।",
+  sub2: "इसके बाद यह वेंडर के कोटेशन जाँचता है, आवेदन के आठ कदमों में साथ चलता है, और सब्सिडी में देरी हो तो पीछा करता है।",
+  upload: "अपना बिल अपलोड करें",
+  sample: "एक उदाहरण देखें",
+  uploadHint: "फोटो या PDF, दोनों चलेंगे। भारत की किसी भी बिजली कंपनी का बिल पढ़ा जा सकता है; दिल्ली के बिलों से सबसे ज़्यादा जानकारी मिलती है।",
+  location: "मेरी लोकेशन लें", locationOn: "आपकी लोकेशन ली गई", locationOff: "लोकेशन नहीं मिली",
+  dlLead: "दिल्ली में:",
+  dlTitle: "सितंबर 2026 के राज्य सरकार के फ़ैसले के तहत, महीने में 400 यूनिट तक खपत वाले घरों को अब 3 kW तक का सिस्टम बिना शुरुआती खर्च के मिल सकता है। दिल्ली का बिल अपलोड करके देखें कि आप पात्र हैं या नहीं।",
+  devSent: "सितंबर का मेरा बिल", devVerdict: "सोलर लगाएँ",
+  devNote: "आवेदन शुरू करने के लिए APPLY लिखें। मैं आठों कदमों में साथ रहूँगा।",
+  devFoot: "दिल्ली के एक घर के लिए उदाहरण जवाब",
+  yrs: "साल", emiShort: "महीने की EMI", co2Short: "हर साल CO₂ कम",
+  chatSub: "ऑनलाइन",
+  whyNowTitle: "ज़्यादातर परिवारों ने अब तक आवेदन क्यों नहीं किया",
+  whyNowBody: "PM सूर्य घर घर की छत के सोलर सिस्टम के लिए ₹78,000 तक देता है और मार्च 2027 तक 1 करोड़ घरों तक पहुँचना चाहता है। अब तक लगभग 41 लाख घरों में यह लग चुका है। CEEW के जून 2026 के सर्वे में ज़्यादातर परिवार आवेदन से पहले ही रुक गए: उन्हें पता नहीं था कि सोलर से फ़ायदा होगा या नहीं, किस वेंडर पर भरोसा करें, या प्रक्रिया क्या है। सूर्य साथी इन्हीं तीन सवालों का जवाब देने के लिए बना है।",
+  cellsNote: "हर खाना 1 लाख घर है। भरे हुए 41 खानों वाले घरों में योजना के तहत सोलर लग चुका है; लक्ष्य पूरे 100 का है।",
+  sBills: "बिल पढ़े गए", sKw: "kW सोलर सुझाया गया", sCo2: "टन CO₂ हर साल, जो ये सिस्टम बचाएँगे", sFlags: "वेंडर कोटेशन में पकड़ी गई गड़बड़ियाँ",
+  howTitle: "पहले बिल से सब्सिडी तक",
+  howSub: "फ़ैसला तो बस शुरुआत है। फिर वेंडर, ऑनलाइन आवेदन, जाँच और पैसे का इंतज़ार आता है। सूर्य साथी हर पड़ाव पर मदद करता है।",
+  st1: "फ़ैसला", st1d: "अपना बिल भेजें। सिस्टम का साइज़, सब्सिडी, EMI और लागत वसूली का समय मिलेगा, या साफ़ मना, अगर सोलर से फ़ायदा न हो।",
+  st2: "वेंडर चुनें", st2d: "वेंडर का कोटेशन भेजें। यह बताएगा कि पैनल से सब्सिडी तो नहीं डूबेगी, कीमत आसपास से ज़्यादा तो नहीं, और वारंटी कम या एडवांस ज़्यादा तो नहीं।",
+  st3: "आवेदन", st3d: "आवेदन खारिज होने की आम वजहें पहले जाँचता है, फिर पोर्टल के कदम एक-एक करके बताता है।",
+  st4: "सब्सिडी पाएँ", st4d: "कोई कदम देर से चले तो याद दिलाता है, और देरी करने वाले के लिए शिकायत लिख देता है।",
+  st5: "लगने के बाद", st5d: "इन्वर्टर का स्क्रीनशॉट या नया बिल भेजें, यह जाँचने के लिए कि पैनल उतनी बिजली बना रहे हैं जितनी बनानी चाहिए।",
+  quoteTitle: "साइन करने से पहले वेंडर का कोटेशन जाँचें",
+  quoteSub: "कोटेशन अपलोड करें। सूर्य साथी इसे बिल की तरह पढ़ता है और इन गड़बड़ियों को खोजता है:",
+  quoteUpload: "कोटेशन अपलोड करें", quoteHint: "कोटेशन की फोटो या PDF", sampleQuote: "एक सैंपल कोटेशन पर आज़माएँ",
+  applySub: "WhatsApp पर सूर्य साथी याद रखता है कि आप कहाँ तक पहुँचे, कोई कदम लंबा खिंचे तो याद दिलाता है, और देरी किसी और की हो तो शिकायत लिख देता है। भेजनी है या नहीं, यह आप तय करते हैं।",
+  askTitle: "रूफ़टॉप सोलर के बारे में सवाल पूछें",
+  askSub: "लोन, सब्सिडी, वेंडर, नेट मीटरिंग, या अटका हुआ कोई कदम। जवाब इसी पेज पर नीचे दिए योजना के नियमों से आते हैं, और पता न हो तो यह साफ़ कहता है। WhatsApp पर आप हिंदी में वॉइस नोट से भी पूछ सकते हैं।",
+  askTry: "या इनमें से कोई पूछें:",
+  rulesTitle: "ये आँकड़े कहाँ से आते हैं",
+  rulesSub: "टैरिफ़, राज्य की अतिरिक्त सब्सिडी और वेंडर की कीमतें कुछ महीनों में बदल जाती हैं। नीचे हर आँकड़े के साथ उसका स्रोत और आखिरी पुष्टि की तारीख है। कुछ बदल गया हो तो सबूत के साथ बताएँ।",
+  factMeta: (n, d) => `${n} बार पुष्टि, आखिरी बार ${d} को`,
+  checkQuoteCta: "वेंडर का कोटेशन जाँचें", applyCta: "WhatsApp पर आवेदन शुरू करें",
+  again: "फिर से शुरू करें",
+  footer: "WeMakeDevs × AWS Environmental Hacks, अक्टूबर 2026 के लिए AWS पर बना",
+  pixelCredit: "स्काईलाइन कोड से बनी",
+});
+
 const $ = (id) => document.getElementById(id);
 const state = { lang: initialLang(), lat: null, lon: null, last: null, lastBody: null, lastQuote: null };
 
@@ -657,7 +748,8 @@ async function loadStats() {
     $("s-kw").textContent = num(s.kw_recommended);
     $("s-co2").textContent = num(s.co2_t_per_year, 1);
     $("s-flags").textContent = num(s.red_flags);
-  } catch (_) { /* counters stay at their resting zeros */ }
+    $("stats").hidden = !(s.bills_read > 0);  // nothing to show until real bills have been read
+  } catch (_) { /* the strip stays hidden */ }
 }
 
 function renderSteps() {
@@ -672,7 +764,7 @@ function renderSteps() {
     who.className = "who";
     const b = document.createElement("b");
     b.textContent = t("who")[st.who];
-    who.append(b, " · " + t("usual", st.days));
+    who.append(b, ", " + t("usual", st.days));
     li.append(title, who);
     list.append(li);
   }
@@ -741,7 +833,7 @@ function renderFacts() {
         const st = await r.json();
         f.confirmations = st.confirmations;
         f.last_confirmed = st.last_confirmed;
-        conf.textContent = `${t("factMeta", f.confirmations, f.last_confirmed)} · ${t("factThanks")}`;
+        conf.textContent = `${t("factMeta", f.confirmations, f.last_confirmed)}. ${t("factThanks")}`;
       } catch (_) { yes.disabled = false; }
     });
     const change = document.createElement("button");
@@ -938,6 +1030,13 @@ function renderTimes() {
 async function loadTimes() {
   try { landing.times = (await getJSON("/stats/stages")).stages; } catch (_) { landing.times = []; }
   renderTimes();
+}
+
+// the gap, to scale: one square per lakh homes, filled where rooftop solar is already up
+for (let i = 0; i < 100; i++) {
+  const c = document.createElement("i");
+  if (i < 41) c.className = "on";
+  $("cells").append(c);
 }
 
 $("privacy-link").href = API + "/privacy";

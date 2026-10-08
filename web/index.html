@@ -3,23 +3,24 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light">
 <title>Surya Saathi</title>
-<meta name="description" content="Send a photo of your electricity bill and get an honest rooftop-solar answer: the right size, the PM Surya Ghar subsidy, your EMI and the payback. Then help with the vendor, the application and the subsidy.">
-<meta name="theme-color" content="#16325c">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><circle cx='32' cy='32' r='14' fill='%23f2a20c'/><g stroke='%23f2a20c' stroke-width='5' stroke-linecap='round'><path d='M32 4v8M32 52v8M4 32h8M52 32h8M12 12l6 6M46 46l6 6M12 52l6-6M46 18l6-6'/></g></svg>">
+<meta name="description" content="A free WhatsApp assistant for rooftop solar under PM Surya Ghar. Send a photo of your electricity bill to get the right system size, the subsidy, the EMI and the payback, then help with the vendor's quote, the application and the subsidy.">
+<meta name="theme-color" content="#f4f7fa">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' shape-rendering='crispEdges'><rect x='5' y='5' width='6' height='6' fill='%23f2a516'/><rect x='7' y='1' width='2' height='2' fill='%23f2a516'/><rect x='7' y='13' width='2' height='2' fill='%23f2a516'/><rect x='1' y='7' width='2' height='2' fill='%23f2a516'/><rect x='13' y='7' width='2' height='2' fill='%23f2a516'/><rect x='3' y='3' width='1' height='1' fill='%23f2a516'/><rect x='12' y='3' width='1' height='1' fill='%23f2a516'/><rect x='3' y='12' width='1' height='1' fill='%23f2a516'/><rect x='12' y='12' width='1' height='1' fill='%23f2a516'/></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Hind:wght@400;500;600&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Anek+Devanagari:wdth,wght@100..125,400..800&family=Anek+Latin:wdth,wght@100..125,300..800&family=Mukta:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 <script src="config.js"></script>
 </head>
 <body>
-<a class="skip" href="#main" data-t="skip"></a>
+<a class="skip" href="#main" data-t="skipLink"></a>
 
 <header class="top">
-  <div class="top-inner">
-    <a class="brand" href="#top" id="home-link">
-      <svg class="brand-sun" viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="13"/><g><path d="M32 5v9M32 50v9M5 32h9M50 32h9M13 13l6.5 6.5M44.5 44.5L51 51M13 51l6.5-6.5M44.5 19.5L51 13"/></g></svg>
+  <div class="wrap top-inner">
+    <a class="brand" href="#top">
+      <svg class="brand-mark" viewBox="0 0 16 16" shape-rendering="crispEdges" aria-hidden="true"><rect x="5" y="5" width="6" height="6"/><rect x="7" y="1" width="2" height="2"/><rect x="7" y="13" width="2" height="2"/><rect x="1" y="7" width="2" height="2"/><rect x="13" y="7" width="2" height="2"/><rect x="3" y="3" width="1" height="1"/><rect x="12" y="3" width="1" height="1"/><rect x="3" y="12" width="1" height="1"/><rect x="12" y="12" width="1" height="1"/></svg>
       <span data-t="brand"></span>
     </a>
     <nav class="nav" aria-label="Sections">
@@ -29,305 +30,339 @@
       <a href="#rules" data-t="navRules"></a>
       <a href="#aws" data-t="navAws"></a>
     </nav>
-    <button id="lang" class="chip" type="button" aria-label="Switch language"></button>
+    <div class="top-actions">
+      <button id="lang" class="text-btn" type="button" aria-label="Switch language"></button>
+      <label class="btn btn-primary btn-sm top-cta" for="file" data-t="upload"></label>
+    </div>
   </div>
 </header>
 
 <main id="main">
   <section id="start">
-    <div class="hero" id="top">
-      <div class="hero-copy">
-        <p class="eyebrow" data-t="eyebrow"></p>
-        <h1 data-t="title"></h1>
-        <p class="lede" data-t="sub"></p>
+    <div class="banner" id="top">
+      <canvas id="scene" aria-hidden="true"></canvas>
+    </div>
 
-        <label class="upload" for="file">
-          <span class="upload-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24"><path d="M4 7h3l2-3h6l2 3h3v13H4z"/><circle cx="12" cy="13" r="4"/></svg>
-          </span>
-          <span class="upload-text" data-t="upload"></span>
-          <span class="upload-hint" data-t="uploadHint"></span>
-          <input id="file" type="file" accept="image/*,application/pdf">
-        </label>
+    <div class="wrap frame">
+      <div class="hero">
+        <div class="hero-copy">
+          <h1 data-t="title"></h1>
+          <p class="lede" data-t="sub"></p>
+          <p class="lede lede-2" data-t="sub2"></p>
+          <div class="cta-row">
+            <label class="btn btn-primary btn-lg" for="file">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>
+              <span data-t="upload"></span>
+            </label>
+            <input id="file" class="sr-only" type="file" accept="image/*,application/pdf">
+            <button id="sample" class="link-btn" type="button" data-t="sample"></button>
+          </div>
+          <p class="hint" data-t="uploadHint"></p>
+          <div class="extras">
+            <button id="locate" class="chip" type="button" data-t="location"></button>
+            <label class="roof" for="roof">
+              <span data-t="roof"></span>
+              <input id="roof" type="number" inputmode="numeric" min="50" step="10" placeholder="—">
+            </label>
+          </div>
+          <p class="delhi-note"><b data-t="dlLead"></b> <span data-t="dlTitle"></span></p>
+          <p class="privacy" data-t="privacy"></p>
+        </div>
 
-        <div class="extras">
-          <button id="locate" class="chip" type="button" data-t="location"></button>
-          <label class="roof" for="roof">
-            <span data-t="roof"></span>
-            <input id="roof" type="number" inputmode="numeric" min="50" step="10" placeholder="—">
+        <figure class="device">
+          <div class="device-screen">
+            <div class="device-bar"><span>9:41</span><span class="device-pill"></span><span>5G</span></div>
+            <div class="wa-head">
+              <span class="avatar">☀</span>
+              <div><b data-t="brand"></b><span data-t="chatSub"></span></div>
+            </div>
+            <div class="wa-body">
+              <div class="wa-msg mine">
+                <div class="bill-thumb" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+                <span data-t="devSent"></span>
+              </div>
+              <div class="wa-msg answer">
+                <span class="wa-label" data-t="devVerdict"></span>
+                <span class="wa-big">2<small>kW</small></span>
+                <dl class="wa-figs">
+                  <div><dt data-t="costAfter"></dt><dd>₹70,000</dd></div>
+                  <div><dt data-t="payback"></dt><dd>4.9 <small data-t="yrs"></small></dd></div>
+                  <div><dt data-t="emiShort"></dt><dd>₹1,284</dd></div>
+                  <div><dt data-t="co2Short"></dt><dd>2.0 <small>t</small></dd></div>
+                </dl>
+                <div class="device-chart" aria-hidden="true">
+                  <i style="--u:13%;--s:58%"></i><i style="--u:14%;--s:62%"></i><i style="--u:25%;--s:74%"></i><i style="--u:29%;--s:70%"></i>
+                  <i style="--u:92%;--s:66%"></i><i style="--u:100%;--s:56%"></i><i style="--u:69%;--s:49%"></i><i style="--u:52%;--s:50%"></i>
+                  <i style="--u:41%;--s:58%"></i><i style="--u:21%;--s:68%"></i><i style="--u:13%;--s:60%"></i><i style="--u:11%;--s:58%"></i>
+                </div>
+                <span class="wa-legend"><i class="key usage"></i><span data-t="usage"></span><i class="key solar"></i><span data-t="solar"></span></span>
+              </div>
+              <div class="wa-msg" data-t="devNote"></div>
+            </div>
+          </div>
+          <figcaption data-t="devFoot"></figcaption>
+        </figure>
+      </div>
+
+      <section class="why" id="why" aria-labelledby="why-title">
+        <div class="why-copy">
+          <h2 id="why-title" data-t="whyNowTitle"></h2>
+          <p class="sec-lede" data-t="whyNowBody"></p>
+        </div>
+        <figure class="progress">
+          <div class="cells" id="cells" role="img" aria-label="41 of 100 squares filled"></div>
+          <figcaption data-t="cellsNote"></figcaption>
+        </figure>
+      </section>
+
+      <section class="stats" id="stats" aria-label="Live impact" hidden>
+        <div class="stat"><b id="s-bills">0</b><span data-t="sBills"></span></div>
+        <div class="stat"><b id="s-kw">0</b><span data-t="sKw"></span></div>
+        <div class="stat"><b id="s-co2">0</b><span data-t="sCo2"></span></div>
+        <div class="stat"><b id="s-flags">0</b><span data-t="sFlags"></span></div>
+        <p class="stats-note" data-t="sNote"></p>
+      </section>
+
+      <section class="sec" id="how">
+        <header class="sec-head">
+          <h2 data-t="howTitle"></h2>
+          <p class="sec-lede" data-t="howSub"></p>
+        </header>
+        <ol class="stages">
+          <li><b data-t="st1"></b><p data-t="st1d"></p></li>
+          <li><b data-t="st2"></b><p data-t="st2d"></p></li>
+          <li><b data-t="st3"></b><p data-t="st3d"></p></li>
+          <li><b data-t="st4"></b><p data-t="st4d"></p></li>
+          <li><b data-t="st5"></b><p data-t="st5d"></p></li>
+        </ol>
+      </section>
+
+      <section class="sec split" id="quote">
+        <header class="sec-head">
+          <h2 data-t="quoteTitle"></h2>
+          <p class="sec-lede" data-t="quoteSub"></p>
+          <ul class="checks">
+            <li data-t="trap1"></li><li data-t="trap2"></li><li data-t="trap3"></li><li data-t="trap4"></li>
+          </ul>
+        </header>
+        <div class="panel-card" id="quote-card">
+          <label class="drop" for="quote-file">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 13h7M9 17h5"/></svg>
+            <b data-t="quoteUpload"></b>
+            <span class="hint" data-t="quoteHint"></span>
+            <input id="quote-file" class="sr-only" type="file" accept="image/*,application/pdf">
           </label>
+          <button id="sample-quote" class="link-btn" type="button" data-t="sampleQuote"></button>
         </div>
-        <p class="privacy" data-t="privacy"></p>
-        <p class="alt"><button id="sample" class="link" type="button" data-t="sample"></button></p>
-      </div>
+      </section>
 
-      <figure class="hero-bill" aria-hidden="true">
-        <div class="slip">
-          <div class="slip-head"><span>BILL OF SUPPLY</span><span>JUN 2026</span></div>
-          <div class="slip-row slip-label"><span data-t="slipSlab"></span><span>₹/kWh</span><span>kWh</span></div>
-          <div class="slip-row"><span>0 – 200</span><span>3.00</span><span>200</span></div>
-          <div class="slip-row"><span>201 – 400</span><span>4.50</span><span>200</span></div>
-          <div class="slip-row"><span>401 – 800</span><span>6.50</span><span>211</span></div>
-          <div class="slip-row slip-total"><span data-t="slipUnits"></span><span></span><span>611</span></div>
-          <div class="slip-meter"><span data-t="slipSun"></span><b>1,482</b><small>kWh / kW / yr</small></div>
+      <section class="sec split" id="apply">
+        <header class="sec-head">
+          <h2 data-t="applyTitle"></h2>
+          <p class="sec-lede" data-t="applySub"></p>
+          <ol class="steps" id="steps"></ol>
+          <h3 class="sub-h" data-t="timesTitle"></h3>
+          <p class="hint" id="times-empty" data-t="timesEmpty"></p>
+          <div class="scroll"><table id="times" hidden></table></div>
+        </header>
+        <div class="chat sticky" aria-label="Example WhatsApp conversation">
+          <div class="chat-head"><span class="avatar">☀</span><div><b data-t="brand"></b><span data-t="chatSub"></span></div></div>
+          <div class="bubble mine">STUCK</div>
+          <div class="bubble"><b data-t="chatHead"></b><span data-t="chatBody"></span></div>
+          <div class="bubble faint" data-t="chatNext"></div>
         </div>
-        <div class="answer">
-          <span class="answer-tag" data-t="answerTag"></span>
-          <strong data-t="answerBig"></strong>
-          <span data-t="answerSub"></span>
+      </section>
+
+      <section class="sec split" id="ask">
+        <header class="sec-head">
+          <h2 data-t="askTitle"></h2>
+          <p class="sec-lede" data-t="askSub"></p>
+          <form id="ask-form" class="ask-form">
+            <input id="ask-input" type="text" maxlength="300" required aria-label="Your question">
+            <button class="btn btn-primary" type="submit" data-t="askSend"></button>
+          </form>
+          <p class="hint" data-t="askTry"></p>
+          <div class="examples" id="ask-examples"></div>
+        </header>
+        <div class="chat ask-answer sticky" aria-live="polite">
+          <div class="chat-head"><span class="avatar">☀</span><div><b data-t="brand"></b><span data-t="chatSub"></span></div></div>
+          <div class="bubble mine" id="ask-q" hidden></div>
+          <div class="bubble" id="ask-a" data-t="askEmpty"></div>
         </div>
-      </figure>
-    </div>
+      </section>
 
-    <section class="stats" id="stats" aria-label="Live impact">
-      <div class="stat"><b id="s-bills">0</b><span data-t="sBills"></span></div>
-      <div class="stat"><b id="s-kw">0</b><span data-t="sKw"></span></div>
-      <div class="stat"><b id="s-co2">0</b><span data-t="sCo2"></span></div>
-      <div class="stat"><b id="s-flags">0</b><span data-t="sFlags"></span></div>
-      <p class="stats-note" data-t="sNote"></p>
-    </section>
+      <section class="sec split" id="flats">
+        <header class="sec-head">
+          <h2 data-t="flatTitle"></h2>
+          <p class="sec-lede" data-t="flatSub"></p>
+          <label class="field" for="society-bill">
+            <span data-t="flatInput"></span>
+            <input id="society-bill" type="number" inputmode="numeric" min="1000" step="1000" value="25000">
+          </label>
+          <dl class="society" id="society"></dl>
+          <p class="hint" data-t="flatNote"></p>
+        </header>
+        <div class="panel-card sticky">
+          <p class="panel-title" data-t="flatMsgTitle"></p>
+          <p class="rwa-msg" id="rwa-msg"></p>
+          <button id="copy-rwa" class="btn btn-line" type="button" data-t="copy"></button>
+        </div>
+      </section>
 
-    <section class="band" id="how">
-      <h2 data-t="howTitle"></h2>
-      <p class="section-lede" data-t="howSub"></p>
-      <ol class="stages">
-        <li><span class="stage-name" data-t="st1"></span><p data-t="st1d"></p></li>
-        <li><span class="stage-name" data-t="st2"></span><p data-t="st2d"></p></li>
-        <li><span class="stage-name" data-t="st3"></span><p data-t="st3d"></p></li>
-        <li><span class="stage-name" data-t="st4"></span><p data-t="st4d"></p></li>
-        <li><span class="stage-name" data-t="st5"></span><p data-t="st5d"></p></li>
-      </ol>
-    </section>
+      <section class="sec" id="rules">
+        <header class="sec-head">
+          <h2 data-t="rulesTitle"></h2>
+          <p class="sec-lede" data-t="rulesSub"></p>
+        </header>
+        <div class="learn">
+          <div><b data-t="l1"></b><p data-t="l1d"></p></div>
+          <div><b data-t="l2"></b><p data-t="l2d"></p></div>
+          <div><b data-t="l3"></b><p data-t="l3d"></p></div>
+          <div><b data-t="l4"></b><p data-t="l4d"></p></div>
+        </div>
+        <div class="filters" role="group" aria-label="Region">
+          <button class="chip" type="button" data-scope="" aria-pressed="true" data-t="fAll"></button>
+          <button class="chip" type="button" data-scope="DL" aria-pressed="false">Delhi</button>
+          <button class="chip" type="button" data-scope="UP" aria-pressed="false">Uttar Pradesh</button>
+          <button class="chip" type="button" data-scope="HR" aria-pressed="false">Haryana</button>
+        </div>
+        <ul class="facts" id="facts"><li class="fact-empty" data-t="factsLoading"></li></ul>
+      </section>
 
-    <section class="bonus-banner" id="delhi">
-      <div>
-        <p class="eyebrow" data-t="dlEyebrow"></p>
-        <h2 data-t="dlTitle"></h2>
-        <p data-t="dlSub"></p>
-      </div>
-      <label class="chip chip-strong" for="file" data-t="dlCta"></label>
-    </section>
+      <section class="sec split" id="whatsapp">
+        <header class="sec-head">
+          <h2 data-t="waTitle"></h2>
+          <p class="sec-lede" data-t="waSub"></p>
+          <p class="wa-number"><span id="wa-number"></span><span id="wa-join" class="tag" hidden></span></p>
+        </header>
+        <dl class="commands">
+          <dt data-t="c1"></dt><dd data-t="c1d"></dd>
+          <dt data-t="c2"></dt><dd data-t="c2d"></dd>
+          <dt data-t="c8"></dt><dd data-t="c8d"></dd>
+          <dt data-t="c9"></dt><dd data-t="c9d"></dd>
+          <dt><code>APPLY</code> <code>आवेदन</code></dt><dd data-t="c3d"></dd>
+          <dt><code>DONE</code> <code>हो गया</code></dt><dd data-t="c4d"></dd>
+          <dt><code>STUCK</code> <code>अटका</code></dt><dd data-t="c5d"></dd>
+          <dt><code>FLAT</code> <code>सोसाइटी</code></dt><dd data-t="c10d"></dd>
+          <dt><code>SYSTEM 3.3</code></dt><dd data-t="c11d"></dd>
+          <dt><code>हिंदी</code> <code>ENGLISH</code></dt><dd data-t="c6d"></dd>
+          <dt><code>DELETE MY DATA</code></dt><dd data-t="c7d"></dd>
+        </dl>
+      </section>
 
-    <section class="band split" id="quote">
-      <div>
-        <h2 data-t="quoteTitle"></h2>
-        <p class="section-lede" data-t="quoteSub"></p>
-        <ul class="traps">
-          <li data-t="trap1"></li>
-          <li data-t="trap2"></li>
-          <li data-t="trap3"></li>
-          <li data-t="trap4"></li>
+      <section class="sec" id="aws">
+        <header class="sec-head">
+          <h2>How it's built on AWS</h2>
+          <p class="sec-lede">Everything runs serverless in AWS's Mumbai region and deploys from one AWS SAM template. Each bill is read three times in parallel on Amazon Bedrock, and only the figures the readings agree on are used. Each household's application runs as its own long-lived Step Functions workflow.</p>
+        </header>
+        <div class="diagram">
+          <svg viewBox="0 0 860 400" role="img" aria-label="Architecture: WhatsApp and the website reach API Gateway; Lambda functions read bills with Amazon Bedrock, keep state in DynamoDB, run the application journey on Step Functions, and a weekly EventBridge Scheduler job watches official sources.">
+            <defs><marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="d-arrowhead"/></marker></defs>
+            <g class="d-edge">
+              <path d="M150 78H246" marker-end="url(#arr)"/><path d="M150 182H246" marker-end="url(#arr)"/>
+              <path d="M376 130H452" marker-end="url(#arr)"/>
+              <path d="M582 92H650" marker-end="url(#arr)"/><path d="M582 130H650" marker-end="url(#arr)"/><path d="M582 168H650" marker-end="url(#arr)"/>
+              <path d="M517 175V262" marker-end="url(#arr)"/><path d="M582 300H650" marker-end="url(#arr)"/>
+              <path d="M200 330H452" marker-end="url(#arr)"/>
+            </g>
+            <g class="d-box">
+              <rect x="20" y="50" width="130" height="56" rx="4"/><rect x="20" y="154" width="130" height="56" rx="4"/>
+              <rect x="246" y="102" width="130" height="56" rx="4"/>
+              <rect x="452" y="70" width="130" height="105" rx="4" class="d-core"/>
+              <rect x="650" y="64" width="190" height="40" rx="4"/><rect x="650" y="110" width="190" height="40" rx="4"/><rect x="650" y="156" width="190" height="40" rx="4"/>
+              <rect x="452" y="262" width="130" height="76" rx="4" class="d-core"/>
+              <rect x="650" y="276" width="190" height="48" rx="4"/>
+              <rect x="20" y="302" width="180" height="56" rx="4"/>
+            </g>
+            <g class="d-text">
+              <text x="85" y="74">WhatsApp</text><text x="85" y="94" class="d-sub">via Twilio</text>
+              <text x="85" y="178">Website</text><text x="85" y="198" class="d-sub">Amplify Hosting</text>
+              <text x="311" y="126">API Gateway</text><text x="311" y="146" class="d-sub">HTTP API</text>
+              <text x="517" y="108" class="d-on">AWS Lambda</text><text x="517" y="128" class="d-sub d-on">webhook and worker</text><text x="517" y="146" class="d-sub d-on">bill and quote API</text>
+              <text x="745" y="89">Amazon Bedrock (Nova 2 Lite)</text>
+              <text x="745" y="135">DynamoDB, 4 tables</text>
+              <text x="745" y="181">PVGIS and NASA POWER</text>
+              <text x="517" y="294" class="d-on">Step Functions</text><text x="517" y="314" class="d-sub d-on">8-step journey</text>
+              <text x="745" y="297">Lambda: reminders, drafts</text><text x="745" y="315" class="d-sub">Transcribe, Polly, S3</text>
+              <text x="110" y="326">EventBridge Scheduler</text><text x="110" y="346" class="d-sub">weekly source check</text>
+            </g>
+          </svg>
+        </div>
+        <ul class="services">
+          <li><b>Amazon Bedrock (Nova 2 Lite)</b> reads bills, quotes and inverter screens, and answers questions using the facts listed above.</li>
+          <li><b>AWS Step Functions</b> pauses on a task token at each application step. If a step runs long, the timeout sends a reminder.</li>
+          <li><b>Amazon EventBridge Scheduler</b> re-reads the official sources every week and flags any fact whose page has changed.</li>
+          <li><b>Amazon Transcribe and Polly</b> handle Hindi voice notes in both directions. <b>S3</b> keeps the audio for one day.</li>
+          <li><b>DynamoDB</b> stores learned tariffs, quote prices, facts, sessions and counters. <b>Lambda and API Gateway</b> serve WhatsApp and this site, which is hosted on <b>Amplify</b>.</li>
         </ul>
-      </div>
-      <div class="card quote-card" id="quote-card">
-        <label class="upload upload-small" for="quote-file">
-          <span class="upload-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 13h7M9 17h5"/></svg></span>
-          <span class="upload-text" data-t="quoteUpload"></span>
-          <input id="quote-file" type="file" accept="image/*,application/pdf">
-        </label>
-        <button id="sample-quote" class="link" type="button" data-t="sampleQuote"></button>
-      </div>
-    </section>
-
-    <section class="band split" id="apply">
-      <div>
-        <h2 data-t="applyTitle"></h2>
-        <p class="section-lede" data-t="applySub"></p>
-        <ol class="steps" id="steps"></ol>
-        <h3 class="sub-h" data-t="timesTitle"></h3>
-        <p class="small" id="times-empty" data-t="timesEmpty"></p>
-        <div class="scroll"><table id="times" hidden></table></div>
-      </div>
-      <div class="phone" aria-label="Example WhatsApp conversation">
-        <div class="bubble in">STUCK</div>
-        <div class="bubble out"><b data-t="chatHead"></b><span data-t="chatBody"></span></div>
-        <div class="bubble out small" data-t="chatNext"></div>
-      </div>
-    </section>
-
-    <section class="band" id="rules">
-      <h2 data-t="rulesTitle"></h2>
-      <p class="section-lede" data-t="rulesSub"></p>
-      <div class="learn">
-        <div><b data-t="l1"></b><p data-t="l1d"></p></div>
-        <div><b data-t="l2"></b><p data-t="l2d"></p></div>
-        <div><b data-t="l3"></b><p data-t="l3d"></p></div>
-        <div><b data-t="l4"></b><p data-t="l4d"></p></div>
-      </div>
-      <div class="filters" role="group" aria-label="Region">
-        <button class="chip" type="button" data-scope="" aria-pressed="true" data-t="fAll"></button>
-        <button class="chip" type="button" data-scope="DL" aria-pressed="false">Delhi</button>
-        <button class="chip" type="button" data-scope="UP" aria-pressed="false">Uttar Pradesh</button>
-        <button class="chip" type="button" data-scope="HR" aria-pressed="false">Haryana</button>
-      </div>
-      <ul class="facts" id="facts"><li class="fact-empty" data-t="factsLoading"></li></ul>
-    </section>
-
-    <section class="band split" id="ask">
-      <div>
-        <h2 data-t="askTitle"></h2>
-        <p class="section-lede" data-t="askSub"></p>
-        <form id="ask-form" class="ask-form">
-          <input id="ask-input" type="text" maxlength="300" required>
-          <button class="chip chip-strong" type="submit" data-t="askSend"></button>
-        </form>
-        <div class="filters" id="ask-examples"></div>
-      </div>
-      <div class="phone ask-answer" aria-live="polite">
-        <div class="bubble in" id="ask-q" hidden></div>
-        <div class="bubble out" id="ask-a" data-t="askEmpty"></div>
-      </div>
-    </section>
-
-    <section class="band split" id="flats">
-      <div>
-        <h2 data-t="flatTitle"></h2>
-        <p class="section-lede" data-t="flatSub"></p>
-        <label class="field" for="society-bill">
-          <span data-t="flatInput"></span>
-          <input id="society-bill" type="number" inputmode="numeric" min="1000" step="1000" value="25000">
-        </label>
-        <dl class="society" id="society"></dl>
-        <p class="small" data-t="flatNote"></p>
-      </div>
-      <div class="card">
-        <h2 data-t="flatMsgTitle"></h2>
-        <p class="rwa-msg" id="rwa-msg"></p>
-        <button id="copy-rwa" class="chip" type="button" data-t="copy"></button>
-      </div>
-    </section>
-
-    <section class="band split" id="whatsapp">
-      <div>
-        <h2 data-t="waTitle"></h2>
-        <p class="section-lede" data-t="waSub"></p>
-        <p class="wa-number"><span id="wa-number"></span><span id="wa-join" hidden></span></p>
-      </div>
-      <dl class="commands">
-        <dt data-t="c1"></dt><dd data-t="c1d"></dd>
-        <dt data-t="c2"></dt><dd data-t="c2d"></dd>
-        <dt data-t="c8"></dt><dd data-t="c8d"></dd>
-        <dt>APPLY · आवेदन</dt><dd data-t="c3d"></dd>
-        <dt>DONE · हो गया</dt><dd data-t="c4d"></dd>
-        <dt>STUCK · अटका</dt><dd data-t="c5d"></dd>
-        <dt data-t="c9"></dt><dd data-t="c9d"></dd>
-        <dt>FLAT · सोसाइटी</dt><dd data-t="c10d"></dd>
-        <dt>SYSTEM 3.3</dt><dd data-t="c11d"></dd>
-        <dt>हिंदी · ENGLISH</dt><dd data-t="c6d"></dd>
-        <dt>DELETE MY DATA</dt><dd data-t="c7d"></dd>
-      </dl>
-    </section>
-
-    <section class="band" id="aws">
-      <h2>Built on AWS</h2>
-      <p class="section-lede">Serverless end to end, deployed with AWS SAM in Mumbai (ap-south-1). One template, about a rupee a day at hackathon scale.</p>
-      <div class="diagram">
-        <svg viewBox="0 0 860 400" role="img" aria-label="Architecture: WhatsApp and the website reach API Gateway; Lambda functions read bills with Amazon Bedrock, keep state in DynamoDB, run the application journey on Step Functions, and a weekly EventBridge Scheduler job watches official sources.">
-          <defs><marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="d-arrowhead"/></marker></defs>
-          <g class="d-edge">
-            <path d="M150 78H246" marker-end="url(#arr)"/><path d="M150 182H246" marker-end="url(#arr)"/>
-            <path d="M376 130H452" marker-end="url(#arr)"/>
-            <path d="M582 92H650" marker-end="url(#arr)"/><path d="M582 130H650" marker-end="url(#arr)"/><path d="M582 168H650" marker-end="url(#arr)"/>
-            <path d="M517 175V262" marker-end="url(#arr)"/><path d="M582 300H650" marker-end="url(#arr)"/>
-            <path d="M200 330H452" marker-end="url(#arr)"/>
-          </g>
-          <g class="d-box">
-            <rect x="20" y="50" width="130" height="56" rx="10"/><rect x="20" y="154" width="130" height="56" rx="10"/>
-            <rect x="246" y="102" width="130" height="56" rx="10"/>
-            <rect x="452" y="70" width="130" height="105" rx="10" class="d-core"/>
-            <rect x="650" y="64" width="190" height="40" rx="10"/><rect x="650" y="110" width="190" height="40" rx="10"/><rect x="650" y="156" width="190" height="40" rx="10"/>
-            <rect x="452" y="262" width="130" height="76" rx="10" class="d-core"/>
-            <rect x="650" y="276" width="190" height="48" rx="10"/>
-            <rect x="20" y="302" width="180" height="56" rx="10"/>
-          </g>
-          <g class="d-text">
-            <text x="85" y="74">WhatsApp</text><text x="85" y="94" class="d-sub">Twilio · Meta</text>
-            <text x="85" y="178">Website</text><text x="85" y="198" class="d-sub">Amplify Hosting</text>
-            <text x="311" y="126">API Gateway</text><text x="311" y="146" class="d-sub">HTTP API</text>
-            <text x="517" y="108">AWS Lambda</text><text x="517" y="128" class="d-sub">webhook · worker</text><text x="517" y="146" class="d-sub">bill + quote API</text>
-            <text x="745" y="89">Bedrock · Nova 2 Lite</text>
-            <text x="745" y="135">DynamoDB · 4 tables</text>
-            <text x="745" y="181">PVGIS · NASA POWER</text>
-            <text x="517" y="294">Step Functions</text><text x="517" y="314" class="d-sub">8-stage journey</text>
-            <text x="745" y="297">Lambda · nudges, drafts</text><text x="745" y="315" class="d-sub">SSM secrets · CloudWatch</text>
-            <text x="110" y="326">EventBridge Scheduler</text><text x="110" y="346" class="d-sub">weekly watcher</text>
-          </g>
-        </svg>
-      </div>
-      <ul class="services">
-        <li><b>Amazon Bedrock (Nova 2 Lite)</b> reads bills and quotes: three readings in parallel, kept only where they agree.</li>
-        <li><b>AWS Step Functions</b> runs each household's application as a long-lived workflow: a task token per stage, a nudge when one stalls.</li>
-        <li><b>Amazon EventBridge Scheduler</b> re-reads official sources every week and flags facts whose page changed.</li>
-        <li><b>Amazon DynamoDB</b> holds learned tariffs, quote prices, facts, sessions and live counters, with TTLs.</li>
-        <li><b>AWS Lambda + API Gateway</b> serve WhatsApp and this site; <b>Amplify Hosting</b> serves the page; <b>SSM</b> keeps the secrets.</li>
-      </ul>
-    </section>
+      </section>
+    </div>
   </section>
 
-  <section id="busy" hidden>
-    <div class="sun" aria-hidden="true"></div>
-    <p id="busy-text" role="status"></p>
-  </section>
+  <div class="wrap frame views">
+    <section id="busy" hidden>
+      <div class="loader" aria-hidden="true"><i></i><i></i><i></i></div>
+      <p id="busy-text" role="status"></p>
+    </section>
 
-  <section id="problem" hidden>
-    <p id="problem-text" class="problem" role="alert"></p>
-    <button class="again chip" type="button" data-t="again"></button>
-  </section>
+    <section id="problem" hidden>
+      <p id="problem-text" class="problem" role="alert"></p>
+      <button class="again btn btn-line" type="button" data-t="again"></button>
+    </section>
 
-  <section id="result" class="view" hidden>
-    <div id="verdict" class="verdict"></div>
-    <div id="tiles" class="tiles"></div>
-    <p id="emi-note" class="small"></p>
-    <div id="bonus" class="bonus" hidden></div>
-    <div id="doctor" class="card doctor" hidden></div>
+    <section id="result" class="view" hidden>
+      <div id="verdict" class="verdict"></div>
+      <div id="tiles" class="tiles"></div>
+      <p id="emi-note" class="hint"></p>
+      <div id="bonus" class="bonus" hidden></div>
+      <div id="doctor" class="panel-card doctor" hidden></div>
+      <div class="panel-card">
+        <p class="panel-title" data-t="chartTitle"></p>
+        <div id="chart"></div>
+        <p class="legend"><span class="key usage"></span><span data-t="usage"></span><span class="key solar"></span><span data-t="solar"></span></p>
+      </div>
+      <ul id="notes" class="notes"></ul>
+      <div class="panel-card" id="why-size">
+        <p class="panel-title" data-t="whyTitle"></p>
+        <p class="hint" data-t="whySub"></p>
+        <div class="scroll"><table id="options"></table></div>
+      </div>
+      <div class="panel-card" id="read" hidden>
+        <p class="panel-title" data-t="readTitle"></p>
+        <dl id="read-list"></dl>
+      </div>
+      <p class="hint" data-t="conservative"></p>
+      <div class="next-actions">
+        <a class="btn btn-primary" id="share" target="_blank" rel="noopener" data-t="share"></a>
+        <button id="to-quote" class="btn btn-line" type="button" data-t="checkQuoteCta"></button>
+        <a class="btn btn-line" href="#whatsapp" id="to-apply" data-t="applyCta"></a>
+      </div>
+      <button class="again link-btn" type="button" data-t="again"></button>
+    </section>
 
-    <div class="card">
-      <h2 data-t="chartTitle"></h2>
-      <div id="chart"></div>
-      <p class="legend"><span class="key usage"></span><span data-t="usage"></span><span class="key solar"></span><span data-t="solar"></span></p>
-    </div>
-
-    <ul id="notes" class="notes"></ul>
-
-    <div class="card" id="why">
-      <h2 data-t="whyTitle"></h2>
-      <p class="small" data-t="whySub"></p>
-      <div class="scroll"><table id="options"></table></div>
-    </div>
-
-    <div class="card" id="read" hidden>
-      <h2 data-t="readTitle"></h2>
-      <dl id="read-list"></dl>
-    </div>
-
-    <p class="small" data-t="conservative"></p>
-    <div class="next-actions">
-      <button id="to-quote" class="chip cta" type="button" data-t="checkQuoteCta"></button>
-      <a class="chip cta" href="#whatsapp" id="to-apply" data-t="applyCta"></a>
-      <a class="chip cta" id="share" target="_blank" rel="noopener" data-t="share"></a>
-    </div>
-    <button class="again chip" type="button" data-t="again"></button>
-  </section>
-
-  <section id="quote-result" class="view" hidden>
-    <p id="q-head" class="small"></p>
-    <div id="q-verdict" class="verdict"></div>
-    <ul id="q-issues" class="notes issues"></ul>
-    <ul id="q-notes" class="notes small"></ul>
-    <div class="card" id="q-ask-card">
-      <h2 id="q-ask-title"></h2>
-      <ul id="q-ask" class="notes"></ul>
-    </div>
-    <p id="q-foot" class="small"></p>
-    <p><a id="q-sample-link" class="small" href="sample-quote.png" target="_blank" rel="noopener" data-t="viewSample" hidden></a></p>
-    <button class="again chip" type="button" data-t="again"></button>
-  </section>
+    <section id="quote-result" class="view" hidden>
+      <p id="q-head" class="panel-title"></p>
+      <div id="q-verdict" class="verdict"></div>
+      <ul id="q-issues" class="notes issues"></ul>
+      <ul id="q-notes" class="notes hint"></ul>
+      <div class="panel-card" id="q-ask-card">
+        <p class="panel-title" id="q-ask-title"></p>
+        <ul id="q-ask" class="notes"></ul>
+      </div>
+      <p id="q-foot" class="hint"></p>
+      <p><a id="q-sample-link" class="hint" href="sample-quote.png" target="_blank" rel="noopener" data-t="viewSample" hidden></a></p>
+      <button class="again link-btn" type="button" data-t="again"></button>
+    </section>
+  </div>
 </main>
 
 <footer class="foot">
-  <span data-t="footer"></span>
-  <span><a id="privacy-link" data-t="privacyLink"></a> · <a href="https://github.com/piyushk-dev/surya-saathi">GitHub</a></span>
+  <div class="wrap foot-inner">
+    <span data-t="footer"></span>
+    <span class="foot-links"><a id="privacy-link" data-t="privacyLink"></a><a href="https://github.com/piyushk-dev/surya-saathi">GitHub</a><span data-t="pixelCredit"></span></span>
+  </div>
 </footer>
+<script src="scene.js"></script>
 <script src="app.js"></script>
 </body>
 </html>
