@@ -294,6 +294,9 @@ h3 { font-size: 1.4rem; font-weight: 600; font-stretch: 106%; line-height: 1.15;
 .cells.waiting i.on { background: var(--page); border-color: var(--line-strong); }
 .cells.filling i.on { animation: cell-on 0.32s steps(3, end) both; animation-delay: calc(var(--i) * 24ms); }
 @keyframes cell-on { from { opacity: 0; transform: scale(0.5); } }
+.impact { display: grid; gap: 4px; margin-top: 10px; padding-left: 16px; border-left: 3px solid var(--green); max-width: 34rem; }
+.impact b { font: 600 clamp(1.7rem, 2.8vw, 2.3rem)/1.1 var(--font-display); font-stretch: 105%; color: var(--green-ink); }
+.impact span { color: var(--ink-2); }
 .progress figcaption { font-size: 0.95rem; color: var(--muted); max-width: 340px; }
 
 .stats { margin-inline: calc(-1 * var(--fpad)); display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-bottom: 1px solid var(--line); }
