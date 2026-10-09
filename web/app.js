@@ -251,6 +251,11 @@ Object.assign(T.en, {
   c8: "Inverter screenshot", c8d: "check output against what the panels should make",
   c9: "Voice note", c9d: "ask anything in Hindi or English; the answer comes back as a voice note",
   c10d: "solar for your housing society's common areas", c11d: "set your system's real size for output checks",
+  c12: "Panel label photo", c12d: "check the panels on your roof against the subsidy rules and your quote",
+  c13d: "get quotes from vendors near you, compared by the price after subsidy", c14d: "pick a vendor from your comparison",
+  c15d: "check an offer, a forwarded message or a call script for scam signs", c16d: "every scheme for a state, with its source",
+  c17d: "where your application is, and how long the step has taken", c18d: "the checklist for signing and for handover",
+  c19d: "this week's dust forecast and the best day to clean",
 });
 Object.assign(T.hi, {
   flatTitle: "फ़्लैट में रहते हैं? आपकी सोसाइटी सोलर लगा सकती है।",
@@ -264,6 +269,11 @@ Object.assign(T.hi, {
   c8: "इन्वर्टर का स्क्रीनशॉट", c8d: "पैनल को जितना बनाना चाहिए, उससे उत्पादन मिलाएँ",
   c9: "वॉइस नोट", c9d: "हिंदी या अंग्रेज़ी में कुछ भी पूछें; जवाब वॉइस नोट में आएगा",
   c10d: "हाउसिंग सोसाइटी के कॉमन एरिया के लिए सोलर", c11d: "उत्पादन जाँच के लिए सिस्टम का असली साइज़",
+  c12: "पैनल लेबल की फोटो", c12d: "छत पर लगे पैनल को सब्सिडी के नियमों और कोटेशन से मिलाएँ",
+  c13d: "आसपास के वेंडरों से कोटेशन, सब्सिडी के बाद की कीमत से तुलना", c14d: "तुलना में से वेंडर चुनें",
+  c15d: "किसी ऑफ़र, फ़ॉरवर्ड मैसेज या कॉल की बात में धोखे के संकेत जाँचें", c16d: "किसी राज्य की हर योजना, स्रोत के साथ",
+  c17d: "आपका आवेदन कहाँ है और इस कदम में कितना समय लगा", c18d: "साइन करने और हैंडओवर की चेकलिस्ट",
+  c19d: "इस हफ़्ते का धूल अनुमान और सफ़ाई का सबसे अच्छा दिन",
 });
 
 
@@ -273,8 +283,10 @@ Object.assign(T.en, {
   shareSkip: (url) => `Checked rooftop solar for our home with Surya Saathi. Check yours with a photo of your electricity bill: ${url}`,
   askTitle: "Ask anything about rooftop solar",
   askSub: "Loans, the subsidy, vendors, net metering, what to do when a step is stuck. Answers stick to the scheme's facts and say so when they don't know. On WhatsApp you can ask by voice note, in Hindi.",
-  askSend: "Ask", askEmpty: "Your answer will appear here.", askThinking: "Thinking…",
-  askExamples: ["Can I get a loan without collateral?", "My vendor wants 70% advance. Is that normal?", "Is my rented flat eligible?"],
+  askSend: "Ask", askEmpty: "Namaste! Ask me about the subsidy where you live, the size your bill needs, or an offer you're not sure about.",
+  askThinking: "Working it out…", askPlaceholder: "Type your question",
+  askExamples: ["How much subsidy for 3 kW in Lucknow?", "My bill is ₹3,000 a month in Jaipur. What size do I need?",
+    "A caller wants ₹2,000 to register me for free solar. Is it real?"],
 });
 Object.assign(T.hi, {
   share: "WhatsApp पर शेयर करें",
@@ -282,8 +294,10 @@ Object.assign(T.hi, {
   shareSkip: (url) => `सूर्य साथी से अपने घर के लिए रूफ़टॉप सोलर जाँचा। अपने बिजली बिल की फोटो से अपना भी जाँचें: ${url}`,
   askTitle: "रूफ़टॉप सोलर के बारे में कुछ भी पूछें",
   askSub: "लोन, सब्सिडी, वेंडर, नेट मीटरिंग, कोई कदम अटके तो क्या करें। जवाब योजना की जानकारी पर टिके रहते हैं, और पता न हो तो साफ़ बताते हैं। WhatsApp पर हिंदी में वॉइस नोट से भी पूछ सकते हैं।",
-  askSend: "पूछें", askEmpty: "जवाब यहाँ दिखेगा।", askThinking: "सोचा जा रहा है…",
-  askExamples: ["क्या बिना गारंटी के लोन मिलेगा?", "वेंडर 70% एडवांस माँग रहा है, क्या यह ठीक है?", "क्या किराए के फ़्लैट पर सोलर लग सकता है?"],
+  askSend: "पूछें", askEmpty: "नमस्ते! अपने इलाके की सब्सिडी, बिल के हिसाब से सिस्टम का आकार, या किसी शक वाले ऑफ़र के बारे में पूछें।",
+  askThinking: "हिसाब लगाया जा रहा है…", askPlaceholder: "अपना सवाल लिखें",
+  askExamples: ["लखनऊ में 3 kW पर कितनी सब्सिडी मिलेगी?", "जयपुर में बिल ₹3,000 महीना है, कितने kW लगवाऊँ?",
+    "कोई फ़्री सोलर के लिए ₹2,000 रजिस्ट्रेशन फ़ीस माँग रहा है, क्या यह सही है?"],
 });
 
 
@@ -334,8 +348,9 @@ Object.assign(T.en, {
   quoteUpload: "Upload the quote", quoteHint: "A photo or PDF of the quotation", sampleQuote: "Try it on a sample quote",
   applySub: "On WhatsApp, Surya Saathi remembers where you are, reminds you when a step runs long, and writes the complaint when someone else is holding it up. You decide whether to send it.",
   askTitle: "Ask a question about rooftop solar",
-  askSub: "Loans, the subsidy, vendors, net metering, or a step that's stuck. Answers come from the scheme rules listed further down this page, and it tells you when it doesn't know. On WhatsApp you can also ask with a voice note in Hindi.",
+  askSub: "Ask in your own words: the subsidy where you live, the size your bill needs, an offer that sounds too good. It works things out with the same tools as this site, says which ones it used, and tells you when it doesn't know. On WhatsApp you can also ask with a voice note in Hindi.",
   askTry: "Or try one of these:",
+  askUsed: (l) => `Worked out with ${l}.`,
   rulesTitle: "Where the numbers come from",
   rulesSub: "Tariffs, state top-ups and vendor prices change every few months. Each figure below shows its source and when someone last confirmed it. If one has changed, report it with proof.",
   factMeta: (n, d) => n ? `Confirmed ${n} time${n === 1 ? "" : "s"}, most recently on ${d}` : `Checked against the source on ${d}`,
@@ -378,8 +393,9 @@ Object.assign(T.hi, {
   quoteUpload: "कोटेशन अपलोड करें", quoteHint: "कोटेशन की फोटो या PDF", sampleQuote: "एक सैंपल कोटेशन पर आज़माएँ",
   applySub: "WhatsApp पर सूर्य साथी याद रखता है कि आप कहाँ तक पहुँचे, कोई कदम लंबा खिंचे तो याद दिलाता है, और देरी किसी और की हो तो शिकायत लिख देता है। भेजनी है या नहीं, यह आप तय करते हैं।",
   askTitle: "रूफ़टॉप सोलर के बारे में सवाल पूछें",
-  askSub: "लोन, सब्सिडी, वेंडर, नेट मीटरिंग, या अटका हुआ कोई कदम। जवाब इसी पेज पर नीचे दिए योजना के नियमों से आते हैं, और पता न हो तो यह साफ़ कहता है। WhatsApp पर आप हिंदी में वॉइस नोट से भी पूछ सकते हैं।",
+  askSub: "अपने शब्दों में पूछें: आपके इलाके की सब्सिडी, बिल के हिसाब से सिस्टम का आकार, या कोई ऑफ़र जो सच से अच्छा लगे। यह इसी साइट के टूल से हिसाब लगाता है, बताता है कि कौन से इस्तेमाल किए, और पता न हो तो साफ़ कहता है। WhatsApp पर आप हिंदी में वॉइस नोट से भी पूछ सकते हैं।",
   askTry: "या इनमें से कोई पूछें:",
+  askUsed: (l) => `इनसे हिसाब लगाया: ${l}।`,
   rulesTitle: "ये आँकड़े कहाँ से आते हैं",
   rulesSub: "टैरिफ़, राज्य की अतिरिक्त सब्सिडी और वेंडर की कीमतें कुछ महीनों में बदल जाती हैं। नीचे हर आँकड़े के साथ उसका स्रोत और आखिरी पुष्टि की तारीख है। कुछ बदल गया हो तो सबूत के साथ बताएँ।",
   factMeta: (n, d) => n ? `${n} बार पुष्टि, आखिरी बार ${d} को` : `${d} को स्रोत से जाँचा गया`,
@@ -418,8 +434,8 @@ Object.assign(T.en, {
   whyNowBody: "Most families stop before they apply. They can't tell if solar will pay, which vendor to trust, or what to do next (CEEW survey, June 2026). Surya Saathi answers all three.",
   cellsNote: "Each square is 1 lakh homes.",
   waTitle: "Try it on WhatsApp",
-  waSub: "Send a bill or quote photo, or ask with a voice note, in Hindi or English. During the hackathon the bot runs on Twilio's WhatsApp sandbox, so send the join code first.",
-  waOpen: "Open WhatsApp",
+  waSub: "Send a bill or quote photo, or ask with a voice note, in Hindi or English. During the hackathon the bot runs on Twilio's WhatsApp sandbox.",
+  waOpen: "Open WhatsApp", waScan: "Scan to open the chat",
   cmdTitle: "Everything you can send on WhatsApp",
   applyCta: "See the application guide",
 });
@@ -450,8 +466,8 @@ Object.assign(T.hi, {
   whyNowBody: "ज़्यादातर परिवार आवेदन से पहले ही रुक जाते हैं। उन्हें पता नहीं होता कि सोलर से फ़ायदा होगा या नहीं, किस वेंडर पर भरोसा करें, या आगे क्या करें (CEEW सर्वे, जून 2026)। सूर्य साथी इन तीनों का जवाब देता है।",
   cellsNote: "हर खाना 1 लाख घर है।",
   waTitle: "WhatsApp पर आज़माएँ",
-  waSub: "हिंदी या अंग्रेज़ी में बिल या कोटेशन की फोटो भेजें, या वॉइस नोट से पूछें। हैकथॉन के दौरान बॉट Twilio के WhatsApp सैंडबॉक्स पर चलता है, इसलिए पहले जॉइन कोड भेजें।",
-  waOpen: "WhatsApp खोलें",
+  waSub: "हिंदी या अंग्रेज़ी में बिल या कोटेशन की फोटो भेजें, या वॉइस नोट से पूछें। हैकथॉन के दौरान बॉट Twilio के WhatsApp सैंडबॉक्स पर चलता है।",
+  waOpen: "WhatsApp खोलें", waScan: "चैट खोलने के लिए स्कैन करें",
   cmdTitle: "WhatsApp पर क्या-क्या भेज सकते हैं",
   applyCta: "आवेदन गाइड देखें",
 });
@@ -479,6 +495,7 @@ function applyLang() {
   document.querySelectorAll("[data-t]").forEach((el) => { el.textContent = t(el.dataset.t); });
   document.querySelectorAll(".filters .chip[data-scope]").forEach((b) => { if (b.dataset.scope) b.textContent = t("scope")[b.dataset.scope]; });
   $("lang").textContent = t("switchTo");
+  $("ask-input").placeholder = t("askPlaceholder");
   if (state.lat !== null) $("locate").textContent = t("locationOn");
   if (state.last) render(state.last);
   if (state.lastQuote) renderQuote(state.lastQuote);
@@ -876,7 +893,7 @@ function renderFacts() {
     const meta = document.createElement("p");
     meta.className = "fact-meta";
     const conf = document.createElement("span");
-    conf.textContent = t("factMeta", f.confirmations, f.last_confirmed);
+    conf.textContent = t("factMeta", f.confirmations, dayLabel(f.last_confirmed));
     const src = document.createElement("a");
     src.href = f.source;
     src.target = "_blank";
@@ -901,7 +918,7 @@ function renderFacts() {
         const st = await r.json();
         f.confirmations = st.confirmations;
         f.last_confirmed = st.last_confirmed;
-        conf.textContent = `${t("factMeta", f.confirmations, f.last_confirmed)}. ${t("factThanks")}`;
+        conf.textContent = `${t("factMeta", f.confirmations, dayLabel(f.last_confirmed))}. ${t("factThanks")}`;
       } catch (_) { yes.disabled = false; }
     });
     const change = document.createElement("button");
@@ -969,6 +986,12 @@ document.querySelectorAll(".filters .chip").forEach((b) => b.addEventListener("c
   loadFacts();
 }));
 
+// 2026-10-08 -> 8 Oct 2026, in the page's language
+function dayLabel(iso) {
+  const d = new Date(`${iso}T00:00:00`);
+  return Number.isNaN(d.getTime()) ? iso : d.toLocaleDateString(state.lang === "hi" ? "hi-IN" : "en-IN", { day: "numeric", month: "short", year: "numeric" });
+}
+
 function renderWhatsApp() {
   const wa = window.SURYA_WA || {};
   $("wa-number").textContent = wa.number || "";
@@ -977,6 +1000,18 @@ function renderWhatsApp() {
   const digits = (wa.number || "").replace(/\D/g, "");
   $("wa-open").hidden = !digits;
   if (digits) $("wa-open").href = "https://wa.me/" + digits + (wa.join ? "?text=" + encodeURIComponent(wa.join) : "");
+  // the same link as a QR code, for anyone reading this on a laptop
+  const qr = $("wa-qr-code");
+  if (digits && typeof qrcode === "function" && !qr.firstChild) {
+    const q = qrcode(0, "M");
+    q.addData($("wa-open").href);
+    q.make();
+    const n = q.getModuleCount(), pad = 2, size = n + 2 * pad;
+    let d = "";
+    for (let r = 0; r < n; r++) for (let c = 0; c < n; c++) if (q.isDark(r, c)) d += `M${c + pad} ${r + pad}h1v1h-1z`;
+    qr.innerHTML = `<svg viewBox="0 0 ${size} ${size}" shape-rendering="crispEdges" aria-hidden="true"><rect width="${size}" height="${size}" class="qr-bg"/><path d="${d}" class="qr-on"/></svg>`;
+  }
+  $("wa-qr").hidden = !qr.firstChild;
 }
 
 // One document, several pages: #guide, #rules and #built are views of their own; other links scroll.
@@ -1076,11 +1111,17 @@ async function ask(question) {
   $("ask-q").hidden = false;
   $("ask-q").textContent = question;
   $("ask-a").textContent = t("askThinking");
+  $("ask-used").hidden = true;
   try {
     const last = state.last && state.last.analysis.recommended
       ? { verdict: state.last.analysis.verdict, kw: state.last.analysis.recommended.kw, discom: state.last.analysis.discom_name } : undefined;
-    const r = await post("/ask", { question, last });
+    const r = await post("/ask", { question, last, lang: state.lang });
     $("ask-a").textContent = r.answer;
+    // say which of the site's own tools the answer was worked out with
+    const used = (r.used || []).map((u) => u[state.lang] || u.en);
+    const and = state.lang === "hi" ? " और " : " and ";
+    if (used.length) $("ask-used").textContent = t("askUsed", used.length > 1 ? used.slice(0, -1).join(", ") + and + used[used.length - 1] : used[0]);
+    $("ask-used").hidden = !used.length;
   } catch (e) {
     $("ask-a").textContent = e.message || t("error");
   }
@@ -1123,8 +1164,17 @@ async function loadTimes() {
 // the gap, to scale: one square per lakh homes, filled where rooftop solar is already up
 for (let i = 0; i < 100; i++) {
   const c = document.createElement("i");
-  if (i < 41) c.className = "on";
+  if (i < 41) { c.className = "on"; c.style.setProperty("--i", i); }
   $("cells").append(c);
+}
+if ("IntersectionObserver" in window && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+  const grid = $("cells");
+  grid.classList.add("waiting");
+  new IntersectionObserver((seen, watcher) => {
+    if (!seen.some((e) => e.isIntersecting)) return;
+    grid.classList.replace("waiting", "filling");
+    watcher.disconnect();
+  }, { threshold: 0.35 }).observe(grid);
 }
 
 $("privacy-link").href = API + "/privacy";

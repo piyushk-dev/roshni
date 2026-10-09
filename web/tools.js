@@ -85,7 +85,7 @@ Object.assign(T.en, {
   ppTitle: "Your solar passport", ppDone: (n, total) => `${n} of ${total} done`, ppLocal: "Saved on this device only",
   ppCopy: "Copy checklist", ppCopied: "Copied", ppCopyFallback: "Select and copy the text",
   backupTitle: "Power cuts?", backupBody: "Ordinary on-grid solar switches off during a power cut, for safety. If backup matters, ask for a hybrid design with a battery and price it separately.",
-  gTitle: "Did the panels make what was promised?", gSub: "Use a full month and the vendor's written monthly estimate.",
+  gTitle: "Are the panels making enough?", gSub: "Use a full month and the vendor's written monthly estimate.",
   gMonth: "Month", gActual: "Generated (kWh)", gPromised: "Promised (kWh)", gClean: "Last cleaned (optional)", gGo: "Check generation",
   gOf: (a, p) => `${a} of ${p} kWh promised`, gShort: (k) => `${k} kWh short`, gOnTrack: "On track", gReview: "Worth a review with your installer",
   gDust: "In Delhi, dust can cut output by 0.3–0.6% a day. Clean every two to four weeks in the dry season, and rule out outages and shade first.",
@@ -190,7 +190,7 @@ Object.assign(T.hi, {
   ppTitle: "आपका सोलर पासपोर्ट", ppDone: (n, total) => `${total} में से ${n} पूरे`, ppLocal: "सिर्फ़ इसी डिवाइस पर सेव",
   ppCopy: "सूची कॉपी करें", ppCopied: "कॉपी हो गया", ppCopyFallback: "टेक्स्ट चुनकर कॉपी करें",
   backupTitle: "बिजली कटौती?", backupBody: "सामान्य ऑन-ग्रिड सोलर सुरक्षा के लिए बिजली जाने पर बंद हो जाता है। बैकअप चाहिए तो बैटरी वाला हाइब्रिड सिस्टम माँगें और उसकी कीमत अलग पूछें।",
-  gTitle: "क्या पैनल ने वादे जितनी बिजली बनाई?", gSub: "पूरा महीना और वेंडर का लिखित मासिक अनुमान लें।",
+  gTitle: "क्या पैनल पूरी बिजली बना रहे हैं?", gSub: "पूरा महीना और वेंडर का लिखित मासिक अनुमान लें।",
   gMonth: "महीना", gActual: "बनी बिजली (kWh)", gPromised: "वादा (kWh)", gClean: "आखिरी सफ़ाई (वैकल्पिक)", gGo: "उत्पादन जाँचें",
   gOf: (a, p) => `${p} kWh के वादे में से ${a}`, gShort: (k) => `${k} kWh कम`, gOnTrack: "ठीक चल रहा है", gReview: "इंस्टॉलर के साथ जाँच कराएँ",
   gDust: "दिल्ली में धूल से उत्पादन रोज़ 0.3–0.6% घट सकता है। सूखे मौसम में हर दो-चार हफ़्ते में सफ़ाई करें, पर पहले कटौती और छाया की जाँच करें।",
@@ -885,7 +885,9 @@ function renderVendorList() {
     btn.type = "button";
     btn.disabled = r.you_quoted;
     btn.addEventListener("click", () => openVendorQuote(r));
-    row.append(el("span", "vkw", `${r.kw} kW`), where, el("span", "vcount", `${t("vQuotes", r.quotes)}, ${t("vAgo", mins)}`), btn);
+    const count = el("span", "vcount");
+    count.append(el("span", null, t("vQuotes", r.quotes)), el("span", null, t("vAgo", mins)));
+    row.append(el("span", "vkw", `${r.kw} kW`), where, count, btn);
     list.append(row);
   }
 }

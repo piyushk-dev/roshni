@@ -7,6 +7,17 @@
 <title>Surya Saathi</title>
 <meta name="description" content="A free WhatsApp assistant for rooftop solar under PM Surya Ghar. Send a photo of your electricity bill to get the right system size, the subsidy, the EMI and the payback, then help with the vendor's quote, the application and the subsidy.">
 <meta name="theme-color" content="#f4f7fa">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Surya Saathi">
+<meta property="og:title" content="Surya Saathi: is rooftop solar worth it for your home?">
+<meta property="og:description" content="Send a photo of your electricity bill on WhatsApp. Get the right solar size, your PM Surya Ghar subsidy, the EMI and the payback, in Hindi or English.">
+<meta property="og:url" content="https://main.d3frlgja2w8q15.amplifyapp.com/">
+<meta property="og:image" content="https://main.d3frlgja2w8q15.amplifyapp.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Surya Saathi on a phone: a bill photo in, a solar estimate back, over a pixel-art Delhi skyline">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="apple-touch-icon" href="icon-180.png">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' shape-rendering='crispEdges'><rect x='5' y='5' width='6' height='6' fill='%23f2a516'/><rect x='7' y='1' width='2' height='2' fill='%23f2a516'/><rect x='7' y='13' width='2' height='2' fill='%23f2a516'/><rect x='1' y='7' width='2' height='2' fill='%23f2a516'/><rect x='13' y='7' width='2' height='2' fill='%23f2a516'/><rect x='3' y='3' width='1' height='1' fill='%23f2a516'/><rect x='12' y='3' width='1' height='1' fill='%23f2a516'/><rect x='3' y='12' width='1' height='1' fill='%23f2a516'/><rect x='12' y='12' width='1' height='1' fill='%23f2a516'/></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -238,12 +249,15 @@
           <p class="sec-lede" data-t="waSub"></p>
         </div>
         <div class="wa-cta">
+          <figure class="wa-qr" id="wa-qr" hidden><div id="wa-qr-code"></div><figcaption data-t="waScan"></figcaption></figure>
+          <div class="wa-go">
           <p class="wa-number"><span id="wa-number"></span></p>
           <p id="wa-join" class="join" hidden></p>
           <a id="wa-open" class="btn btn-wa" target="_blank" rel="noopener">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 0 0-7.8 13.5L3 21l4.6-1.2A9 9 0 1 0 12 3z"/><path d="M9 8.5c0 3.5 2.6 6.5 6.5 6.5l1-1.6-2-1-1 .9a4.5 4.5 0 0 1-2.4-2.4l.9-1-1-2z"/></svg>
             <span data-t="waOpen"></span>
           </a>
+          </div>
         </div>
       </section>
     </div>
@@ -294,15 +308,23 @@
         <dl class="commands">
           <dt data-t="c1"></dt><dd data-t="c1d"></dd>
           <dt data-t="c2"></dt><dd data-t="c2d"></dd>
+          <dt data-t="c12"></dt><dd data-t="c12d"></dd>
           <dt data-t="c8"></dt><dd data-t="c8d"></dd>
           <dt data-t="c9"></dt><dd data-t="c9d"></dd>
-          <dt><code>APPLY</code> <code>आवेदन</code></dt><dd data-t="c3d"></dd>
-          <dt><code>DONE</code> <code>हो गया</code></dt><dd data-t="c4d"></dd>
-          <dt><code>STUCK</code> <code>अटका</code></dt><dd data-t="c5d"></dd>
-          <dt><code>FLAT</code> <code>सोसाइटी</code></dt><dd data-t="c10d"></dd>
-          <dt><code>SYSTEM 3.3</code></dt><dd data-t="c11d"></dd>
-          <dt><code>हिंदी</code> <code>ENGLISH</code></dt><dd data-t="c6d"></dd>
-          <dt><code>DELETE MY DATA</code></dt><dd data-t="c7d"></dd>
+          <dt><span class="say">Quotes</span> <span class="say">कोटेशन</span></dt><dd data-t="c13d"></dd>
+          <dt><span class="say">Choose 1</span></dt><dd data-t="c14d"></dd>
+          <dt><span class="say">Scam</span> <span class="say say-more">+ the offer</span></dt><dd data-t="c15d"></dd>
+          <dt><span class="say">Schemes UP</span></dt><dd data-t="c16d"></dd>
+          <dt><span class="say">Apply</span> <span class="say">आवेदन</span></dt><dd data-t="c3d"></dd>
+          <dt><span class="say">Done</span> <span class="say">हो गया</span></dt><dd data-t="c4d"></dd>
+          <dt><span class="say">Status</span> <span class="say">स्थिति</span></dt><dd data-t="c17d"></dd>
+          <dt><span class="say">Stuck</span> <span class="say">अटका</span></dt><dd data-t="c5d"></dd>
+          <dt><span class="say">Passport</span> <span class="say">पासपोर्ट</span></dt><dd data-t="c18d"></dd>
+          <dt><span class="say">Dust</span> <span class="say">धूल</span></dt><dd data-t="c19d"></dd>
+          <dt><span class="say">Flat</span> <span class="say">सोसाइटी</span></dt><dd data-t="c10d"></dd>
+          <dt><span class="say">System 3.3</span></dt><dd data-t="c11d"></dd>
+          <dt><span class="say">हिंदी</span> <span class="say">English</span></dt><dd data-t="c6d"></dd>
+          <dt><span class="say">Delete my data</span></dt><dd data-t="c7d"></dd>
         </dl>
       </div>
     </div>
@@ -350,6 +372,7 @@
         <div class="snip ask-answer sticky" aria-live="polite">
           <div class="m out" id="ask-q" hidden></div>
           <div class="m in" id="ask-a" data-t="askEmpty"></div>
+          <div class="wa-day ask-used" id="ask-used" hidden></div>
         </div>
       </div>
     </div>
@@ -360,52 +383,55 @@
     <div class="wrap frame">
       <header class="page-head">
         <h1>How it's built on AWS</h1>
-        <p class="sec-lede">Everything runs serverless in AWS's Mumbai region and deploys from one AWS SAM template. Each bill is read three times in parallel on Amazon Bedrock, and only the figures the readings agree on are used. Each household's application runs as its own long-lived Step Functions workflow.</p>
+        <p class="sec-lede">Everything runs serverless in AWS's Mumbai region and deploys from one AWS SAM template. Each bill is read three times in parallel on Amazon Bedrock, and only the figures the readings agree on are used. Questions are answered by a Bedrock tool-use loop over this site's own calculators. Each household's application runs as its own long-lived Step Functions workflow.</p>
       </header>
       <div class="sec" id="aws">
         <div class="diagram">
-          <svg viewBox="0 0 980 556" role="img" aria-label="Three flows. Every message: WhatsApp or the website reaches API Gateway, then Lambda, which reads the bill on Amazon Bedrock, keeps data in DynamoDB and handles voice with Transcribe and Polly, then answers on WhatsApp. Each application: replying APPLY starts a Step Functions run of 8 steps; a Lambda sends each step and a reminder when one runs late. Every week: EventBridge Scheduler runs a Lambda that re-reads official pages and flags changed facts in DynamoDB, shown on the rates and rules page.">
+          <svg viewBox="0 0 980 602" role="img" aria-label="Three flows. Every message: WhatsApp or the website reaches API Gateway, then Lambda, which reads bills and answers questions on Amazon Bedrock, keeps data in DynamoDB, finds places with Amazon Location and handles voice with Transcribe and Polly, then answers on WhatsApp. Each application: sending Apply starts a Step Functions run of 8 steps; a Lambda sends each step and a reminder when one runs late. Every week: EventBridge Scheduler runs a Lambda that re-reads official pages and flags changed facts in DynamoDB, shown on the rates and rules page.">
             <defs><marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="d-arrowhead"/></marker></defs>
             <g class="d-lanes">
               <text x="20" y="30">Every message</text>
-              <text x="20" y="320">Each application</text>
-              <text x="20" y="460">Every week</text>
-              <line x1="20" x2="960" y1="288" y2="288"/><line x1="20" x2="960" y1="428" y2="428"/>
+              <text x="20" y="366">Each application</text>
+              <text x="20" y="506">Every week</text>
+              <line x1="20" x2="960" y1="334" y2="334"/><line x1="20" x2="960" y1="474" y2="474"/>
             </g>
             <g class="d-edge">
-              <path d="M190 156H241" marker-end="url(#arr)"/><path d="M412 156H463" marker-end="url(#arr)"/>
-              <path d="M654 146H680V80H705" marker-end="url(#arr)"/><path d="M654 156H705" marker-end="url(#arr)"/><path d="M654 166H680V232H705" marker-end="url(#arr)"/>
-              <path d="M559 186V228H105V187" marker-end="url(#arr)"/>
-              <path d="M190 366H241" marker-end="url(#arr)"/><path d="M412 366H463" marker-end="url(#arr)"/><path d="M654 366H705" marker-end="url(#arr)"/>
-              <path d="M190 506H241" marker-end="url(#arr)"/><path d="M412 506H463" marker-end="url(#arr)"/><path d="M654 506H705" marker-end="url(#arr)"/>
+              <path d="M190 182H241" marker-end="url(#arr)"/><path d="M412 182H463" marker-end="url(#arr)"/>
+              <path d="M654 182H680V74H705" marker-end="url(#arr)"/><path d="M654 182H680V146H705" marker-end="url(#arr)"/>
+              <path d="M654 182H680V218H705" marker-end="url(#arr)"/><path d="M654 182H680V290H705" marker-end="url(#arr)"/>
+              <path d="M559 212V254H105V213" marker-end="url(#arr)"/>
+              <path d="M190 412H241" marker-end="url(#arr)"/><path d="M412 412H463" marker-end="url(#arr)"/><path d="M654 412H705" marker-end="url(#arr)"/>
+              <path d="M190 552H241" marker-end="url(#arr)"/><path d="M412 552H463" marker-end="url(#arr)"/><path d="M654 552H705" marker-end="url(#arr)"/>
             </g>
             <g class="d-box">
-              <rect x="20" y="126" width="170" height="60" rx="6"/><rect x="242" y="126" width="170" height="60" rx="6"/><rect x="464" y="126" width="190" height="60" rx="6" class="d-core"/>
-              <rect x="706" y="50" width="254" height="60" rx="6"/><rect x="706" y="126" width="254" height="60" rx="6"/><rect x="706" y="202" width="254" height="60" rx="6"/>
-              <rect x="20" y="336" width="170" height="60" rx="6"/><rect x="242" y="336" width="170" height="60" rx="6" class="d-core"/><rect x="464" y="336" width="190" height="60" rx="6" class="d-core"/><rect x="706" y="336" width="254" height="60" rx="6"/>
-              <rect x="20" y="476" width="170" height="60" rx="6"/><rect x="242" y="476" width="170" height="60" rx="6" class="d-core"/><rect x="464" y="476" width="190" height="60" rx="6"/><rect x="706" y="476" width="254" height="60" rx="6"/>
+              <rect x="20" y="152" width="170" height="60" rx="6"/><rect x="242" y="152" width="170" height="60" rx="6"/><rect x="464" y="152" width="190" height="60" rx="6" class="d-core"/>
+              <rect x="706" y="44" width="254" height="60" rx="6"/><rect x="706" y="116" width="254" height="60" rx="6"/><rect x="706" y="188" width="254" height="60" rx="6"/><rect x="706" y="260" width="254" height="60" rx="6"/>
+              <rect x="20" y="382" width="170" height="60" rx="6"/><rect x="242" y="382" width="170" height="60" rx="6" class="d-core"/><rect x="464" y="382" width="190" height="60" rx="6" class="d-core"/><rect x="706" y="382" width="254" height="60" rx="6"/>
+              <rect x="20" y="522" width="170" height="60" rx="6"/><rect x="242" y="522" width="170" height="60" rx="6" class="d-core"/><rect x="464" y="522" width="190" height="60" rx="6"/><rect x="706" y="522" width="254" height="60" rx="6"/>
             </g>
             <g class="d-text">
-              <text x="105" y="152">WhatsApp or web</text><text x="105" y="171" class="d-sub">Twilio, Amplify Hosting</text>
-              <text x="327" y="152">API Gateway</text><text x="327" y="171" class="d-sub">HTTP API</text>
-              <text x="559" y="152" class="d-on">AWS Lambda</text><text x="559" y="171" class="d-sub d-on">webhook, then worker</text>
-              <text x="833" y="76">Amazon Bedrock</text><text x="833" y="95" class="d-sub">Nova 2 Lite reads each bill 3 times</text>
-              <text x="833" y="152">Amazon DynamoDB</text><text x="833" y="171" class="d-sub">tariffs, quotes, sessions, serials</text>
-              <text x="833" y="228">Transcribe and Polly</text><text x="833" y="247" class="d-sub">Hindi voice notes, kept in S3 a day</text>
-              <text x="332" y="220" class="d-label">answer on WhatsApp in about 10 seconds</text>
-              <text x="105" y="362">You reply APPLY</text><text x="105" y="381" class="d-sub">on WhatsApp</text>
-              <text x="327" y="362" class="d-on">Step Functions</text><text x="327" y="381" class="d-sub d-on">8 steps, one at a time</text>
-              <text x="559" y="362" class="d-on">AWS Lambda</text><text x="559" y="381" class="d-sub d-on">sends each step</text>
-              <text x="833" y="362">Reminder on WhatsApp</text><text x="833" y="381" class="d-sub">when a step runs past its usual time</text>
-              <text x="105" y="502">EventBridge Scheduler</text><text x="105" y="521" class="d-sub">runs every 7 days</text>
-              <text x="327" y="502" class="d-on">AWS Lambda</text><text x="327" y="521" class="d-sub d-on">re-reads official pages</text>
-              <text x="559" y="502">DynamoDB facts</text><text x="559" y="521" class="d-sub">changed pages are flagged</text>
-              <text x="833" y="502">Rates and rules page</text><text x="833" y="521" class="d-sub">shows each fact's status</text>
+              <text x="105" y="178">WhatsApp or web</text><text x="105" y="197" class="d-sub">Twilio, Amplify Hosting</text>
+              <text x="327" y="178">API Gateway</text><text x="327" y="197" class="d-sub">HTTP API</text>
+              <text x="559" y="178" class="d-on">AWS Lambda</text><text x="559" y="197" class="d-sub d-on">webhook, then worker</text>
+              <text x="833" y="70">Amazon Bedrock</text><text x="833" y="89" class="d-sub">Nova 2 Lite reads bills, calls the tools</text>
+              <text x="833" y="142">Amazon DynamoDB</text><text x="833" y="161" class="d-sub">tariffs, quotes, sessions, serials</text>
+              <text x="833" y="214">Amazon Location</text><text x="833" y="233" class="d-sub">finds the places people ask about</text>
+              <text x="833" y="286">Transcribe and Polly</text><text x="833" y="305" class="d-sub">Hindi voice notes, kept in S3 a day</text>
+              <text x="332" y="246" class="d-label">answer on WhatsApp in about 10 seconds</text>
+              <text x="105" y="408">You send Apply</text><text x="105" y="427" class="d-sub">on WhatsApp</text>
+              <text x="327" y="408" class="d-on">Step Functions</text><text x="327" y="427" class="d-sub d-on">8 steps, one at a time</text>
+              <text x="559" y="408" class="d-on">AWS Lambda</text><text x="559" y="427" class="d-sub d-on">sends each step</text>
+              <text x="833" y="408">Reminder on WhatsApp</text><text x="833" y="427" class="d-sub">when a step runs past its usual time</text>
+              <text x="105" y="548">EventBridge Scheduler</text><text x="105" y="567" class="d-sub">runs every 7 days</text>
+              <text x="327" y="548" class="d-on">AWS Lambda</text><text x="327" y="567" class="d-sub d-on">re-reads official pages</text>
+              <text x="559" y="548">DynamoDB facts</text><text x="559" y="567" class="d-sub">changed pages are flagged</text>
+              <text x="833" y="548">Rates and rules page</text><text x="833" y="567" class="d-sub">shows each fact's status</text>
             </g>
           </svg>
         </div>
         <ul class="services">
-          <li><b>Amazon Bedrock (Nova 2 Lite)</b> reads bills, quotes, inverter screens and panel labels, and answers questions using the facts on the rates and rules page.</li>
+          <li><b>Amazon Bedrock (Nova 2 Lite)</b> reads bills, quotes, inverter screens and panel labels. Questions go through a tool-use loop: the model calls this site's own scheme list, estimate, scam check, dust forecast and application status, and the answer says which ones it used.</li>
+          <li><b>Amazon Location Service</b> turns the places people name, like "Saket, Delhi" or "Lucknow", into a state and coordinates, for the right schemes and the local dust forecast.</li>
           <li><b>AWS Step Functions</b> pauses on a task token at each application step. If a step runs long, the timeout sends a reminder.</li>
           <li><b>Amazon EventBridge Scheduler</b> re-reads the official sources every week and flags any fact whose page has changed.</li>
           <li><b>Amazon Transcribe and Polly</b> handle Hindi voice notes in both directions. <b>S3</b> keeps the audio for one day.</li>
@@ -713,6 +739,7 @@
     </span>
   </div>
 </footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
 <script src="scene.js"></script>
 <script src="app.js"></script>
 <script src="tools.js"></script>
