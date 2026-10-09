@@ -130,13 +130,16 @@ def _handle(event: dict, context) -> dict:
         return _fact_action(fact, event)
     if route == "POST /ask":
         from . import qa
+        from .bot import DEVANAGARI
 
         body = json.loads(event.get("body") or "{}")
         question = str(body.get("question", "")).strip()
         if not question:
             return _response(400, {"error": "ask a question"})
         context = {"last": body["last"]} if isinstance(body.get("last"), dict) else {}
-        return _response(200, {"answer": qa.answer(question[:500], context, body.get("lang", "en"))})
+        lang = "hi" if DEVANAGARI.search(question) else body.get("lang", "en")  # answer in the question's script
+        out = qa.answer_full(question[:500], context, lang)
+        return _response(200, {"answer": out["text"], "used": out["used"]})
     if route not in ("POST /analyze", "POST /bill", "POST /quote"):
         return _response(404, {"error": f"no route {route}"})
 

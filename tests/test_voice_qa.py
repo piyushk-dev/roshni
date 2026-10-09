@@ -79,7 +79,7 @@ def test_ask_route(monkeypatch):
 
     from surya import handler
 
-    monkeypatch.setattr(qa, "answer", lambda q, user, lang: f"[{lang}] {q} {user.get('last', {}).get('kw')}")
+    monkeypatch.setattr(qa, "answer_full", lambda q, user, lang: {"text": f"[{lang}] {q} {user.get('last', {}).get('kw')}", "used": []})
     ev = lambda body: {"requestContext": {"http": {"method": "POST"}}, "rawPath": "/ask", "body": json.dumps(body)}
     out = json.loads(handler.lambda_handler(ev({"question": "Loan?", "lang": "hi", "last": {"kw": 2}}), None)["body"])
     assert out["answer"] == "[hi] Loan? 2"

@@ -57,6 +57,9 @@ Resources:
               Resource:
                 - !Sub arn:aws:bedrock:${AWS::Region}:${AWS::AccountId}:inference-profile/*
                 - arn:aws:bedrock:*::foundation-model/*
+            - Effect: Allow  # the assistant finds the places people name
+              Action: [geo-places:Geocode]
+              Resource: !Sub arn:aws:geo-places:${AWS::Region}::provider/default
       Events:
         Bill:
           Type: HttpApi
@@ -221,6 +224,9 @@ Resources:
               Resource:
                 - !Sub arn:aws:bedrock:${AWS::Region}:${AWS::AccountId}:inference-profile/*
                 - arn:aws:bedrock:*::foundation-model/*
+            - Effect: Allow  # the assistant finds the places people name
+              Action: [geo-places:Geocode]
+              Resource: !Sub arn:aws:geo-places:${AWS::Region}::provider/default
 
   WebhookLogs:
     Type: AWS::Logs::LogGroup

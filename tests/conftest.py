@@ -34,3 +34,15 @@ def no_network_classifier(monkeypatch):
     from surya import performance
 
     monkeypatch.setattr(performance, "classify", lambda data, media_type, client=None: "electricity_bill")
+
+
+@pytest.fixture(autouse=True)
+def no_real_aws(monkeypatch):
+    """Tests run offline: reaching for a real AWS client fails loudly instead of using local credentials."""
+    import boto3
+
+    def refuse(*args, **kwargs):
+        raise RuntimeError(f"a test tried to reach AWS ({args[0] if args else kwargs.get('service_name')}); patch it")
+
+    monkeypatch.setattr(boto3, "client", refuse)
+    monkeypatch.setattr(boto3, "resource", refuse)
