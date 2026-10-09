@@ -84,3 +84,10 @@ def test_ask_route(monkeypatch):
     out = json.loads(handler.lambda_handler(ev({"question": "Loan?", "lang": "hi", "last": {"kw": 2}}), None)["body"])
     assert out["answer"] == "[hi] Loan? 2"
     assert handler.lambda_handler(ev({"question": "  "}), None)["statusCode"] == 400
+
+
+def test_voice_replies_drop_emoji_markers_and_links_and_spell_units():
+    said = voice.speakable("🔴 For 3 kW:\n- Central: ₹78,000\n• See https://pmsuryaghar.gov.in\nPM10 141 µg/m³ ✅", "en")
+    assert "🔴" not in said and "✅" not in said and "https" not in said and not said.startswith("-")
+    assert "3 kilowatt" in said and "₹78,000" in said and "micrograms" in said
+    assert "किलोवाट" in voice.speakable("3 kW पर ₹78,000", "hi")

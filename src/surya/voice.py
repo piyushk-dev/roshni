@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import time
 import urllib.request
 import uuid
@@ -53,8 +54,24 @@ def transcribe(audio: bytes, media_type: str) -> tuple[str, str]:
     return text, lang
 
 
+# Polly reads emoji as words and spells some units out letter by letter; list markers it already skips
+EMOJI = re.compile("[\U0001F000-\U0001FAFF\u2600-\u27BF\u2B00-\u2BFF\uFE0F\u200D]")
+UNITS = {"en": {"kW": "kilowatt", "µg/m³": "micrograms"}, "hi": {"kW": "किलोवाट", "µg/m³": "माइक्रोग्राम"}}
+
+
+def speakable(text: str, lang: str) -> str:
+    """The reply as Polly should read it: no emoji, list markers or links, units in words."""
+    text = EMOJI.sub("", text)
+    text = re.sub(r"^\s*[-•*]\s+", "", text, flags=re.M)
+    text = re.sub(r"https?://\S+", "", text)
+    for unit, word in UNITS.get(lang, UNITS["en"]).items():
+        text = text.replace(unit, word)
+    return re.sub(r"[ \t]+", " ", text).strip()
+
+
 def speak(text: str, lang: str) -> str:
     """A presigned link to an MP3 of `text`, valid for an hour."""
+    text = speakable(text, lang)
     polly = boto3.client("polly")
     s3 = boto3.client("s3", config=Config(signature_version="s3v4", s3={"addressing_style": "virtual"}))
     audio = polly.synthesize_speech(Text=text[:2900], OutputFormat="mp3", VoiceId=VOICE, Engine="neural",
