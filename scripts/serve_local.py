@@ -53,7 +53,7 @@ class Preview(SimpleHTTPRequestHandler):
             self.send_error(413)
             return
         raw = self.rfile.read(size).decode("utf-8") if size else None
-        if path in ("/bill", "/quote", "/ask"):
+        if path in ("/bill", "/quote", "/ask", "/panel"):
             result = {"statusCode": 503, "body": json.dumps({"error": "This local preview does not call cloud AI. Use the sample comparison or enter your quote terms below; bill/photo/voice AI remains available on the deployed site."})}
         else:
             try:

@@ -575,20 +575,20 @@ function fillList(id, items) {
 
 function renderQuote(data) {
   const v = data.views[state.lang];
-  $("q-head").textContent = v.head;
+  $("qr-head").textContent = v.head.replace(/^[^\p{L}\p{N}]+/u, "").replace(/ · /g, ", ");
   const box = $("q-verdict");
   box.className = "verdict " + v.verdict;
   box.innerHTML = "";
   const big = document.createElement("div");
   big.className = "big";
-  big.textContent = v.title;
+  big.textContent = v.title.replace(/^[^\p{L}\p{N}]+/u, "").replace(/:$/, "");  // the box colour carries the verdict
   box.append(big);
   fillList("q-issues", [...v.red, ...v.amber]);
   fillList("q-notes", v.note);
   fillList("q-ask", v.ask);
   $("q-ask-title").textContent = v.ask_title;
   $("q-ask-card").hidden = v.ask.length === 0;
-  $("q-foot").textContent = v.foot;
+  $("qr-foot").textContent = v.foot;
 }
 
 function render(data) {
@@ -812,7 +812,7 @@ async function loadStats() {
   try {
     const s = await getJSON("/stats");
     $("s-bills").textContent = num(s.bills_read);
-    $("s-kw").textContent = num(s.kw_recommended);
+    $("st-kw").textContent = num(s.kw_recommended);
     $("s-co2").textContent = num(s.co2_t_per_year, 1);
     $("s-flags").textContent = num(s.red_flags);
     $("stats").hidden = !(s.bills_read > 0);  // nothing to show until real bills have been read
