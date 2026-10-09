@@ -16,7 +16,8 @@ Surya Saathi is a WhatsApp-first companion for that whole path. A family sends a
 
 Everything is serverless in ap-south-1, defined in one AWS SAM template:
 
-- **Amazon Bedrock (Nova 2 Lite)** reads bills, quotes, inverter screens and panel labels, and answers questions.
+- **Amazon Bedrock (Nova 2 Lite)** reads bills, quotes, inverter screens and panel labels. Questions go through a tool-use loop over the product's own calculators.
+- **Amazon Location Service** finds the places people name in a question, and the state they're in.
 - **AWS Step Functions** runs each household's application as a long-lived workflow. Every stage is a task that waits on a task token until the family replies DONE. A stage that runs past its usual length times out into a nudge, then waits again.
 - **Amazon EventBridge Scheduler** runs a weekly watcher over official sources.
 - **Amazon Transcribe and Amazon Polly** handle Hindi voice notes in and out.
@@ -42,6 +43,8 @@ Parallel reads cost about the same time as one. The real bill, WhatsApp-compress
 
 **Dust.** Dust and smog in Delhi can cut output by 0.3–0.6% a day, so cleaning after a dusty spell pays more than cleaning during one. A live CAMS forecast from Open-Meteo rates each day by India's AQI bands for PM10 and picks the first low day after the dust settles. One morning the forecast still started on the previous day: a response cached just before midnight was served after it. The cache now keys on the date in India, and days before today are dropped.
 
+**Letting the model do arithmetic.** The first version of the assistant pasted the facts into the prompt and let the model answer. Asked about 3 kW in Lucknow, it multiplied Uttar Pradesh's ₹15,000 per kW by three and promised ₹45,000, past the state's ₹30,000 cap. Now questions go through a Bedrock tool-use loop. The model can call the scheme list for a state, a rough estimate from a typed bill, the scam check, the dust forecast and the household's application step. The tools hand back finished amounts, caps applied and written the Indian way (₹1,08,000), and the prompt says to quote them as given. Amazon Location Service turns "Saket, Delhi" or "Jaipur" into coordinates and a state code, so the right scheme and the local forecast come back. Every answer says which tools it used. One more catch: a test that patched the old function let the new one reach Bedrock with my own credentials. The test suite now refuses any real AWS client.
+
 **WhatsApp.** Meta's Cloud API integration was finished in an afternoon: signed webhooks, an async worker, de-duplication of retries. Then Meta restricted the account until the business is verified, and a student project isn't a registered business. Twilio's WhatsApp sandbox took about an hour to add behind the same bot logic. Its quirks: a different signature scheme, media links that redirect to signed storage, and a 1,600-character limit per message.
 
 **Knowing the rules.** Fuel surcharges change monthly, and state top-ups change with budgets. Instead of chasing every number, the system learns:
@@ -61,4 +64,4 @@ Parallel reads cost about the same time as one. The real bill, WhatsApp-compress
 ## AI tools used
 
 - **Claude Code (Anthropic)** and **Codex (OpenAI)** as coding assistants, for research, code and writing.
-- **Amazon Bedrock (Nova 2 Lite)** inside the product, to read bills, quotes, inverter screens and panel labels, and to answer questions.
+- **Amazon Bedrock (Nova 2 Lite)** inside the product, to read bills, quotes, inverter screens and panel labels, and to answer questions with the product's own tools.

@@ -33,7 +33,7 @@ Delhi's newest deal goes unnoticed too. Homes using up to 400 units a month can 
 | **Get paid** | E-token and claim-deadline reminders inside the same plan |
 | **Keep it running** | **Dust this week**: a live CAMS forecast (via Open-Meteo) rates each day by India's AQI bands for PM10 and picks the day to clean the panels, after the dust settles. A **solar passport** of signing and handover checks, **promised vs actual** generation with a note for the installer, the **first bill's energy flow** (generation is not export), and **support requests** with the evidence to attach. On WhatsApp, an inverter photo is checked against what the panels should make |
 | **No roof of your own** | **Flats and societies**: common-area solar at ₹18,000/kW, a calculator, and a ready message for the RWA |
-| **Any question** | Typed or spoken, in Hindi or English. Voice note in (Transcribe), voice note out (Polly). Answers are grounded in the household's own estimate and the facts board |
+| **Any question** | Typed or spoken, in Hindi or English. A Bedrock tool-use loop works the answer out with the product's own tools: the scheme list for a state, a rough estimate from a typed bill, the scam check, the dust forecast and the household's application step. Places are found with Amazon Location Service, and every answer says which tools it used. Voice note in (Transcribe), voice note out (Polly) |
 
 ## Knowledge that keeps itself current
 
@@ -58,11 +58,12 @@ flowchart LR
   WORK --> SF[Step Functions<br/>8-stage journey] --> JL[Lambda<br/>nudges]
   WORK & API --> DDB[(DynamoDB<br/>knowledge · sessions · sunlight · marketplace)]
   API --> AQ[Open-Meteo<br/>dust forecast]
+  WORK & API --> LOC[Amazon Location<br/>places]
   SCH[EventBridge Scheduler<br/>weekly] --> WATCH[Lambda<br/>watcher] --> DDB
   API --> SUN[PVGIS + NASA POWER]
 ```
 
-- **AWS services:** Lambda, API Gateway, Bedrock, Step Functions, EventBridge Scheduler, DynamoDB, S3, Transcribe, Polly, Amplify Hosting, SSM Parameter Store, CloudWatch.
+- **AWS services:** Lambda, API Gateway, Bedrock, Step Functions, EventBridge Scheduler, DynamoDB, S3, Transcribe, Polly, Amazon Location Service, Amplify Hosting, SSM Parameter Store, CloudWatch.
 - **AWS open source:** deployed with **AWS SAM**, one template ([`template.yaml`](template.yaml)) in ap-south-1.
 - **Reliable bill reading:** every bill is read **three times in parallel** and only what the readings agree on is kept. Phone photos of skewed tables otherwise drift, so this matters.
 
@@ -85,7 +86,7 @@ flowchart LR
 
 ```bash
 python -m venv .venv && .venv/Scripts/pip install pytest boto3 aws-sam-cli
-.venv/Scripts/python -m pytest            # 196 tests, offline
+.venv/Scripts/python -m pytest            # 205 tests, offline
 sam build && sam deploy --guided          # the whole backend
 python scripts/deploy_web.py              # the website, to Amplify
 ```
@@ -107,6 +108,7 @@ The local server runs the deterministic tools and uses captured Delhi sunlight f
 - **Nudges days apart** would need an approved WhatsApp template in production. Demo mode (`APPLY DEMO`) shortens a day to 4 seconds.
 - **State assistance needs local confirmation.** The schemes selector covers central rules for all 36 states and union territories. Delhi, Uttar Pradesh and Assam have government source links; other reviewed entries distinguish secondary reports from official guidance. Unreviewed local support is shown as unknown.
 - **The demo vendors are fictional.** The marketplace's four vendors, their replies and scorecards are sample data, labelled on every screen, each showing a different trap. Real vendors can answer requests, and their scores come only from the quotes they actually send. No real company is shown with prices it didn't quote. The comparison that runs when someone opens Get quotes is a sample: vendors see one, labelled, only when an area has no real requests.
+- **A typed-bill estimate is rough.** It sizes by the rule of thumb that 1 kW makes about 4 units a day and prices at the typical local rate per kW; a bill photo gives the full estimate.
 - **Ownership checks are evidence aids.** They do not certify equipment safety, DCR compliance, warranty liability or a monetary bill settlement. Generation review is manual and uses a completed month; low output alone does not diagnose dust.
 - **The panel check reads what's printed.** It can't spot a forged label, and the duplicate-serial check only knows serials checked through Surya Saathi. The DCR certificate and MNRE's ALMM list remain the proof.
 - **Support packs prepare the next conversation.** They distinguish monitoring, generation, billing, documents and maintenance, record dates and list relevant evidence. They do not submit tickets. Elapsed days are dated records, not regulatory deadlines.
