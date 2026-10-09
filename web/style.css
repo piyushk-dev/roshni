@@ -340,6 +340,12 @@ table { border-collapse: collapse; width: 100%; font-size: 1rem; font-variant-nu
 th { text-align: left; font-weight: 600; font-size: 0.92rem; color: var(--muted); padding: 10px 12px; border-bottom: 1px solid var(--line-strong); white-space: nowrap; }
 td { padding: 12px; border-bottom: 1px solid var(--line); white-space: nowrap; }
 tr.best td { background: var(--sun-soft); font-weight: 600; }
+/* on a phone the size table drops its savings column (the tile above has it) so nothing scrolls */
+@media (max-width: 680px) {
+  #options th, #options td { padding: 10px 7px; }
+  #options th { white-space: normal; }
+  #options th:nth-child(3), #options td:nth-child(3) { display: none; }
+}
 
 .panel-card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: clamp(20px, 3vw, 28px); display: grid; gap: 16px; min-width: 0; align-content: start; }
 .field { display: grid; gap: 8px; color: var(--ink-2); max-width: 22rem; }
