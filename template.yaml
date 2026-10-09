@@ -32,6 +32,15 @@ Resources:
         AllowOrigins: ["*"]
         AllowMethods: [GET, POST, DELETE, OPTIONS]
         AllowHeaders: [content-type]
+      # The API is public, so cap what a flood of requests could cost; the routes that call Bedrock
+      # or Amazon Location get tighter limits than the rest.
+      DefaultRouteSettings:
+        ThrottlingBurstLimit: 40
+        ThrottlingRateLimit: 20
+      RouteSettings:
+        "POST /ask": {ThrottlingBurstLimit: 10, ThrottlingRateLimit: 5}
+        "GET /places": {ThrottlingBurstLimit: 10, ThrottlingRateLimit: 5}
+        "POST /panel": {ThrottlingBurstLimit: 6, ThrottlingRateLimit: 3}
 
   AnalyzeFunction:
     Type: AWS::Serverless::Function

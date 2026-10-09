@@ -13,21 +13,25 @@ DEFAULT_LANG = "hi"
 TEXT = {
     "welcome": {
         "en": (
-            "☀️ Namaste! I'm Surya Saathi.\n\n"
-            "Send a photo or PDF of your electricity bill and find out, honestly, whether rooftop solar is worth it "
-            "for your home: the right size, the PM Surya Ghar subsidy, the loan EMI and the payback.\n\n"
-            "📍 Share your location for sunlight at your exact address.\n"
-            "QUOTES compares sample terms after your estimate. SCAM checks a forwarded offer. "
-            "PASSPORT shows signing checks. SCHEMES DL shows sourced support (use your state code).\n\n"
+            "☀️ Namaste! I'm Surya Saathi, your rooftop-solar helper.\n\n"
+            "Send a photo or PDF of your electricity bill to find out, honestly, whether solar is worth it for your "
+            "home: the right size, the PM Surya Ghar subsidy, the EMI and the payback.\n\n"
+            "You can also:\n"
+            "• ask anything, typed or as a voice note\n"
+            "• send a vendor's quote or a panel's label to check it\n"
+            "• reply QUOTES to compare vendors, SCAM with an offer you got, SCHEMES UP for a state's help, DUST for the day to clean\n"
+            "• share your location for sunlight at your address\n\n"
             "Reply हिंदी for Hindi."
         ),
         "hi": (
-            "☀️ नमस्ते! मैं सूर्य साथी हूँ।\n\n"
-            "अपने बिजली बिल की फोटो या PDF भेजें, और जानें कि आपके घर के लिए रूफ़टॉप सोलर फ़ायदेमंद है या नहीं: "
-            "सही साइज़, PM सूर्य घर सब्सिडी, लोन की EMI और कितने साल में लागत वसूल होगी।\n\n"
-            "📍 अपनी लोकेशन भेजें, ताकि आपके पते की धूप से अनुमान लगे।\n"
-            "अनुमान के बाद QUOTES से सैंपल तुलना, SCAM से ऑफ़र जाँच, PASSPORT से साइन की जाँच "
-            "और SCHEMES DL से योजनाएँ देखें (अपने राज्य का कोड दें)।\n\n"
+            "☀️ नमस्ते! मैं सूर्य साथी हूँ, आपका रूफ़टॉप सोलर साथी।\n\n"
+            "अपने बिजली बिल की फोटो या PDF भेजें और जानें कि आपके घर के लिए सोलर फ़ायदेमंद है या नहीं: "
+            "सही साइज़, PM सूर्य घर सब्सिडी, EMI और कितने साल में लागत वसूल होगी।\n\n"
+            "आप यह भी कर सकते हैं:\n"
+            "• कुछ भी पूछें, लिखकर या वॉइस नोट से\n"
+            "• वेंडर का कोटेशन या पैनल का लेबल जाँच के लिए भेजें\n"
+            "• वेंडरों की तुलना के लिए QUOTES, मिले ऑफ़र के साथ SCAM, राज्य की मदद के लिए SCHEMES UP, सफ़ाई के दिन के लिए DUST लिखें\n"
+            "• अपने पते की धूप के अनुमान के लिए लोकेशन भेजें\n\n"
             "Reply ENGLISH for English."
         ),
     },
@@ -161,6 +165,9 @@ def handle(msg: dict, user: dict, wa, pipeline) -> dict | None:
         if low.startswith("choose"):
             try:
                 view = market.view(user["market_request"])
+                if not view["quotes"]:
+                    wa.send_text(to, market.TEXT[lang]["no_quotes_yet"])
+                    return user
                 match = re.fullmatch(r"choose\s+([1-9]\d*)", low)
                 if not match or int(match[1]) > len(view["quotes"]):
                     raise ValueError("bad choice")

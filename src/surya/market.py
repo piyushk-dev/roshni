@@ -398,8 +398,10 @@ TEXT = {
     "en": {
         "ask_pin": "To ask vendors near you for quotes, reply with your 6-digit pin code. Your name and number stay private until you choose a vendor.",
         "waiting": "📨 Asked {n} vendors in your area for a {kw:g} kW quote. Reply QUOTES in a minute to compare them.",
-        "group": "👥 {homes} homes in {pincode} asked this month. At {needed}, vendors give a group price.",
-        "group_on": "👥 {homes} homes in {pincode} asked this month, so vendors are giving a group price: {pct}% off.",
+        "group": "👥 {who} in {pincode} asked this month. At {needed}, vendors give a group price.",
+        "group_on": "👥 {who} in {pincode} asked this month, so vendors are giving a group price: {pct}% off.",
+        "homes": lambda n: "1 home" if n == 1 else f"{n} homes",
+        "no_quotes_yet": "No quotes have arrived yet. Reply QUOTES in a minute to see them.",
         "head": "🧾 Quotes for {kw:g} kW, compared after subsidy:",
         "row": "{n}. {name}{demo}: {total}, you pay {net} after subsidy. {verdict}",
         "ok": "✅ No problems found.", "amber": "🟠 {k} thing{s} to negotiate.", "red": "🔴 {reason}",
@@ -416,8 +418,10 @@ TEXT = {
     "hi": {
         "ask_pin": "आस-पास के वेंडर से कोटेशन मँगाने के लिए अपना 6 अंकों का पिन कोड भेजें। वेंडर चुनने तक आपका नाम और नंबर निजी रहेगा।",
         "waiting": "📨 आपके इलाके के {n} वेंडर से {kw:g} kW का कोटेशन माँगा है। तुलना के लिए एक मिनट बाद QUOTES लिखें।",
-        "group": "👥 इस महीने {pincode} से {homes} घरों ने कोटेशन माँगे। {needed} होने पर वेंडर ग्रुप रेट देते हैं।",
-        "group_on": "👥 इस महीने {pincode} से {homes} घरों ने कोटेशन माँगे, इसलिए वेंडर ग्रुप रेट दे रहे हैं: {pct}% छूट।",
+        "group": "👥 इस महीने {pincode} से {who} कोटेशन माँगे। {needed} होने पर वेंडर ग्रुप रेट देते हैं।",
+        "group_on": "👥 इस महीने {pincode} से {who} कोटेशन माँगे, इसलिए वेंडर ग्रुप रेट दे रहे हैं: {pct}% छूट।",
+        "homes": lambda n: "1 घर ने" if n == 1 else f"{n} घरों ने",
+        "no_quotes_yet": "अभी कोई कोटेशन नहीं आया है। एक मिनट बाद QUOTES लिखकर देखें।",
         "head": "🧾 {kw:g} kW के कोटेशन, सब्सिडी के बाद की तुलना:",
         "row": "{n}. {name}{demo}: {total}, सब्सिडी के बाद आप देंगे {net}। {verdict}",
         "ok": "✅ कोई दिक्कत नहीं।", "amber": "🟠 {k} बातों पर मोलभाव करें।", "red": "🔴 {reason}",
@@ -440,8 +444,9 @@ def wa_started(view_: dict, lang: str) -> str:
     parts = [t["waiting"].format(n=len(view_["quotes"]) + view_["pending"], kw=req["kw"])]
     g = req.get("group")
     if g:
-        parts.append(t["group_on"].format(homes=g["homes"], pincode=g["pincode"], pct=g["discount_pct"]) if g["discount_pct"]
-                     else t["group"].format(homes=g["homes"], pincode=g["pincode"], needed=g["needed"]))
+        who = t["homes"](g["homes"])
+        parts.append(t["group_on"].format(who=who, pincode=g["pincode"], pct=g["discount_pct"]) if g["discount_pct"]
+                     else t["group"].format(who=who, pincode=g["pincode"], needed=g["needed"]))
     return "\n".join(parts)
 
 
