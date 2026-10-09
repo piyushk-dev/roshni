@@ -85,7 +85,7 @@ flowchart LR
 
 ```bash
 python -m venv .venv && .venv/Scripts/pip install pytest boto3 aws-sam-cli
-.venv/Scripts/python -m pytest            # 194 tests, offline
+.venv/Scripts/python -m pytest            # 196 tests, offline
 sam build && sam deploy --guided          # the whole backend
 python scripts/deploy_web.py              # the website, to Amplify
 ```
