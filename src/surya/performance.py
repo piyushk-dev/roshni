@@ -20,8 +20,9 @@ SMOG_MONTHS = {11, 12, 1}
 
 CLASSIFY = {"toolSpec": {"name": "classify", "description": "Say what this document is.", "inputSchema": {"json": {
     "type": "object",
-    "properties": {"kind": {"type": "string", "enum": ["electricity_bill", "solar_quote", "inverter_reading", "other"],
-                            "description": "inverter_reading: an inverter display or solar monitoring app showing units generated"}},
+    "properties": {"kind": {"type": "string", "enum": ["electricity_bill", "solar_quote", "inverter_reading", "panel_label", "other"],
+                            "description": "inverter_reading: an inverter display or solar monitoring app showing units generated; "
+                                           "panel_label: the nameplate sticker on the back of a solar panel"}},
     "required": ["kind"]}}}}
 
 READ = {"toolSpec": {"name": "record_generation", "description": "Record the generation shown.", "inputSchema": {"json": {

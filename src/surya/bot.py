@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import re
 
-from . import doctor, journey, market, performance, product, qa, quote, rwa, scam, voice
+from . import doctor, journey, market, panel, performance, product, qa, quote, rwa, scam, voice
 from .format import BillProblem, message
 
 DEVANAGARI = re.compile(r"[ऀ-ॿ]")
@@ -223,6 +223,10 @@ def handle(msg: dict, user: dict, wa, pipeline) -> dict | None:
             return user
         if doc == "inverter_reading":
             return _output_check(data, media_type, user, wa, to, lang, pipeline)
+        if doc == "panel_label":
+            fields, _ = panel.read_label(data, media_type)
+            wa.send_text(to, panel.message(fields, panel.check(fields, owner=to), lang))
+            return user
         try:
             request, reading = pipeline.request_from_bill(data, media_type)
             a = pipeline.run({**request, **{k: user[k] for k in ("lat", "lon") if k in user}})

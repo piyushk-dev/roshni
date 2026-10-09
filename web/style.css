@@ -688,8 +688,9 @@ code { font: 500 0.9rem/1.4 var(--font-code); background: var(--tint); color: va
 .dust { display: grid; gap: 18px; margin-top: clamp(24px, 3vw, 36px); padding: clamp(22px, 3vw, 30px); background: var(--surface); border: 1px solid var(--line); border-radius: 16px; }
 .dust-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: 12px 24px; }
 .dust-head h2 { font-size: clamp(1.4rem, 2.2vw, 1.75rem); margin-bottom: 4px; }
-.dust-days { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; }
-.dday { position: relative; display: grid; grid-template-rows: auto auto 128px auto auto; gap: 6px; justify-items: center; padding: 18px 8px 14px; border: 1px solid var(--line); border-radius: 12px; text-align: center; }
+/* one column per day; each day spans the row's tracks, so dates, bars and labels line up across days */
+.dust-days { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); grid-template-rows: auto auto 128px auto auto; gap: 6px 12px; }
+.dday { position: relative; display: grid; grid-row: span 5; grid-template-rows: subgrid; gap: 6px; justify-items: center; padding: 18px 8px 14px; border: 1px solid var(--line); border-radius: 12px; text-align: center; }
 .dday.clean { border-color: var(--green); box-shadow: inset 0 0 0 1px var(--green); }
 .dday .dname { font-weight: 600; }
 .dday .ddate { font-size: 0.9rem; color: var(--muted); }
@@ -710,8 +711,8 @@ code { font: 500 0.9rem/1.4 var(--font-code); background: var(--tint); color: va
 .quad .use-text p { color: var(--ink-2); }
 .mini-scheme { display: grid; gap: 14px; align-content: center; padding: 26px 28px; background: var(--page); }
 .mini-scheme .big-amount { font-size: 2.8rem; }
-.mini-dust { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; align-content: end; padding: 30px 22px 18px; background: var(--page); }
-.mini-dust .dday { grid-template-rows: auto 104px auto; padding: 16px 4px 10px; background: var(--surface); }
+.mini-dust { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); grid-template-rows: auto 104px auto; gap: 6px 10px; align-content: end; padding: 30px 22px 18px; background: var(--page); }
+.mini-dust .dday { grid-row: span 3; padding: 16px 4px 10px; background: var(--surface); }
 .mini-dust .dbar { width: 26px; }
 
 /* vendors: open requests as rows, then the quote form */
@@ -728,6 +729,14 @@ code { font: 500 0.9rem/1.4 var(--font-code); background: var(--tint); color: va
 .vrow.active { background: var(--green-soft); box-shadow: -12px 0 0 var(--green-soft), 12px 0 0 var(--green-soft); }
 .vq-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .vq-grid .row-actions { margin-top: 6px; }
+
+/* panel label check */
+@media (min-width: 901px) { .split.panelcheck, .split.support { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.panelcheck > div:first-child { display: grid; gap: 16px; align-content: start; }
+.pl-watt { max-width: 22rem; }
+.pl-thumb { display: block; width: 100%; max-height: 300px; object-fit: contain; border-radius: 10px; background: var(--page); border: 1px solid var(--line); }
+.pl-head { font-weight: 600; color: var(--ink); overflow-wrap: anywhere; }
+.sp-who { color: var(--ink-2); }
 
 /* ---------- responsive: tools ---------- */
 @media (max-width: 1080px) {
@@ -749,8 +758,7 @@ code { font: 500 0.9rem/1.4 var(--font-code); background: var(--tint); color: va
   .vrow .btn { grid-column: 1 / -1; }
   .quad .use { grid-template-rows: 236px auto; }
   .quad .use-visual { height: 236px; }
-  .mini-dust { gap: 6px; padding: 28px 10px 14px; }
-  .mini-dust .dday { grid-template-rows: auto 96px auto; }
+  .mini-dust { gap: 6px; padding: 28px 10px 14px; grid-template-rows: auto 96px auto; }
   .mini-dust .dbar { width: 18px; }
   .srow { grid-template-columns: minmax(0, 1fr); gap: 6px; }
   .srow .src { justify-items: start; text-align: left; }
@@ -759,8 +767,8 @@ code { font: 500 0.9rem/1.4 var(--font-code); background: var(--tint); color: va
   .passport-head .btn { grid-column: 1 / -1; justify-self: start; }
   .gauge { grid-template-columns: minmax(0, 1fr); justify-items: start; }
   .figs dd { font-size: 1.25rem; }
-  .dust-days { gap: 6px; }
-  .dday { padding: 16px 2px 10px; grid-template-rows: auto auto 96px auto auto; }
+  .dust-days { gap: 6px; grid-template-rows: auto auto 96px auto auto; }
+  .dday { padding: 16px 2px 10px; }
   .dbar { width: 20px; }
   .dday .dval { font-size: 0.82rem; }
 }

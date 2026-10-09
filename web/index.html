@@ -532,6 +532,21 @@
         <div class="callout"><b data-t="backupTitle"></b> <span data-t="backupBody"></span></div>
       </div>
 
+      <div class="sec split panelcheck" id="panel">
+        <div>
+          <h2 data-t="plTitle"></h2>
+          <p class="sec-lede" data-t="plSub"></p>
+          <label class="field-col pl-watt"><span data-t="plWatt"></span><input id="pl-watt" type="number" min="100" max="1000" step="5" placeholder="545" inputmode="numeric"></label>
+          <div class="use-actions">
+            <label class="btn btn-primary" for="pl-file" data-t="plUpload"></label>
+            <input id="pl-file" class="sr-only" type="file" accept="image/*">
+            <button class="btn btn-line" type="button" id="pl-ok" data-t="plSampleOk"></button>
+            <button class="link-btn" type="button" id="pl-bad" data-t="plSampleBad"></button>
+          </div>
+        </div>
+        <div class="tool-out sticky" id="pl-out" aria-live="polite"></div>
+      </div>
+
       <div class="sec two-up care-tools">
         <div class="tool-card" id="gen">
           <h2 data-t="gTitle"></h2>
@@ -571,7 +586,7 @@
             <button class="btn btn-primary wide" type="submit" data-t="spGo"></button>
           </form>
         </div>
-        <div class="tool-out sticky" id="sp-out" aria-live="polite" hidden></div>
+        <div class="tool-out sticky" id="sp-out" aria-live="polite"></div>
       </div>
     </div>
   </section>

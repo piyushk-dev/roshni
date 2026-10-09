@@ -136,6 +136,9 @@ Resources:
         MarketPreview:
           Type: HttpApi
           Properties: {ApiId: !Ref Api, Path: /market/preview, Method: POST}
+        Panel:
+          Type: HttpApi
+          Properties: {ApiId: !Ref Api, Path: /panel, Method: POST}
         MarketOpen:
           Type: HttpApi
           Properties: {ApiId: !Ref Api, Path: /market/open, Method: GET}

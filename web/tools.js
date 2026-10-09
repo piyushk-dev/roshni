@@ -13,6 +13,13 @@ Object.assign(T.en, {
   u4a: "See your schemes", msCentral: "Central subsidy, 3 kW", msCentralShort: "Central subsidy", msTop: "Delhi top-up, if you qualify",
   u5t: "Clean the panels on the right day", u5d: "Dust and smog cut solar output. A live air-quality forecast picks the day to clean, after the dust settles.",
   u5a: "See this week's forecast",
+  plTitle: "Is this the panel you paid for?",
+  plSub: "Photograph the label on the back of a panel. It's read for the maker, wattage, serial and where it was made, then checked against the subsidy rules and serials already checked at other homes.",
+  plWatt: "Panel wattage on your quote (W, optional)", plUpload: "Photograph a label", plSampleOk: "Try a made-in-India label",
+  plSampleBad: "Try an imported one", plReading: "Reading the label…",
+  plWhere: "Every panel has a label like this on its back. Photograph it close enough to read the serial number.",
+  plAlt: "A sample panel label: maker, model, 545 W, serial number, made in India, DCR",
+  spWho: (w) => `Contact: ${w}`, spSoon: "Add the dates and press Prepare request for a note you can send.",
   navVendors: "For vendors", qVendor: "Are you a registered vendor?", qVendorLink: "Answer requests",
   vTitle: "Answer quote requests", vSub: "Households near you have asked for quotes, sized from their bills. You see the size and the area, never their name or number. Your quote is checked the way the household will see it.",
   vName: "Company name", vShow: "Show requests", vNoName: "Enter your company name first.",
@@ -93,8 +100,9 @@ Object.assign(T.en, {
   dLocate: "Use my location", dClean: "Clean", dLevels: { clear: "Low", dusty: "Dusty", high: "Very dusty" },
   dAdvice: { clean_after: (day) => `Clean the panels on ${day}, after the dust settles. Plain water, early morning; never spray the inverter.`,
     dusty_week: () => "Dust stays high all week. Wait for a clear day, or the panels just get dusty again.",
+    clean_lull: (day) => `Dust dips on ${day}, then rises again. If the panels look dirty, clean that morning; otherwise wait for a settled spell.`,
     clear_week: () => "Low dust this week, so your usual cleaning schedule is fine." },
-  dWhy: "In Delhi, dust can cut output by 0.3–0.6% a day.", dSource: "Bars show dust in µg/m³, forecast by CAMS via", dDown: "The dust forecast isn't available right now.",
+  dWhy: "In Delhi, dust can cut output by 0.3–0.6% a day.", dSource: "Bars show the day's average PM10 in µg/m³; above 100 is over India's limit. Forecast by CAMS via", dDown: "The dust forecast isn't available right now.",
 });
 
 Object.assign(T.hi, {
@@ -107,6 +115,13 @@ Object.assign(T.hi, {
   u4a: "अपनी योजनाएँ देखें", msCentral: "केंद्रीय सब्सिडी, 3 kW", msCentralShort: "केंद्रीय सब्सिडी", msTop: "दिल्ली की अतिरिक्त सब्सिडी, अगर पात्र हों",
   u5t: "सही दिन पैनल साफ़ करें", u5d: "धूल और स्मॉग से सोलर उत्पादन घटता है। हवा की गुणवत्ता का लाइव अनुमान सफ़ाई का दिन चुनता है, धूल बैठने के बाद।",
   u5a: "इस हफ़्ते का अनुमान देखें",
+  plTitle: "क्या यही पैनल है जिसका पैसा दिया?",
+  plSub: "पैनल के पीछे लगे लेबल की फोटो लें। उसमें कंपनी, वॉट, सीरियल और कहाँ बना, यह पढ़ा जाता है, फिर सब्सिडी के नियमों और दूसरे घरों पर जाँचे गए सीरियल से मिलाया जाता है।",
+  plWatt: "कोटेशन में पैनल का वॉट (W, वैकल्पिक)", plUpload: "लेबल की फोटो लें", plSampleOk: "भारत में बना लेबल आज़माएँ",
+  plSampleBad: "विदेशी लेबल आज़माएँ", plReading: "लेबल पढ़ा जा रहा है…",
+  plWhere: "हर पैनल के पीछे ऐसा लेबल होता है। इतने पास से फोटो लें कि सीरियल नंबर पढ़ा जा सके।",
+  plAlt: "पैनल लेबल का नमूना: कंपनी, मॉडल, 545 W, सीरियल नंबर, भारत में बना, DCR",
+  spWho: (w) => `संपर्क: ${w}`, spSoon: "तारीख़ें भरें और अनुरोध तैयार करें दबाएँ, भेजने लायक नोट मिलेगा।",
   navVendors: "वेंडर के लिए", qVendor: "क्या आप रजिस्टर्ड वेंडर हैं?", qVendorLink: "अनुरोधों का जवाब दें",
   vTitle: "कोटेशन अनुरोधों का जवाब दें", vSub: "आपके आस-पास के घरों ने बिल के हिसाब से कोटेशन माँगे हैं। आपको साइज़ और इलाका दिखता है, नाम या नंबर कभी नहीं। आपका कोटेशन वैसे ही जाँचा जाता है जैसे घर वाले देखेंगे।",
   vName: "कंपनी का नाम", vShow: "अनुरोध देखें", vNoName: "पहले अपनी कंपनी का नाम लिखें।",
@@ -187,8 +202,9 @@ Object.assign(T.hi, {
   dLocate: "मेरी लोकेशन लें", dClean: "सफ़ाई", dLevels: { clear: "कम", dusty: "धूल", high: "बहुत धूल" },
   dAdvice: { clean_after: (day) => `${day} को पैनल साफ़ करें, धूल बैठने के बाद। सुबह-सुबह सादे पानी से; इन्वर्टर पर कभी पानी न डालें।`,
     dusty_week: () => "पूरे हफ़्ते धूल ज़्यादा रहेगी। साफ़ दिन का इंतज़ार करें, वरना पैनल फिर धूल से भर जाएँगे।",
+    clean_lull: (day) => `${day} को धूल कुछ कम होगी, फिर बढ़ेगी। पैनल गंदे दिखें तो उस सुबह साफ़ करें; वरना धूल थमने का इंतज़ार करें।`,
     clear_week: () => "इस हफ़्ते धूल कम है, सफ़ाई का सामान्य समय ठीक है।" },
-  dWhy: "दिल्ली में धूल से उत्पादन रोज़ 0.3–0.6% घट सकता है।", dSource: "बार धूल µg/m³ में दिखाते हैं, अनुमान CAMS का, स्रोत", dDown: "धूल का अनुमान अभी उपलब्ध नहीं है।",
+  dWhy: "दिल्ली में धूल से उत्पादन रोज़ 0.3–0.6% घट सकता है।", dSource: "बार दिन का औसत PM10 µg/m³ में दिखाते हैं; 100 से ऊपर भारत की सीमा से ज़्यादा है। अनुमान CAMS का, स्रोत", dDown: "धूल का अनुमान अभी उपलब्ध नहीं है।",
 });
 
 const tools = { states: null, q: { rid: null, view: null, timer: null, ran: false, chosen: null, seen: new Set() },
@@ -710,8 +726,17 @@ function renderBill() {
 
 function renderSupport() {
   const r = tools.care.support, out = $("sp-out");
-  if (!r) return;
   out.innerHTML = "";
+  if (!r || r.kind !== $("sp-kind").value) {
+    // before the note is prepared: who to contact and what to attach for the chosen problem
+    const topic = tools.care.lists && tools.care.lists.support_topics.find((x) => x.id === $("sp-kind").value);
+    if (!topic) return;
+    out.append(el("h3", null, tx(topic.title)), el("p", "sp-who", t("spWho", tx(topic.who))), el("p", "panel-title", t("spEvidence")));
+    const ul = el("ul", "evidence");
+    for (const e of topic.evidence) { const li = el("li"); li.append(el("span", "sq"), el("span", null, tx(e))); ul.append(li); }
+    out.append(ul, el("p", "hint", t("spSoon")));
+    return;
+  }
   out.append(el("h3", null, tx(r.title)));
   if (r.days_since_contact !== null && r.days_since_contact !== undefined) out.append(el("p", "hint", t("spDays", r.days_since_contact)));
   out.append(el("p", "panel-title", t("spEvidence")));
@@ -741,6 +766,7 @@ async function openCare() {
     try { tools.care.lists = await getJSON("/care/checklists"); } catch (_) { return; }
     renderPassport();
     fillSupportKinds();
+    renderSupport();
     const now = new Date();
     const prev = new Date(now.getFullYear(), now.getMonth() - 1, 1);
     $("g-month").value = `${prev.getFullYear()}-${String(prev.getMonth() + 1).padStart(2, "0")}`;
@@ -760,22 +786,22 @@ function renderDust() {
   const d = tools.care.dust, wrap = $("d-days"), advice = $("d-advice");
   if (!d) return;
   wrap.innerHTML = "";
-  // bars and numbers use the dust reading, the same measure that sets each day's level
-  const val = (x) => x.dust_max ?? x.pm10 ?? 0;
+  // bars and numbers show the day's PM10 average, the same measure that sets its level
+  const val = (x) => x.pm10 ?? 0;
   const max = Math.max(300, ...d.days.map(val));
   for (const day of d.days) {
     const box = el("div", `dday ${day.level}` + (day.date === d.clean_on ? " clean" : ""));
     if (day.date === d.clean_on) box.append(el("span", "tag-clean", t("dClean")));
     const bar = el("i", "dbar");
     bar.style.height = `${Math.max(6, Math.round(100 * val(day) / max))}%`;
-    bar.title = `PM10 ${day.pm10 ?? "–"} µg/m³`;
+    bar.title = `PM10 ${day.pm10 ?? "–"} µg/m³, desert dust up to ${day.dust_max ?? "–"} µg/m³`;
     box.append(el("span", "dname", dayName(day.date, { weekday: "short" })), el("span", "ddate", dayName(day.date, { day: "numeric", month: "short" })),
       bar, el("span", "dlevel", t("dLevels")[day.level]), el("span", "dval", String(val(day))));
     wrap.append(box);
   }
   advice.innerHTML = "";
   const when = d.clean_on ? dayName(d.clean_on, { weekday: "long", day: "numeric", month: "long" }) : "";
-  advice.append(el("span", "sq " + (d.advice === "dusty_week" ? "amber" : "ok")), el("span", null, t("dAdvice")[d.advice](when)));
+  advice.append(el("span", "sq " + (d.advice === "dusty_week" || d.advice === "clean_lull" ? "amber" : "ok")), el("span", null, t("dAdvice")[d.advice](when)));
 }
 async function loadDust(lat, lon) {
   const q = lat !== null && lat !== undefined ? `?lat=${lat}&lon=${lon}` : "";
@@ -797,7 +823,7 @@ function renderHomeDust() {
   const d = tools.care.dust, wrap = document.getElementById("home-dust");
   if (!d || !wrap) return;
   wrap.innerHTML = "";
-  const val = (x) => x.dust_max ?? x.pm10 ?? 0, max = Math.max(300, ...d.days.map(val));
+  const val = (x) => x.pm10 ?? 0, max = Math.max(300, ...d.days.map(val));
   for (const day of d.days) {
     const box = el("div", `dday ${day.level}` + (day.date === d.clean_on ? " clean" : ""));
     if (day.date === d.clean_on) box.append(el("span", "tag-clean", t("dClean")));
@@ -899,6 +925,68 @@ async function openVendors() {
   if (!$("v-state").options.length) fillStates($("v-state"), "DL");
 }
 
+
+// --- panel label check ----------------------------------------------------------------------------
+function deviceId() {
+  try {
+    let id = localStorage.getItem("surya-device");
+    if (!id) { id = Array.from(crypto.getRandomValues(new Uint8Array(12)), (b) => b.toString(16).padStart(2, "0")).join(""); localStorage.setItem("surya-device", id); }
+    return id;
+  } catch (_) { return tools.sessionId || (tools.sessionId = String(Math.random()).slice(2)); }
+}
+function renderPanel() {
+  const p = tools.care.panel, out = $("pl-out");
+  out.innerHTML = "";
+  if (!p) {
+    const img = el("img", "pl-thumb");
+    img.src = "sample-panel-ok.png";
+    img.alt = t("plAlt");
+    out.append(img, el("p", "hint", t("plWhere")));
+    return;
+  }
+  const img = el("img", "pl-thumb");
+  img.src = p.url;
+  img.alt = "";
+  out.append(img);
+  const v = p.res.views[state.lang] || p.res.views.en;
+  if (v.head) out.append(el("p", "pl-head", v.head.replace(/^[^\p{L}\p{N}]+/u, "")));
+  const title = el("p", "q-verdict");
+  title.append(el("span", "sq " + v.verdict), el("span", null, v.title.replace(/^[^\p{L}\p{N}]+/u, "")));
+  out.append(title);
+  if (v.lines.length) {
+    const ul = el("ul", "evidence");
+    v.lines.forEach((line, i) => { const li = el("li"); li.append(el("span", "sq " + (v.levels[i] || "amber")), el("span", null, line)); ul.append(li); });
+    out.append(ul);
+  }
+  if (v.next) out.append(el("p", "calc-note", v.next));
+  out.hidden = false;
+}
+async function checkPanel(b64, type, url, sample) {
+  const out = $("pl-out");
+  out.hidden = false;
+  out.innerHTML = "";
+  out.append(el("p", "board-status waiting", t("plReading")));
+  try {
+    const watt = parseFloat($("pl-watt").value);
+    const res = await postJSON("/panel", { file_base64: b64, media_type: type, owner: deviceId(), expect_watt: Number.isFinite(watt) ? watt : undefined, sample });
+    tools.care.panel = { res, url };
+    renderPanel();
+  } catch (ex) { out.textContent = ex.message; }
+}
+async function samplePanel(name) {
+  const blob = await (await fetch(name)).blob();
+  checkPanel(await toBase64(blob), "image/png", name, true);
+}
+$("pl-ok").addEventListener("click", () => samplePanel("sample-panel-ok.png"));
+$("pl-bad").addEventListener("click", () => samplePanel("sample-panel-imported.png"));
+$("pl-file").addEventListener("change", async (e) => {
+  const file = e.target.files[0];
+  e.target.value = "";
+  if (!file) return;
+  try { const { b64, type } = await prepare(file); checkPanel(b64, type, URL.createObjectURL(file), false); }
+  catch (ex) { $("pl-out").hidden = false; $("pl-out").textContent = ex.message; }
+});
+
 // --- wiring ---------------------------------------------------------------------------------------
 $("q-form").addEventListener("submit", requestQuotes);
 $("q-delete").addEventListener("click", deleteComparison);
@@ -926,10 +1014,12 @@ $("b-form").addEventListener("submit", async (e) => {
     renderBill();
   } catch (ex) { $("b-out").hidden = false; $("b-out").textContent = ex.message; }
 });
+$("sp-kind").addEventListener("change", renderSupport);
 $("sp-form").addEventListener("submit", async (e) => {
   e.preventDefault();
   try {
-    tools.care.support = await postJSON("/care/support", { kind: $("sp-kind").value, first_noticed: $("sp-noticed").value, contacted_on: $("sp-contacted").value || undefined });
+    const kind = $("sp-kind").value;
+    tools.care.support = { ...await postJSON("/care/support", { kind, first_noticed: $("sp-noticed").value, contacted_on: $("sp-contacted").value || undefined }), kind };
     renderSupport();
   } catch (ex) { $("sp-out").hidden = false; $("sp-out").textContent = ex.message; }
 });
@@ -948,7 +1038,7 @@ window.renderProduct = () => {
   renderSchemes();
   renderPlan();
   if (tools.care.lists) { renderPassport(); fillSupportKinds(); }
-  renderGen(); renderBill(); renderSupport(); renderDust(); renderHomeDust();
+  renderGen(); renderBill(); renderSupport(); renderDust(); renderHomeDust(); renderPanel();
 };
 loadDust(state.lat, state.lon);  // feeds the home page's mini forecast and the After install page
 const firstView = (location.hash || "").replace("#", "");

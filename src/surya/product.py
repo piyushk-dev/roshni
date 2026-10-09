@@ -225,7 +225,7 @@ DUST_URL = "https://air-quality-api.open-meteo.com/v1/air-quality"
 DUST_SOURCE = "https://open-meteo.com/en/docs/air-quality-api"
 DUST_CACHE_S = 3 * 3600
 DELHI = (28.6, 77.2)
-_dust_cache: dict[tuple[float, float], tuple[float, dict]] = {}
+_dust_cache: dict[tuple[float, float, str], tuple[float, dict]] = {}
 
 
 def _fetch_json(url: str) -> dict:
@@ -238,16 +238,17 @@ def _fetch_json(url: str) -> dict:
 
 
 def dust(lat=None, lon=None, fetch=None, now: float | None = None) -> dict:
-    """Five days of PM10 and dust for a place, and the first clear day after the dust settles."""
+    """Five days of PM10 and dust for a place from today, and the first clear day after the dust settles."""
     import time
 
     lat = round(number(lat if lat not in (None, "") else DELHI[0], "latitude", 6, 38), 1)
     lon = round(number(lon if lon not in (None, "") else DELHI[1], "longitude", 68, 98), 1)
     now = now or time.time()
-    hit = _dust_cache.get((lat, lon))
+    today = datetime.fromtimestamp(now, timezone(timedelta(hours=5, minutes=30))).date().isoformat()
+    hit = _dust_cache.get((lat, lon, today))
     if hit and now - hit[0] < DUST_CACHE_S:
         return hit[1]
-    raw = (fetch or _fetch_json)(f"{DUST_URL}?latitude={lat}&longitude={lon}&hourly=pm10,dust&timezone=Asia%2FKolkata&forecast_days=5")
+    raw = (fetch or _fetch_json)(f"{DUST_URL}?latitude={lat}&longitude={lon}&hourly=pm10,dust&timezone=Asia%2FKolkata&forecast_days=6")
     hours = raw["hourly"]
     by_day: dict[str, dict[str, list[float]]] = {}
     for t, pm, du in zip(hours["time"], hours["pm10"], hours["dust"]):
@@ -258,34 +259,44 @@ def dust(lat=None, lon=None, fetch=None, now: float | None = None) -> dict:
             day["dust"].append(du)
     days = []
     for d, v in sorted(by_day.items()):
+        # a forecast cached across midnight still starts yesterday, and the last day is only part-filled
+        if d < today or len(v["pm10"]) < 18:
+            continue
         pm = round(sum(v["pm10"]) / len(v["pm10"])) if v["pm10"] else None
         du = round(max(v["dust"])) if v["dust"] else None
-        # India's 24-hour PM10 standard is 100 µg/m³
-        level = "high" if (pm or 0) > 250 or (du or 0) > 300 else "dusty" if (pm or 0) > 100 or (du or 0) > 150 else "clear"
+        # India's National AQI bands for 24-hour PM10: up to 100 satisfactory, 101-250 moderate, above 250 poor
+        level = "high" if (pm or 0) > 250 else "dusty" if (pm or 0) > 100 else "clear"
         days.append({"date": d, "pm10": pm, "dust_max": du, "level": level})
+    days = days[:5]
+    if not days:
+        raise OSError("the forecast has no days from today")
     dusty = [i for i, d in enumerate(days) if d["level"] != "clear"]
     if not dusty:
         advice, clean = "clear_week", None
     elif dusty[-1] == len(days) - 1:
-        advice, clean = "dusty_week", None
+        # dust returns by the end; a low day between dusty ones is worth it only if the panels look dirty
+        lulls = [d["date"] for d in days if d["level"] == "clear"]
+        advice, clean = ("clean_lull", lulls[-1]) if lulls else ("dusty_week", None)
     else:
         advice, clean = "clean_after", days[dusty[-1] + 1]["date"]
     result = {"lat": lat, "lon": lon, "days": days, "advice": advice, "clean_on": clean, "source": DUST_SOURCE}
-    _dust_cache[(lat, lon)] = (now, result)
+    _dust_cache[(lat, lon, today)] = (now, result)
     return result
 
 
 DUST_TEXT = {
     "en": {"head": "🌫️ Dust and smog near you, next {n} days:", "clear": "low", "dusty": "dusty", "high": "very dusty",
-           "row": "{day}: {level} (dust {du} µg/m³)",
+           "row": "{day}: {level} (PM10 {pm} µg/m³)",
            "clean_after": "🧽 Clean the panels on {day}, after the dust settles. Use plain water early in the morning; never spray the inverter.",
            "dusty_week": "🧽 Dust stays high all week. Wait for a clear day to clean, or the panels just get dusty again.",
+           "clean_lull": "🧽 Dust dips on {day}, then rises again. If the panels look dirty, clean that morning with plain water; otherwise wait for a settled spell.",
            "clear_week": "🧽 Low dust this week, so your usual cleaning schedule is fine.",
            "why": "Dust in Delhi can cut solar output by 0.3–0.6% a day."},
     "hi": {"head": "🌫️ आपके इलाके में अगले {n} दिन धूल और स्मॉग:", "clear": "कम", "dusty": "धूल", "high": "बहुत धूल",
-           "row": "{day}: {level} (धूल {du} µg/m³)",
+           "row": "{day}: {level} (PM10 {pm} µg/m³)",
            "clean_after": "🧽 {day} को पैनल साफ़ करें, धूल बैठने के बाद। सुबह-सुबह सादे पानी से; इन्वर्टर पर कभी पानी न डालें।",
            "dusty_week": "🧽 पूरे हफ़्ते धूल ज़्यादा रहेगी। साफ़ दिन का इंतज़ार करें, वरना पैनल फिर धूल से भर जाएँगे।",
+           "clean_lull": "🧽 {day} को धूल कुछ कम होगी, फिर बढ़ेगी। पैनल गंदे दिखें तो उस सुबह सादे पानी से साफ़ करें; वरना धूल थमने का इंतज़ार करें।",
            "clear_week": "🧽 इस हफ़्ते धूल कम है, सफ़ाई का सामान्य समय ठीक है।",
            "why": "दिल्ली में धूल से सोलर उत्पादन रोज़ 0.3–0.6% घट सकता है।"},
 }
@@ -295,6 +306,6 @@ def dust_message(result: dict, lang: str = "en") -> str:
     t = DUST_TEXT[lang if lang in DUST_TEXT else "en"]
     label = lambda iso: date.fromisoformat(iso).strftime("%a %d %b")
     lines = [t["head"].format(n=len(result["days"]))]
-    lines += [t["row"].format(day=label(d["date"]), level=t[d["level"]], du=d["dust_max"] if d["dust_max"] is not None else d["pm10"]) for d in result["days"]]
+    lines += [t["row"].format(day=label(d["date"]), level=t[d["level"]], pm=d["pm10"] if d["pm10"] is not None else "?") for d in result["days"]]
     lines += ["", t[result["advice"]].format(day=label(result["clean_on"]) if result["clean_on"] else ""), t["why"]]
     return "\n".join(lines)

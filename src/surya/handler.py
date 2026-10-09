@@ -7,7 +7,7 @@ import json
 from dataclasses import asdict
 from importlib import resources
 
-from . import doctor, knowledge, market, pipeline, product, quote, scam
+from . import doctor, knowledge, market, panel, pipeline, product, quote, scam
 from .format import BillProblem, bonus_text, explain, message
 
 
@@ -69,6 +69,16 @@ def _handle(event: dict, context) -> dict:
             raise ValueError("paste an offer of 1–10,000 characters")
         flags = scam.check(text)
         return _response(200, {"flags": flags, "views": {lang: scam.render(flags, lang) for lang in ("en", "hi")}})
+    if route == "POST /panel":
+        data = base64.b64decode(body.get("file_base64") or "", validate=True)
+        if not data:
+            raise ValueError("send a photo of the panel's label")
+        media_type = pipeline._media_type(body.get("media_type", "image/jpeg"))
+        fields, _ = panel.read_label(data, media_type)
+        expect = body.get("expect_watt")
+        flags = panel.check(fields, float(expect) if expect not in (None, "") else None, str(body.get("owner") or "")[:64] or None,
+                            sample=bool(body.get("sample")))
+        return _response(200, {"fields": fields, "flags": flags, "views": {code: panel.render(fields, flags, code) for code in ("en", "hi")}})
     if route == "GET /market/open":
         return _response(200, {"requests": market.open_requests(product.state_code(params.get("state", "DL")),
                                                                  knowledge.slug(params["vendor"]) if params.get("vendor") else None)})
