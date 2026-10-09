@@ -1,10 +1,11 @@
 """Is this the panel you paid for? Read a panel's back label and check it against the subsidy rules.
 
 Under PM Surya Ghar the subsidy needs panels with Indian cells and an Indian module (DCR), and the
-installer's 16-digit DCR certificate must list the serial numbers on the roof. Vendors have swapped
-in imported panels after quoting, and the portal now rejects duplicate serials. A photo of each
-label is checked for an imported origin, a missing DCR mark, a wattage that doesn't match the quote,
-and a serial already checked at another home. Serials are kept only as hashes.
+installer's 16-digit DCR certificate must list the serial numbers on the roof. DCR panels cost more
+than imported ones, and the portal flags a serial already used elsewhere; since an MNRE memorandum of
+11 May 2026 a vendor's undertaking no longer clears that flag. A photo of each label is checked for
+an imported origin, a missing DCR mark, a wattage that doesn't match the quote, and a serial already
+checked at another home. Serials are kept only as hashes.
 """
 
 from __future__ import annotations
@@ -50,7 +51,7 @@ TEXT = {
         "dcr_missing": "The label doesn't show DCR. Ask the installer for the 16-digit DCR certificate that lists this serial.",
         "watt_mismatch": "The label says {pmax:g} W, but your quote says {expect:g} W per panel.",
         "serial_missing": "No serial number is readable. Photograph the label again, closer.",
-        "serial_seen": "This serial was already checked at another home. The portal rejects duplicate serials, so ask the installer before you pay.",
+        "serial_seen": "This serial was already checked at another home. The portal flags repeated serials, and an undertaking no longer clears them, so ask the installer before you pay.",
         "next": "Next: match this serial with your DCR certificate and the invoice, and check the model on MNRE's ALMM list.",
     },
     "hi": {
@@ -63,7 +64,7 @@ TEXT = {
         "dcr_missing": "लेबल पर DCR नहीं दिखता। इंस्टॉलर से 16 अंकों का DCR प्रमाणपत्र माँगें जिसमें यह सीरियल हो।",
         "watt_mismatch": "लेबल पर {pmax:g} W है, पर आपके कोटेशन में हर पैनल {expect:g} W का है।",
         "serial_missing": "सीरियल नंबर पढ़ा नहीं जा सका। लेबल की फोटो फिर से, पास से लें।",
-        "serial_seen": "यह सीरियल पहले किसी और घर पर जाँचा जा चुका है। पोर्टल एक जैसे सीरियल नामंज़ूर करता है, इसलिए भुगतान से पहले इंस्टॉलर से पूछें।",
+        "serial_seen": "यह सीरियल पहले किसी और घर पर जाँचा जा चुका है। पोर्टल दोहराए गए सीरियल पकड़ता है और अब अंडरटेकिंग से यह नहीं सुलझता, इसलिए भुगतान से पहले इंस्टॉलर से पूछें।",
         "next": "आगे: यह सीरियल DCR प्रमाणपत्र और बिल से मिलाएँ, और मॉडल MNRE की ALMM सूची में देखें।",
     },
 }

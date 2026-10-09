@@ -26,12 +26,14 @@ Every number shown carries where it came from and how fresh it is. No personal d
 |---|---|---|
 | Decide | Don't know if it pays; drop-off happens before applying (CEEW 2026) | Bill photo → honest answer ✅ |
 | Decide | Delhi's ₹0-upfront deal is unknown; only 10k of 2.3 lakh homes done | State bonus check ✅ (Delhi), more states via community facts |
+| Decide | State help differs and is scattered across portals | **Schemes** for all 36 states and UTs, each with its source ✅; budget planner for the EMI months before the subsidy arrives ✅ |
 | Save now, solar or not | Paying for unused sanctioned load (fixed charges track it); estimated readings; unexplained "other charges" | **Bill doctor**: right-size sanctioned load from the bill's max demand, flag estimated readings, odd charges, missing subsidy |
-| Choose | Non-DCR panels void the subsidy; inflated subsidy promises; overpricing | Quote checker ✅, live price benchmark, compare quotes side by side |
+| Choose | Non-DCR panels void the subsidy; inflated subsidy promises; overpricing; scam calls and forwards | Quote checker ✅; **Get quotes** board ranked by price after subsidy, with PIN-code group pricing ✅ (fictional demo vendors, labelled); vendor page where real installers answer requests ✅; scam check ✅ |
 | Apply | Rejections from name mismatches, Aadhaar not seeded to bank, old bill, dues, no NOC | Pre-flight checklist |
 | Apply | Net meter is the slowest step | Step tracker (Step Functions) with nudges when a stage stalls |
+| Install | Cheaper panels are hard to spot on the roof; the portal flags repeated serials (May 2026) | **Panel label check** from a photo: origin of module and cells, DCR mark, wattage vs quote, serial already checked at another home ✅ |
 | Get paid | E-token not redeemed, bank mismatch, claim deadline 30 Nov 2026 | Reminders + drafted complaint for whoever is holding it up (DISCOM nodal officer, portal grievance, 15555, CPGRAMS, RTI). The household sends it |
-| Live with it | Dust and smog cut output 10%+ a month; export credits not applied (installer complaints) | Monthly check: inverter reading vs expected output; post-solar bill check for export credit; cleaning reminders |
+| Live with it | Dust and smog cut output 10%+ a month; export credits not applied (installer complaints) | Inverter photo vs expected output ✅; first-bill energy flow ✅; **Dust this week** picks the cleaning day from a live forecast ✅; solar passport and support requests ✅ |
 | No roof of your own | Most city homes are flats | Apartment / RWA mode: common-area solar (₹18,000/kW), virtual net metering explainer, a message to send the RWA |
 
 Channels: WhatsApp (Twilio Sandbox live; Meta Cloud API built, waiting on business verification), website on Amplify, Hindi voice notes.
@@ -47,9 +49,11 @@ Channels: WhatsApp (Twilio Sandbox live; Meta Cloud API built, waiting on busine
 - [x] Flats/RWA mode with calculator; post-install output check from an inverter photo; photo classifier
 - [x] README, architecture diagram, blog draft (docs/blog.md), video script (docs/video-script.md)
 - [x] Share result on WhatsApp; accountability board (real step times by provider)
+- [x] Get quotes: one request, quotes compared after subsidy, group pricing by PIN code, demo vendors that each show a trap; vendor page for real installers
+- [x] Schemes for all 36 states with sources, budget planner, scam check
+- [x] After install: dust this week (live CAMS forecast), solar passport, promised vs actual, first bill, support requests, panel label check
 - [ ] Make the repo public before submitting; record the video; publish the blog
 
 ## AWS
 
-Live: Lambda, API Gateway, DynamoDB, Bedrock (Nova 2 Lite), Amplify Hosting, SSM Parameter Store, CloudWatch, AWS SAM.
-Adding: Step Functions (journey), EventBridge Scheduler (nudges, watcher), Transcribe + Polly (voice), S3 (voice audio).
+Live: Lambda, API Gateway, DynamoDB (with TTL and conditional writes), Bedrock (Nova 2 Lite), Step Functions (journey), EventBridge Scheduler (watcher), Transcribe + Polly (voice), S3 (voice audio), Amplify Hosting, SSM Parameter Store, CloudWatch, AWS SAM.

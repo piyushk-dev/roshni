@@ -4,17 +4,23 @@
 
 India wants one crore homes on rooftop solar by March 2027 under PM Surya Ghar. By June 2026 about 41 lakh were there. A CEEW survey of 17,000 households explains the gap: once families apply, most go on to install. The drop-off happens before they apply. They can't tell whether solar pays for their home, who to trust, or what to do next.
 
-Surya Saathi is a WhatsApp-first companion for that whole path. A family sends a photo of their electricity bill and gets an honest answer in Hindi or English: the right size, the cost after subsidy, the EMI and the payback, or "skip it" when solar won't pay. From there it checks vendor quotes, walks them through the eight application steps with reminders, drafts the complaint when someone else is holding things up, and after installation checks the panels' output against what they should make.
+Surya Saathi is a WhatsApp-first companion for that whole path. A family sends a photo of their electricity bill and gets an honest answer in Hindi or English: the right size, the cost after subsidy, the EMI and the payback, or "skip it" when solar won't pay. From there it:
+
+- compares vendor quotes by what the family pays after subsidy;
+- lists the central subsidy and the state's own help, each with its source;
+- walks them through the eight application steps, and drafts the complaint when someone else is holding things up;
+- checks that the panels on the roof are the ones in the quote;
+- after installation, picks the day to clean the panels and checks the first bill.
 
 ## The stack
 
 Everything is serverless in ap-south-1, defined in one AWS SAM template:
 
-- **Amazon Bedrock (Nova 2 Lite)** reads bills, quotes and inverter screens, and answers questions.
+- **Amazon Bedrock (Nova 2 Lite)** reads bills, quotes, inverter screens and panel labels, and answers questions.
 - **AWS Step Functions** runs each household's application as a long-lived workflow. Every stage is a task that waits on a task token until the family replies DONE. A stage that runs past its usual length times out into a nudge, then waits again.
 - **Amazon EventBridge Scheduler** runs a weekly watcher over official sources.
 - **Amazon Transcribe and Amazon Polly** handle Hindi voice notes in and out.
-- **Amazon DynamoDB** stores sessions, a sunlight cache, and the knowledge layer.
+- **Amazon DynamoDB** stores sessions, a sunlight cache, the knowledge layer and the quote marketplace, which expires old requests with TTL.
 - **AWS Lambda, API Gateway and Amplify Hosting** serve WhatsApp (through Twilio) and the website.
 
 ## What fought back
@@ -26,6 +32,15 @@ Everything is serverless in ap-south-1, defined in one AWS SAM template:
 3. Every bill is read three times in parallel, keeping only what the readings agree on.
 
 Parallel reads cost about the same time as one. The real bill, WhatsApp-compressed or not, now gives the same answer every time.
+
+**Comparing quotes honestly.** The sticker price misleads. A quote with imported panels can't get the subsidy, so the cheapest quote on paper can cost the most. The comparison board ranks every quote by the price after subsidy, and runs the same checks on each: DCR panels, subsidy promises above the cap, large advances, undersized inverters, missing net meter or earthing. The four vendors in the demo are fictional, labelled on every screen, and each shows a different trap. I didn't want any real company shown with prices it never quoted. Real installers get a vendor page instead. It shows open requests by area (only the first three digits of the PIN), and a quote passes the same checks before it's sent, so the installer sees what the family will see.
+
+**Is this the panel you paid for?** The subsidy needs Indian cells and an Indian module, and those DCR panels cost more than imported ones. The portal also flags a module serial it has already seen, and since May 2026 a vendor's undertaking no longer clears that flag. None of this is easy for a family to check from the ground. So a photo of a panel's back label is read with a Bedrock tool schema: maker, wattage, serial, where the module and its cells were made, and whether it carries the DCR mark. Two details mattered:
+
+1. **Missing fields.** The model sometimes writes "null" or "not visible" instead of leaving a field out, which once produced "cells from null". Those values are now cleaned before any rule runs.
+2. **Duplicate serials.** Each serial is hashed with SHA-256 and written to DynamoDB with a conditional put (`attribute_not_exists`). The first home to check a serial owns it, a second home gets a warning, and there's no read-then-write race.
+
+**Dust.** Dust and smog in Delhi can cut output by 0.3–0.6% a day, so cleaning after a dusty spell pays more than cleaning during one. A live CAMS forecast from Open-Meteo rates each day by India's AQI bands for PM10 and picks the first low day after the dust settles. One morning the forecast still started on the previous day: a response cached just before midnight was served after it. The cache now keys on the date in India, and days before today are dropped.
 
 **WhatsApp.** Meta's Cloud API integration was finished in an afternoon: signed webhooks, an async worker, de-duplication of retries. Then Meta restricted the account until the business is verified, and a student project isn't a registered business. Twilio's WhatsApp sandbox took about an hour to add behind the same bot logic. Its quirks: a different signature scheme, media links that redirect to signed storage, and a 1,600-character limit per message.
 
@@ -43,4 +58,7 @@ Parallel reads cost about the same time as one. The real bill, WhatsApp-compress
 - Website: https://main.d3frlgja2w8q15.amplifyapp.com
 - Code: https://github.com/piyushk-dev/surya-saathi
 
-Built with Claude Code as a coding assistant.
+## AI tools used
+
+- **Claude Code (Anthropic)** and **Codex (OpenAI)** as coding assistants, for research, code and writing.
+- **Amazon Bedrock (Nova 2 Lite)** inside the product, to read bills, quotes, inverter screens and panel labels, and to answer questions.

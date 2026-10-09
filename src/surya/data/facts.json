@@ -18,6 +18,15 @@
     "verified": "2026-10-08"
   },
   {
+    "id": "repeat-serials",
+    "scope": "IN",
+    "title": "Repeated panel serials are flagged",
+    "value": "The National Portal flags a module or inverter serial already used elsewhere; for applications after 26 May 2026 a vendor's undertaking no longer clears it (MNRE memorandum of 11 May 2026, as reported).",
+    "source": "https://solarquarter.com/2026/05/13/mnre-tightens-serial-number-verification-rules-under-pm-surya-ghar-scheme/",
+    "official": false,
+    "verified": "2026-10-09"
+  },
+  {
     "id": "loan-rate",
     "scope": "IN",
     "title": "Collateral-free solar loan",

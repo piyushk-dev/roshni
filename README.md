@@ -27,10 +27,11 @@ Delhi's newest deal goes unnoticed too. Homes using up to 400 units a month can 
 | **Decide** | **Bill photo → right size, cost after subsidy, EMI, payback, CO₂**, or an honest "skip". Months missing from the bill are estimated from local temperature. A smaller system wins when it gets within 10% of the best 25-year value. Delhi's ₹0-upfront and state top-up are flagged when they apply |
 | **Save now** | **Bill doctor**: flags sanctioned load far above your actual peak (₹5,500/yr on our test bill), estimated readings, one-off charges, and missing export credit |
 | **Know your help** | **Schemes**: the central subsidy for all 36 states and UTs (higher in hill and North-East states), each state's top-up shown separately with its conditions and source (Delhi: ₹26,000/kW up to ₹78,000, from solar.delhi.gov.in), the 5.75% collateral-free loan, and a **budget planner** for the months of EMI before the subsidy arrives |
-| **Choose** | **Get quotes**: one request; every vendor's quote is checked by the same rules and compared by what you pay **after subsidy**, so a cheap quote with imported panels shows up as the most expensive. Requests from one PIN code pool into a group price at five homes. The **quote checker** reads quotes you already have, and the **scam check** flags forwarded offers (fees, look-alike portals, OTP requests, subsidy over the cap, "free solar", pressure to decide today) |
+| **Choose** | **Get quotes**: one request; every vendor's quote is checked by the same rules and compared by what you pay **after subsidy**, so a cheap quote with imported panels shows up as the most expensive. Requests from one PIN code pool into a group price at five homes. The **quote checker** reads quotes you already have, and the **scam check** flags forwarded offers (fees, look-alike portals, OTP requests, subsidy over the cap, "free solar", pressure to decide today). On the **vendor side**, installers see open requests by area (never the full PIN) and send a quote that the same rules check before it goes out |
 | **Apply** | **8-step plan on Step Functions**, starting with a pre-flight check for the common rejections. A nudge when a step runs long. **STUCK** drafts a complaint for whoever is holding things up: helpline, then nodal officer, then grievance portal, then RTI. The household sends it |
+| **Install** | **Is this the panel you paid for?** A photo of a panel's back label is read for the maker, wattage, serial and origin, and flagged when the module or its cells are imported, the DCR mark is missing, the wattage differs from the quote, or the serial was already checked at another home. The portal flags repeated serials, and since May 2026 a vendor's undertaking no longer clears them, so this runs before the final payment |
 | **Get paid** | E-token and claim-deadline reminders inside the same plan |
-| **Keep it running** | **Dust this week**: a live CAMS forecast (via Open-Meteo) picks the day to clean the panels, after the dust settles. A **solar passport** of signing and handover checks, **promised vs actual** generation with a note for the installer, the **first bill's energy flow** (generation is not export), and **support requests** with the evidence to attach. On WhatsApp, an inverter photo is checked against what the panels should make |
+| **Keep it running** | **Dust this week**: a live CAMS forecast (via Open-Meteo) rates each day by India's AQI bands for PM10 and picks the day to clean the panels, after the dust settles. A **solar passport** of signing and handover checks, **promised vs actual** generation with a note for the installer, the **first bill's energy flow** (generation is not export), and **support requests** with the evidence to attach. On WhatsApp, an inverter photo is checked against what the panels should make |
 | **No roof of your own** | **Flats and societies**: common-area solar at ₹18,000/kW, a calculator, and a ready message for the RWA |
 | **Any question** | Typed or spoken, in Hindi or English. Voice note in (Transcribe), voice note out (Polly). Answers are grounded in the household's own estimate and the facts board |
 
@@ -76,6 +77,7 @@ flowchart LR
 
 - **Bills:** the reader never asks for name, address, phone or consumer number, and bill images aren't stored.
 - **Voice:** voice notes are deleted after a day.
+- **Panel serials** are kept only as SHA-256 hashes, for two years, so a serial seen at a second home can be flagged.
 - **What we keep:** the WhatsApp number, language, last estimate and journey stage, deleted automatically after 90 days. Sample comparisons expire after 30 days and are excluded from real impact counters and price learning.
 - **Deleting:** **DELETE MY DATA** deletes the WhatsApp-linked comparison as well as the session. Website comparisons have a delete control. Passport records stay in browser storage only when explicitly saved; use its clear control and delete exported copies separately.
 
@@ -83,7 +85,7 @@ flowchart LR
 
 ```bash
 python -m venv .venv && .venv/Scripts/pip install pytest boto3 aws-sam-cli
-.venv/Scripts/python -m pytest            # 179 tests, offline
+.venv/Scripts/python -m pytest            # 194 tests, offline
 sam build && sam deploy --guided          # the whole backend
 python scripts/deploy_web.py              # the website, to Amplify
 ```
@@ -100,12 +102,13 @@ The local server runs the deterministic tools and uses captured Delhi sunlight f
 ## Honest limits
 
 - **The PM Surya Ghar portal has no API.** The journey guides and tracks the application; the household submits it.
-- **WhatsApp commands:** `QUOTES` and `CHOOSE 1` (compare and pick), `SCAM <offer>`, `SCHEMES UP`, `PASSPORT`, `DUST`, plus `APPLY`, `DONE`, `STUCK`, `FLAT`, `SYSTEM 3.3` and `DELETE MY DATA`.
+- **WhatsApp commands:** `QUOTES` and `CHOOSE 1` (compare and pick), `SCAM <offer>`, `SCHEMES UP`, `PASSPORT`, `DUST`, plus `APPLY`, `DONE`, `STUCK`, `FLAT`, `SYSTEM 3.3` and `DELETE MY DATA`. Photos are sorted automatically: a bill, a quote, an inverter screen or a panel label.
 - **WhatsApp:** Meta's Cloud API integration is built, but Meta only lets verified businesses reply, so the demo runs on Twilio's sandbox.
 - **Nudges days apart** would need an approved WhatsApp template in production. Demo mode (`APPLY DEMO`) shortens a day to 4 seconds.
 - **State assistance needs local confirmation.** The schemes selector covers central rules for all 36 states and union territories. Delhi, Uttar Pradesh and Assam have government source links; other reviewed entries distinguish secondary reports from official guidance. Unreviewed local support is shown as unknown.
 - **The demo vendors are fictional.** The marketplace's four vendors, their replies and scorecards are sample data, labelled on every screen, each showing a different trap. Real vendors can answer requests, and their scores come only from the quotes they actually send. No real company is shown with prices it didn't quote.
 - **Ownership checks are evidence aids.** They do not certify equipment safety, DCR compliance, warranty liability or a monetary bill settlement. Generation review is manual and uses a completed month; low output alone does not diagnose dust.
+- **The panel check reads what's printed.** It can't spot a forged label, and the duplicate-serial check only knows serials checked through Surya Saathi. The DCR certificate and MNRE's ALMM list remain the proof.
 - **Support packs prepare the next conversation.** They distinguish monitoring, generation, billing, documents and maintenance, record dates and list relevant evidence. They do not submit tickets. Elapsed days are dated records, not regulatory deadlines.
 
 ## Built with
