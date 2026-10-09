@@ -152,7 +152,7 @@ BONUS = {
         "hi": "🎁 दिल्ली बोनस: आपका औसत लगभग {avg:,.0f} यूनिट महीना है, जो दिल्ली की 400 यूनिट सीमा से कम है। सितंबर 2026 की नीति में आपको सरकारी सूचीबद्ध वेंडर से {kw:g} kW तक का सिस्टम बिना शुरुआती खर्च के, {years} साल के मुफ़्त रखरखाव के साथ मिल सकता है। इससे सालाना लगभग {save} की बचत होगी। संशोधन अधिसूचित है; बिजली कंपनी से इस रास्ते और पात्रता की पुष्टि करें या {portal} देखें।",
     },
     "top_up": {
-        "en": "🎁 Delhi bonus: Delhi now adds up to {extra} on top of the central subsidy (September 2026 policy). If it applies, this {kw:g} kW system costs you about {net} instead of {net_central}, paying for itself in {payback:.1f} years. This is conditional on the state route and bid-cost cap; confirm eligibility with your DISCOM. It is not counted above.",
+        "en": "🎁 Delhi bonus: Delhi now adds up to {extra} on top of the central subsidy (September 2026 policy). If it applies, this {kw:g} kW system costs about {net} instead of {net_central} and pays for itself in {payback:.1f} years. It depends on the state route and the bid-cost cap, so confirm with your DISCOM; it isn't counted above.",
         "hi": "🎁 दिल्ली बोनस: दिल्ली अब केंद्र की सब्सिडी के ऊपर {extra} तक और देती है (सितंबर 2026 नीति)। लागू होने पर यह {kw:g} kW सिस्टम {net_central} की जगह लगभग {net} का पड़ेगा, और {payback:.1f} साल में लागत वसूल होगी। राज्य योजना का रास्ता और बोली की लागत वाली सीमा लागू हैं; बिजली कंपनी से पात्रता की पुष्टि करें। ऊपर के हिसाब में इसे नहीं जोड़ा गया।",
     },
 }

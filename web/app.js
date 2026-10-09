@@ -31,6 +31,7 @@ const T = {
     costSub: (gross, subsidy) => `${gross} − ${subsidy} subsidy`,
     saves: "Saves every year",
     savesSub: (m) => `about ${m} a month`,
+    savesUpTo: (high, m) => `up to ${high}; about ${m} a month`,
     payback: "Pays for itself in",
     years: (y) => `${y} years`,
     emi: "Loan EMI, 10 years",
@@ -86,6 +87,7 @@ const T = {
     costSub: (gross, subsidy) => `${gross} − ${subsidy} सब्सिडी`,
     saves: "हर साल बचत",
     savesSub: (m) => `लगभग ${m} महीना`,
+    savesUpTo: (high, m) => `${high} तक; लगभग ${m} महीना`,
     payback: "लागत वसूल",
     years: (y) => `${y} साल में`,
     emi: "लोन EMI, 10 साल",
@@ -634,7 +636,9 @@ function render(data) {
     const high = Math.max(o.savings_rs, o.savings_optimistic_rs);
     tiles.append(
       tile(t("costAfter"), rupees(o.net_cost), t("costSub", rupees(o.gross_cost), rupees(o.subsidy))),
-      tile(t("saves"), `${hundreds(o.savings_rs)}–${hundreds(high).slice(1)}`, t("savesSub", hundreds(o.savings_rs / 12))),
+      // the lower figure stays big; the range goes underneath, so every tile keeps one line
+      tile(t("saves"), hundreds(o.savings_rs), high - o.savings_rs >= 100
+        ? t("savesUpTo", hundreds(high), hundreds(o.savings_rs / 12)) : t("savesSub", hundreds(o.savings_rs / 12))),
       tile(t("payback"), t("years", o.payback_years.toFixed(1)), t("co2", o.co2_t_per_year.toFixed(1))),
       tile(t("emi"), rupees(o.emi_rs), t("emiSub", o.loan_rate_pct)),
     );
@@ -654,8 +658,15 @@ function render(data) {
   optionsTable(a);
   billRead(data.bill);
   $("share").href = shareLink(data);
-  $("bonus").hidden = !data.bonus;
-  $("bonus").textContent = data.bonus || "";
+  // the same text WhatsApp sends ("🎁 Delhi bonus: ..."); here the label becomes a title
+  const bonus = $("bonus"), parts = (data.bonus || "").match(/^[^\p{L}\p{N}]*([^:]{3,40}):\s*([\s\S]*)$/u);
+  bonus.hidden = !data.bonus;
+  bonus.innerHTML = "";
+  if (parts) {
+    const title = document.createElement("b");
+    title.textContent = parts[1];
+    bonus.append(title, parts[2]);
+  } else bonus.textContent = data.bonus || "";
   renderDoctor(data.doctor);
 }
 
