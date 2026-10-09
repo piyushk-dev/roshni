@@ -24,6 +24,7 @@ Object.assign(T.en, {
   vTitle: "Answer quote requests", vSub: "Households near you have asked for quotes, sized from their bills. You see the size and the area, never their name or number. Your quote is checked the way the household will see it.",
   vName: "Company name", vShow: "Show requests", vNoName: "Enter your company name first.",
   vOpen: (n) => `${n} open request${n === 1 ? "" : "s"}`, vNone: "No open requests here right now.",
+  vSample: "Sample request from the website demo", vSampleOnly: "No real requests here yet. Here's the website's sample, so you can try it.",
   vArea: (a) => (a ? `Area ${a}` : "Area not given"), vQuotes: (n) => `${n} quote${n === 1 ? "" : "s"} so far`,
   vAgo: (m) => (m < 1 ? "just now" : m < 60 ? `${m} min ago` : m < 1440 ? `${Math.round(m / 60)} h ago` : `${Math.round(m / 1440)} days ago`),
   vQuote: "Quote", vQuoted: "Quoted", vQuoteTitle: (kw, d) => `Your quote for ${kw} kW${d ? `, ${d}` : ""}`,
@@ -56,6 +57,8 @@ Object.assign(T.en, {
   qGroupOn: (homes, pin, pct) => `${homes} homes in ${pin} this month: group price, ${pct}% off.`,
   qDelete: "Delete this comparison", qDeleted: "Comparison deleted.",
   qOwnTitle: "Already have a quote?", qOwnSub: "Upload the quotation. It's read and checked the same way, in about ten seconds.",
+  qChk1: "Made-in-India panels", qChk2: "Subsidy within the cap", qChk3: "A fair price per kW",
+  qChk4: "Panel count matches kW", qChk5: "Inverter and warranties", qChk6: "Advance and payments",
   scamTitle: "Got a suspicious offer?", scamSub: "Paste the message, ad or call script you received.",
   scamGo: "Check it", scamExample: "Try an example", scamEmpty: "Paste the offer first.",
   scamSample: "Congratulations! You are selected for FREE solar under PM Surya Ghar. Pay ₹1,500 registration fee today only to book your ₹1,20,000 subsidy. Limited slots. Register at pmsuryaghar-yojana.com and share the OTP you receive.",
@@ -126,6 +129,7 @@ Object.assign(T.hi, {
   vTitle: "कोटेशन अनुरोधों का जवाब दें", vSub: "आपके आस-पास के घरों ने बिल के हिसाब से कोटेशन माँगे हैं। आपको साइज़ और इलाका दिखता है, नाम या नंबर कभी नहीं। आपका कोटेशन वैसे ही जाँचा जाता है जैसे घर वाले देखेंगे।",
   vName: "कंपनी का नाम", vShow: "अनुरोध देखें", vNoName: "पहले अपनी कंपनी का नाम लिखें।",
   vOpen: (n) => `${n} खुले अनुरोध`, vNone: "अभी यहाँ कोई खुला अनुरोध नहीं है।",
+  vSample: "वेबसाइट डेमो का नमूना अनुरोध", vSampleOnly: "यहाँ अभी कोई असली अनुरोध नहीं है। आज़माने के लिए वेबसाइट का नमूना दिखाया गया है।",
   vArea: (a) => (a ? `इलाका ${a}` : "इलाका नहीं बताया"), vQuotes: (n) => `अब तक ${n} कोटेशन`,
   vAgo: (m) => (m < 1 ? "अभी" : m < 60 ? `${m} मिनट पहले` : m < 1440 ? `${Math.round(m / 60)} घंटे पहले` : `${Math.round(m / 1440)} दिन पहले`),
   vQuote: "कोटेशन दें", vQuoted: "कोटेशन दिया", vQuoteTitle: (kw, d) => `${kw} kW के लिए आपका कोटेशन${d ? `, ${d}` : ""}`,
@@ -158,6 +162,8 @@ Object.assign(T.hi, {
   qGroupOn: (homes, pin, pct) => `इस महीने ${pin} से ${homes} घर: ग्रुप रेट, ${pct}% छूट।`,
   qDelete: "यह तुलना मिटाएँ", qDeleted: "तुलना मिटा दी।",
   qOwnTitle: "कोटेशन पहले से है?", qOwnSub: "कोटेशन अपलोड करें। इसे भी लगभग दस सेकंड में इसी तरह पढ़ा और जाँचा जाता है।",
+  qChk1: "भारत में बने पैनल", qChk2: "सब्सिडी सीमा के भीतर", qChk3: "प्रति kW सही कीमत",
+  qChk4: "पैनल कुल kW के बराबर", qChk5: "इन्वर्टर और वारंटी", qChk6: "एडवांस और भुगतान",
   scamTitle: "कोई संदिग्ध ऑफ़र मिला?", scamSub: "मिला हुआ मैसेज, विज्ञापन या कॉल की बात यहाँ चिपकाएँ।",
   scamGo: "जाँचें", scamExample: "उदाहरण आज़माएँ", scamEmpty: "पहले ऑफ़र चिपकाएँ।",
   scamSample: "बधाई हो! PM सूर्य घर में आपको मुफ्त सोलर के लिए चुना गया है। अपनी ₹1,20,000 सब्सिडी बुक करने के लिए आज ही ₹1,500 रजिस्ट्रेशन फीस दें। सीमित स्लॉट। pmsuryaghar-yojana.com पर रजिस्टर करें और आया हुआ OTP बताएँ।",
@@ -410,7 +416,7 @@ async function requestQuotes(e) {
   tools.q.seen = new Set();
   tools.q.chosen = null;
   try {
-    tools.q.view = await postJSON("/market/requests", { state: $("q-state").value, kw, pincode: pin });
+    tools.q.view = await postJSON("/market/requests", { state: $("q-state").value, kw, pincode: pin, sample: !e });
     tools.q.rid = tools.q.view.request.id;
     renderBoard();
     tools.q.timer = setTimeout(pollQuotes, Math.max(700, (tools.q.view.next_in || 1) * 1000 + 150));
@@ -867,11 +873,13 @@ function renderVendorList() {
   list.innerHTML = "";
   const st = $("v-status");
   st.hidden = false;
-  st.textContent = tools.v.list.length ? t("vOpen", tools.v.list.length) : t("vNone");
+  const real = tools.v.list.filter((r) => !r.sample).length;
+  st.textContent = real ? t("vOpen", real) : tools.v.list.length ? t("vSampleOnly") : t("vNone");
   for (const r of tools.v.list) {
     const row = el("div", "vrow" + (r.id === tools.v.rid ? " active" : ""));
     const where = el("div", "vwhere");
     where.append(el("b", null, r.discom || tx(tools.states && tools.states[r.state]) || r.state), el("span", null, t("vArea", r.area)));
+    if (r.sample) where.append(el("span", "vsample", t("vSample")));
     const mins = Math.max(0, Math.round((Date.now() / 1000 - r.created) / 60));
     const btn = el("button", "btn " + (r.you_quoted ? "btn-quiet" : "btn-line"), r.you_quoted ? t("vQuoted") : t("vQuote"));
     btn.type = "button";
@@ -885,9 +893,9 @@ async function loadVendorRequests(e) {
   if (e) e.preventDefault();
   const err = $("v-error");
   err.hidden = true;
-  if (!$("v-name").value.trim()) { err.textContent = t("vNoName"); err.hidden = false; return; }
+  const name = $("v-name").value.trim();
   try {
-    const d = await getJSON(`/market/open?state=${encodeURIComponent($("v-state").value)}&vendor=${encodeURIComponent($("v-name").value.trim())}`);
+    const d = await getJSON(`/market/open?state=${encodeURIComponent($("v-state").value)}` + (name ? `&vendor=${encodeURIComponent(name)}` : ""));
     tools.v.list = d.requests;
     renderVendorList();
   } catch (ex) { err.textContent = ex.message; err.hidden = false; }
@@ -905,6 +913,7 @@ function openVendorQuote(r) {
   $("v-quote").scrollIntoView({ behavior: "smooth", block: "start" });
 }
 $("v-form").addEventListener("submit", loadVendorRequests);
+$("v-state").addEventListener("change", () => loadVendorRequests());
 $("vq-preview").addEventListener("click", async () => {
   try { renderVendorCheck(await postJSON("/market/preview", { state: $("v-state").value, name: $("v-name").value.trim() || "Your quote", quote: vendorQuote() }), false); }
   catch (ex) { $("vq-out").hidden = false; $("vq-out").textContent = ex.message; }
@@ -912,6 +921,12 @@ $("vq-preview").addEventListener("click", async () => {
 $("vq-form").addEventListener("submit", async (e) => {
   e.preventDefault();
   if (!tools.v.rid) return;
+  if (!$("v-name").value.trim()) {
+    $("vq-out").hidden = false;
+    $("vq-out").textContent = t("vNoName");
+    $("v-name").focus();
+    return;
+  }
   try {
     const res = await postJSON(`/market/requests/${tools.v.rid}/quotes`, { vendor_name: $("v-name").value.trim(), quote: vendorQuote() });
     renderVendorCheck(res, true);
@@ -923,6 +938,7 @@ $("vq-form").addEventListener("submit", async (e) => {
 async function openVendors() {
   await loadStates();
   if (!$("v-state").options.length) fillStates($("v-state"), "DL");
+  loadVendorRequests();
 }
 
 

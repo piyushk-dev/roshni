@@ -279,7 +279,8 @@ def _clean_request(body: dict) -> dict:
     if pincode and not re.fullmatch(r"[1-9]\d{5}", pincode):
         raise ValueError("PIN code must be 6 digits and cannot start with zero")
     return {"kw": round(kw, 1), "state": state, "discom": str(body.get("discom") or "")[:20], "pincode": pincode,
-            "sanctioned_kw": body.get("sanctioned_kw"), "source": body.get("source", "web")}
+            "sanctioned_kw": body.get("sanctioned_kw"), "source": body.get("source", "web"),
+            "sample": bool(body.get("sample"))}
 
 
 def create_request(body: dict, wa_id: str | None = None, now: float | None = None) -> dict:
@@ -348,22 +349,31 @@ def choose(rid: str, vendor_id: str) -> dict:
 
 
 def open_requests(state: str, vendor_id: str | None = None, limit: int = 20) -> list[dict]:
-    """What a vendor sees: size, provider and pin code area, never the household."""
+    """What a vendor sees: size, provider and pin code area, never the household.
+
+    The website runs a sample comparison when someone opens Get quotes. Those samples stay out of
+    a vendor's list while real requests exist; with none, the latest sample shows, labelled, so the
+    vendor side can still be tried."""
     since = int(time.time()) - TTL_DAYS * 86400
-    out = []
+    real, samples = [], []
     for row in reversed(_query(f"OPEN#{state}", since=since)):
         req = _get(f"REQ#{row['id']}", "META")
         if not req or req["status"] != "open":
             continue
+        # requests from before the flag existed were the website's automatic samples
+        sample = req.get("sample", not req.get("wa_id"))
+        if sample and samples:
+            continue
         quoted = {q["vendor_id"] for q in _query(f"REQ#{req['id']}", prefix="QUOTE#")}
-        out.append({"id": req["id"], "kw": req["kw"], "state": req["state"], "discom": req["discom"],
-                    "area": (req["pincode"][:3] + "xxx") if req["pincode"] else "", "created": req["created"],
-                    "quotes": len(quoted), "you_quoted": bool(vendor_id and vendor_id in quoted),
-                    # the group size helps a vendor price; the exact PIN code stays with the household
-                    "group": {k: v for k, v in (req.get("group") or {}).items() if k != "pincode"} or None})
-        if len(out) >= limit:
+        (samples if sample else real).append({
+            "id": req["id"], "kw": req["kw"], "state": req["state"], "discom": req["discom"],
+            "area": (req["pincode"][:3] + "xxx") if req["pincode"] else "", "created": req["created"],
+            "quotes": len(quoted), "you_quoted": bool(vendor_id and vendor_id in quoted), "sample": bool(sample),
+            # the group size helps a vendor price; the exact PIN code stays with the household
+            "group": {k: v for k, v in (req.get("group") or {}).items() if k != "pincode"} or None})
+        if len(real) >= limit:
             break
-    return out
+    return real or samples
 
 
 def submit_quote(rid: str, vendor_name: str, raw: dict) -> dict:

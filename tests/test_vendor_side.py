@@ -53,3 +53,26 @@ def test_vendors_cannot_impersonate_demo_vendors_or_send_broken_quotes():
     assert api("POST", f"/market/requests/{rid}/quotes", {"vendor_name": "Real Co", "quote": {"system_kw": 3}})[0] == 400
     assert api("POST", f"/market/requests/{rid}/quotes", {"vendor_name": "Real Co"})[0] == 400
     assert api("POST", "/market/requests/nope/quotes", {"vendor_name": "Real Co", "quote": GOOD})[0] == 404
+
+
+def test_website_samples_stay_out_of_the_way_of_real_requests():
+    for _ in range(3):
+        api("POST", "/market/requests", {"state": "UP", "kw": 3, "sample": True})
+    data = api("GET", "/market/open", params={"state": "UP"})[1]["requests"]
+    assert len(data) == 1 and data[0]["sample"]  # nothing real yet: one labelled sample to try
+    rid = api("POST", "/market/requests", {"state": "UP", "kw": 4, "pincode": "226010"})[1]["request"]["id"]
+    data = api("GET", "/market/open", params={"state": "UP"})[1]["requests"]
+    assert [r["id"] for r in data] == [rid] and not data[0]["sample"]
+
+
+def test_requests_stored_before_the_flag_count_as_samples_unless_from_whatsapp():
+    def legacy(wa_id):
+        rid = market.create_request({"state": "HR", "kw": 3}, wa_id=wa_id)["request"]["id"]
+        meta = json.loads(market._mem[f"REQ#{rid}"]["META"]["data"])
+        del meta["sample"]
+        market._mem[f"REQ#{rid}"]["META"]["data"] = json.dumps(meta)
+        return rid
+    legacy(None)
+    rid = legacy("whatsapp:+910000000000")
+    rows = market.open_requests("HR")
+    assert [r["id"] for r in rows] == [rid] and not rows[0]["sample"]

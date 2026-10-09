@@ -326,7 +326,12 @@
           <button class="chip" type="button" data-scope="" aria-pressed="true" data-t="fAll"></button>
           <button class="chip" type="button" data-scope="DL" aria-pressed="false">Delhi</button>
           <button class="chip" type="button" data-scope="UP" aria-pressed="false">Uttar Pradesh</button>
+          <button class="chip" type="button" data-scope="MH" aria-pressed="false">Maharashtra</button>
+          <button class="chip" type="button" data-scope="GJ" aria-pressed="false">Gujarat</button>
+          <button class="chip" type="button" data-scope="RJ" aria-pressed="false">Rajasthan</button>
           <button class="chip" type="button" data-scope="HR" aria-pressed="false">Haryana</button>
+          <button class="chip" type="button" data-scope="KL" aria-pressed="false">Kerala</button>
+          <button class="chip" type="button" data-scope="AS" aria-pressed="false">Assam</button>
         </div>
         <ul class="facts" id="facts"><li class="fact-empty" data-t="factsLoading"></li></ul>
       </div>
@@ -385,7 +390,7 @@
               <text x="327" y="152">API Gateway</text><text x="327" y="171" class="d-sub">HTTP API</text>
               <text x="559" y="152" class="d-on">AWS Lambda</text><text x="559" y="171" class="d-sub d-on">webhook, then worker</text>
               <text x="833" y="76">Amazon Bedrock</text><text x="833" y="95" class="d-sub">Nova 2 Lite reads each bill 3 times</text>
-              <text x="833" y="152">Amazon DynamoDB</text><text x="833" y="171" class="d-sub">tariffs, prices, sessions, sun data</text>
+              <text x="833" y="152">Amazon DynamoDB</text><text x="833" y="171" class="d-sub">tariffs, quotes, sessions, serials</text>
               <text x="833" y="228">Transcribe and Polly</text><text x="833" y="247" class="d-sub">Hindi voice notes, kept in S3 a day</text>
               <text x="332" y="220" class="d-label">answer on WhatsApp in about 10 seconds</text>
               <text x="105" y="362">You reply APPLY</text><text x="105" y="381" class="d-sub">on WhatsApp</text>
@@ -400,11 +405,11 @@
           </svg>
         </div>
         <ul class="services">
-          <li><b>Amazon Bedrock (Nova 2 Lite)</b> reads bills, quotes and inverter screens, and answers questions using the facts on the rates and rules page.</li>
+          <li><b>Amazon Bedrock (Nova 2 Lite)</b> reads bills, quotes, inverter screens and panel labels, and answers questions using the facts on the rates and rules page.</li>
           <li><b>AWS Step Functions</b> pauses on a task token at each application step. If a step runs long, the timeout sends a reminder.</li>
           <li><b>Amazon EventBridge Scheduler</b> re-reads the official sources every week and flags any fact whose page has changed.</li>
           <li><b>Amazon Transcribe and Polly</b> handle Hindi voice notes in both directions. <b>S3</b> keeps the audio for one day.</li>
-          <li><b>DynamoDB</b> stores learned tariffs, quote prices, facts, sessions and counters. <b>Lambda and API Gateway</b> serve WhatsApp and this site, which is hosted on <b>Amplify</b>.</li>
+          <li><b>DynamoDB</b> stores learned tariffs, quote prices, facts, sessions and counters, plus the quote marketplace (expired with TTL) and panel serials, kept only as hashes and written with a conditional put so a repeat is caught. <b>Lambda and API Gateway</b> serve WhatsApp and this site, which is hosted on <b>Amplify</b>.</li>
         </ul>
       </div>
     </div>
@@ -439,6 +444,10 @@
         <div class="tool-card">
           <h2 data-t="qOwnTitle"></h2>
           <p class="sec-lede" data-t="qOwnSub"></p>
+          <ul class="checks">
+            <li data-t="qChk1"></li><li data-t="qChk2"></li><li data-t="qChk3"></li>
+            <li data-t="qChk4"></li><li data-t="qChk5"></li><li data-t="qChk6"></li>
+          </ul>
           <div class="use-actions">
             <label class="btn btn-primary" for="quote-file" data-t="quoteUpload"></label>
             <input id="quote-file" class="sr-only" type="file" accept="image/*,application/pdf">

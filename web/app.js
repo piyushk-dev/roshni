@@ -163,7 +163,7 @@ Object.assign(T.en, {
   l2: "Quotes teach prices", l2d: "Every quote checked adds a price per kW for its state. The fair range comes from real local quotes.",
   l3: "People confirm facts", l3d: "Confirm what's still true, or report a change with evidence. Three reports flag a fact for review.",
   l4: "Watchers check sources", l4d: "Every week, official pages are re-read. If one changes, its facts are marked for review.",
-  fAll: "All India", factsLoading: "Loading the latest facts…", factsError: "Couldn't load the facts right now.",
+  fAll: "All", factsLoading: "Loading the latest facts…", factsError: "Couldn't load the facts right now.",
   factStill: "Still true", factChange: "Report a change", factThanks: "Thanks, confirmed.",
   factNew: "What is it now?", factEvidence: "Evidence: a link, or where you saw it", factSend: "Send report",
   factSent: "Thanks. Three matching reports flag it for review.",
@@ -171,7 +171,7 @@ Object.assign(T.en, {
   factReports: (n) => `${n} change report${n === 1 ? "" : "s"}`,
   factSource: "source",
   status: { current: "current", reported_changed: "change reported", source_changed: "source page changed" },
-  scope: { IN: "All India", DL: "Delhi", UP: "Uttar Pradesh", HR: "Haryana" },
+  scope: { IN: "All India", DL: "Delhi", UP: "Uttar Pradesh", HR: "Haryana", RJ: "Rajasthan", AS: "Assam", MH: "Maharashtra", GJ: "Gujarat", KL: "Kerala" },
   waTitle: "Use it on WhatsApp",
   waSub: "Send a bill or quote photo, in Hindi or English. During the hackathon the bot runs on Twilio's WhatsApp sandbox, so message the number below with the join code first.",
   waJoin: (code) => `Send “${code}” first`,
@@ -220,7 +220,7 @@ Object.assign(T.hi, {
   l2: "कोटेशन से कीमतें", l2d: "हर जाँचा गया कोटेशन उस राज्य की प्रति kW कीमत जोड़ता है। सही रेंज असली स्थानीय कोटेशन से बनती है।",
   l3: "लोग पुष्टि करते हैं", l3d: "जो सही है उसकी पुष्टि करें, या सबूत के साथ बदलाव बताएँ। तीन रिपोर्ट पर जानकारी जाँच के लिए चिह्नित होती है।",
   l4: "स्रोतों पर नज़र", l4d: "हर हफ़्ते सरकारी पेज दोबारा पढ़े जाते हैं। कोई बदले तो उससे जुड़ी जानकारी जाँच के लिए चिह्नित होती है।",
-  fAll: "पूरा भारत", factsLoading: "ताज़ा जानकारी आ रही है…", factsError: "अभी जानकारी लोड नहीं हो सकी।",
+  fAll: "सभी", factsLoading: "ताज़ा जानकारी आ रही है…", factsError: "अभी जानकारी लोड नहीं हो सकी।",
   factStill: "अब भी सही", factChange: "बदलाव बताएँ", factThanks: "धन्यवाद, पुष्टि हो गई।",
   factNew: "अब क्या है?", factEvidence: "सबूत: लिंक, या कहाँ देखा", factSend: "रिपोर्ट भेजें",
   factSent: "धन्यवाद। तीन मिलती-जुलती रिपोर्ट पर इसे जाँच के लिए चिह्नित किया जाता है।",
@@ -228,7 +228,7 @@ Object.assign(T.hi, {
   factReports: (n) => `${n} बदलाव रिपोर्ट`,
   factSource: "स्रोत",
   status: { current: "मौजूदा", reported_changed: "बदलाव रिपोर्ट", source_changed: "स्रोत पेज बदला" },
-  scope: { IN: "पूरा भारत", DL: "दिल्ली", UP: "उत्तर प्रदेश", HR: "हरियाणा" },
+  scope: { IN: "पूरा भारत", DL: "दिल्ली", UP: "उत्तर प्रदेश", HR: "हरियाणा", RJ: "राजस्थान", AS: "असम", MH: "महाराष्ट्र", GJ: "गुजरात", KL: "केरल" },
   waTitle: "WhatsApp पर इस्तेमाल करें",
   waSub: "हिंदी या अंग्रेज़ी में बिल या कोटेशन की फोटो भेजें। हैकथॉन के दौरान बॉट Twilio के WhatsApp सैंडबॉक्स पर चलता है, इसलिए पहले नीचे दिए नंबर पर जॉइन कोड भेजें।",
   waJoin: (code) => `पहले “${code}” भेजें`,
@@ -477,6 +477,7 @@ const hundreds = (x) => rupees(Math.round(x / 100) * 100);
 function applyLang() {
   document.documentElement.lang = state.lang;
   document.querySelectorAll("[data-t]").forEach((el) => { el.textContent = t(el.dataset.t); });
+  document.querySelectorAll(".filters .chip[data-scope]").forEach((b) => { if (b.dataset.scope) b.textContent = t("scope")[b.dataset.scope]; });
   $("lang").textContent = t("switchTo");
   if (state.lat !== null) $("locate").textContent = t("locationOn");
   if (state.last) render(state.last);
