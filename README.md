@@ -24,7 +24,7 @@ Delhi's newest deal goes unnoticed too. Homes using up to 400 units a month can 
 
 | Stage | What Surya Saathi does |
 |---|---|
-| **Decide** | **Bill photo → right size, cost after subsidy, EMI, payback, CO₂**, or an honest "skip". Months missing from the bill are estimated from local temperature. A smaller system wins when it gets within 10% of the best 25-year value. Delhi's ₹0-upfront and state top-up are flagged when they apply |
+| **Decide** | **Bill photo → right size, cost after subsidy, EMI, payback, CO₂**, or an honest "skip". Not sure the roof fits? **Trace it on Amazon Location's satellite map**: the usable area and location go into the estimate. Months missing from the bill are estimated from local temperature. A smaller system wins when it gets within 10% of the best 25-year value. Delhi's ₹0-upfront and state top-up are flagged when they apply |
 | **Save now** | **Bill doctor**: flags sanctioned load far above your actual peak (₹5,500/yr on our test bill), estimated readings, one-off charges, and missing export credit |
 | **Know your help** | **Schemes**: the central subsidy for all 36 states and UTs (higher in hill and North-East states), each state's top-up shown separately with its conditions and source (Delhi: ₹26,000/kW up to ₹78,000, from solar.delhi.gov.in), the 5.75% collateral-free loan, and a **budget planner** for the months of EMI before the subsidy arrives |
 | **Choose** | **Get quotes**: one request; every vendor's quote is checked by the same rules and compared by what you pay **after subsidy**, so a cheap quote with imported panels shows up as the most expensive. Requests from one PIN code pool into a group price at five homes. The **quote checker** reads quotes you already have, and the **scam check** flags forwarded offers (fees, look-alike portals, OTP requests, subsidy over the cap, "free solar", pressure to decide today). On the **vendor side**, installers see open requests by area (never the full PIN) and send a quote that the same rules check before it goes out |
@@ -59,6 +59,7 @@ flowchart LR
   WORK & API --> DDB[(DynamoDB<br/>knowledge · sessions · sunlight · marketplace)]
   API --> AQ[Open-Meteo<br/>dust forecast]
   WORK & API --> LOC[Amazon Location<br/>places]
+  WEB --> TILES[Amazon Location<br/>satellite tiles]
   SCH[EventBridge Scheduler<br/>weekly] --> WATCH[Lambda<br/>watcher] --> DDB
   API --> SUN[PVGIS + NASA POWER]
 ```
@@ -88,7 +89,7 @@ flowchart LR
 python -m venv .venv && .venv/Scripts/pip install pytest boto3 aws-sam-cli
 .venv/Scripts/python -m pytest            # 205 tests, offline
 sam build && sam deploy --guided          # the whole backend
-python scripts/deploy_web.py              # the website, to Amplify
+python scripts/deploy_web.py              # the website, to Amplify (--config-only just writes web/config.js)
 ```
 
 For a local review without cloud credentials:

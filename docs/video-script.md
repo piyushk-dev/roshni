@@ -30,6 +30,10 @@ Judges see only this video, and a feature that isn't shown doesn't count. Show A
 | 2:30–2:48 | Rates & rules board, then the DynamoDB table with TARIFF# and PRICE# items; then the architecture diagram | "Rates change every month, so the knowledge updates itself: bills teach tariffs, quotes teach prices, people confirm facts, and EventBridge Scheduler re-reads official pages weekly. All serverless on AWS, deployed with SAM in Mumbai." |
 | 2:48–3:00 | Home page hero + URL | "Surya Saathi. From the bill to the subsidy, and after." |
 
+## Optional shot (5 seconds)
+
+Home page, "Add your location or roof size", then "Measure it on the map": search the area, tap the roof's four corners, "Use 650 sq ft". Voiceover: "Not sure the roof fits? Trace it on Amazon Location's satellite map."
+
 ## If time runs short
 
 Cut the voice note first, then the scam check. Keep the bill, the quote comparison and the journey: those three carry the idea.

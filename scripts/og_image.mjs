@@ -4,9 +4,10 @@
 // and downscale og/1-home-1600.png to 1200x630. og_inject.js hides the page chrome for the capture only.
 // usage: node og_image.mjs <out-dir> <width> <height> <wait-ms> <url> [<url> ...]
 import { spawn } from "node:child_process";
-import { mkdtempSync, writeFileSync, mkdirSync } from "node:fs";
+import { mkdtempSync, writeFileSync, mkdirSync, rmSync } from "node:fs";
+import { execFileSync } from "node:child_process";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { basename, join } from "node:path";
 
 const [outDir, w, h, wait, ...urls] = process.argv.slice(2);
 const W = +w, H = +h, WAIT = +wait;
@@ -22,7 +23,7 @@ let version;
 for (let i = 0; i < 60 && !version; i++) {
   try { version = await (await fetch(`http://127.0.0.1:${port}/json/version`)).json(); } catch { await sleep(250); }
 }
-if (!version) { console.error("edge did not start"); proc.kill(); process.exit(1); }
+if (!version) { console.error("edge did not start"); proc.kill(); rmSync(profile, { recursive: true, force: true }); process.exit(1); }
 
 let n = 0;
 for (const url of urls) {
@@ -55,4 +56,16 @@ for (const url of urls) {
   console.log(file, Math.ceil(size.height));
   ws.close();
 }
-proc.kill();
+// Edge relaunches itself, so its browser processes aren't children of the one spawned here, and each
+// run's throwaway profile is about 170 MB. Ask the browser to close, stop anything still running from this
+// profile, then remove the profile.
+try {
+  const b = new WebSocket(version.webSocketDebuggerUrl);
+  await new Promise((resolve, reject) => { b.onopen = resolve; b.onerror = reject; });
+  b.send(JSON.stringify({ id: 1, method: "Browser.close" }));
+  await sleep(1500);
+} catch { proc.kill(); }
+const leftover = `Get-CimInstance Win32_Process -Filter "Name = 'msedge.exe'" | Where-Object { $_.CommandLine -like '*${basename(profile)}*' } | ForEach-Object { Stop-Process -Id $_.ProcessId -Force }`;
+try { execFileSync("powershell", ["-NoProfile", "-Command", leftover], { stdio: "ignore" }); } catch {}
+await sleep(500);
+try { rmSync(profile, { recursive: true, force: true, maxRetries: 10, retryDelay: 300 }); } catch (e) { console.error("could not remove", profile, e.code); }

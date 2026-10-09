@@ -106,6 +106,14 @@ def test_states_are_found_by_name_code_or_hindi_without_the_geocoder(monkeypatch
     assert places.find("Atlantis") is None
 
 
+def test_places_route_finds_a_place_or_says_it_cannot():
+    get = lambda q: handler.lambda_handler({"requestContext": {"http": {"method": "GET"}}, "rawPath": "/places",
+                                            "queryStringParameters": {"q": q}}, None)
+    r = get("Lucknow")
+    assert r["statusCode"] == 200 and json.loads(r["body"])["state"] == "UP"
+    assert get("Atlantis")["statusCode"] == 404
+
+
 def test_ask_route_says_what_it_used(monkeypatch):
     monkeypatch.setattr(qa, "answer_full", lambda q, user, lang: {"text": "₹78,000.", "used": [{"en": "the scheme list for Delhi", "hi": "दिल्ली की योजना सूची"}]})
     r = handler.lambda_handler({"requestContext": {"http": {"method": "POST"}}, "rawPath": "/ask",

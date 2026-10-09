@@ -7,7 +7,7 @@ import json
 from dataclasses import asdict
 from importlib import resources
 
-from . import doctor, knowledge, market, panel, pipeline, product, quote, scam
+from . import doctor, knowledge, market, panel, pipeline, places, product, quote, scam
 from .format import BillProblem, bonus_text, explain, message
 
 
@@ -79,6 +79,9 @@ def _handle(event: dict, context) -> dict:
         flags = panel.check(fields, float(expect) if expect not in (None, "") else None, str(body.get("owner") or "")[:64] or None,
                             sample=bool(body.get("sample")))
         return _response(200, {"fields": fields, "flags": flags, "views": {code: panel.render(fields, flags, code) for code in ("en", "hi")}})
+    if route == "GET /places":
+        found = places.find(str(params.get("q", ""))[:120])
+        return _response(200, found) if found else _response(404, {"error": "couldn't find that place in India"})
     if route == "GET /market/open":
         return _response(200, {"requests": market.open_requests(product.state_code(params.get("state", "DL")),
                                                                  knowledge.slug(params["vendor"]) if params.get("vendor") else None)})

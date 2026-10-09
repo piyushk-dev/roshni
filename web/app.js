@@ -1,6 +1,6 @@
 "use strict";
 
-const API = window.SURYA_API;
+const API = window.SURYA_API || "/api";  // config.js is written at deploy time; a local preview answers at /api
 const MAX_EDGE_PX = 2000; // keeps bill text legible while staying far under the 6 MB Lambda payload limit
 const SAMPLE = {
   discom: "BRPL",
@@ -505,6 +505,7 @@ function applyLang() {
   if (state.lastQuote) renderQuote(state.lastQuote);
   if (typeof renderSteps === "function") { renderSteps(); renderFacts(); renderWhatsApp(); renderSociety(); renderAskExamples(); renderTimes(); }
   if (window.renderProduct) window.renderProduct();
+  if (window.renderRoof) window.renderRoof();
 }
 
 function show(id) {

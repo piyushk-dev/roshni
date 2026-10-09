@@ -17,7 +17,7 @@ Surya Saathi is a WhatsApp-first companion for that whole path. A family sends a
 Everything is serverless in ap-south-1, defined in one AWS SAM template:
 
 - **Amazon Bedrock (Nova 2 Lite)** reads bills, quotes, inverter screens and panel labels. Questions go through a tool-use loop over the product's own calculators.
-- **Amazon Location Service** finds the places people name in a question, and the state they're in.
+- **Amazon Location Service** finds the places people name in a question, and the state they're in. Its satellite tiles let a household trace its roof on the website.
 - **AWS Step Functions** runs each household's application as a long-lived workflow. Every stage is a task that waits on a task token until the family replies DONE. A stage that runs past its usual length times out into a nudge, then waits again.
 - **Amazon EventBridge Scheduler** runs a weekly watcher over official sources.
 - **Amazon Transcribe and Amazon Polly** handle Hindi voice notes in and out.

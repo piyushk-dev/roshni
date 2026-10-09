@@ -70,6 +70,7 @@
             <summary data-t="tune"></summary>
             <div class="extras">
               <button id="locate" class="chip" type="button" data-t="location"></button>
+              <button id="roof-map" class="chip" type="button" data-t="roofMap"></button>
               <label class="roof" for="roof">
                 <span data-t="roof"></span>
                 <input id="roof" type="number" inputmode="numeric" min="50" step="10" placeholder="—">
@@ -416,7 +417,7 @@
               <text x="559" y="178" class="d-on">AWS Lambda</text><text x="559" y="197" class="d-sub d-on">webhook, then worker</text>
               <text x="833" y="70">Amazon Bedrock</text><text x="833" y="89" class="d-sub">Nova 2 Lite reads bills, calls the tools</text>
               <text x="833" y="142">Amazon DynamoDB</text><text x="833" y="161" class="d-sub">tariffs, quotes, sessions, serials</text>
-              <text x="833" y="214">Amazon Location</text><text x="833" y="233" class="d-sub">finds the places people ask about</text>
+              <text x="833" y="214">Amazon Location</text><text x="833" y="233" class="d-sub">places, and satellite tiles for roofs</text>
               <text x="833" y="286">Transcribe and Polly</text><text x="833" y="305" class="d-sub">Hindi voice notes, kept in S3 a day</text>
               <text x="332" y="246" class="d-label">answer on WhatsApp in about 10 seconds</text>
               <text x="105" y="408">You send Apply</text><text x="105" y="427" class="d-sub">on WhatsApp</text>
@@ -432,7 +433,7 @@
         </div>
         <ul class="services">
           <li><b>Amazon Bedrock (Nova 2 Lite)</b> reads bills, quotes, inverter screens and panel labels. Questions go through a tool-use loop: the model calls this site's own scheme list, estimate, scam check, dust forecast and application status, and the answer says which ones it used.</li>
-          <li><b>Amazon Location Service</b> turns the places people name, like "Saket, Delhi" or "Lucknow", into a state and coordinates, for the right schemes and the local dust forecast.</li>
+          <li><b>Amazon Location Service</b> turns the places people name, like "Saket, Delhi" or "Lucknow", into a state and coordinates, for the right schemes and the local dust forecast. Its satellite tiles let a household trace its roof on the map; the API key can only fetch map tiles, and only for this site.</li>
           <li><b>AWS Step Functions</b> pauses on a task token at each application step. If a step runs long, the timeout sends a reminder.</li>
           <li><b>Amazon EventBridge Scheduler</b> re-reads the official sources every week and flags any fact whose page has changed.</li>
           <li><b>Amazon Transcribe and Polly</b> handle Hindi voice notes in both directions. <b>S3</b> keeps the audio for one day.</li>
@@ -740,9 +741,33 @@
     </span>
   </div>
 </footer>
+<dialog class="roofer" id="roofer" aria-labelledby="rf-title">
+  <div class="rf-top">
+    <h2 id="rf-title" data-t="rfTitle"></h2>
+    <form class="rf-search" id="rf-search" role="search">
+      <input id="rf-q" type="search" autocomplete="off" enterkeyhint="search" aria-labelledby="rf-title">
+      <button class="btn btn-line btn-sm" type="submit" data-t="rfFind"></button>
+    </form>
+    <button class="rf-close" type="button" id="rf-close" data-t="rfClose"></button>
+  </div>
+  <div class="rf-map" id="rf-map"></div>
+  <div class="rf-bottom">
+    <div class="rf-text">
+      <p class="rf-help" id="rf-help"></p>
+      <p class="rf-read" id="rf-read" aria-live="polite"></p>
+    </div>
+    <div class="rf-actions">
+      <button class="link-btn" type="button" id="rf-undo" data-t="rfUndo"></button>
+      <button class="link-btn" type="button" id="rf-clear" data-t="rfClear"></button>
+      <button class="btn btn-primary" type="button" id="rf-use" disabled></button>
+    </div>
+  </div>
+</dialog>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
 <script src="scene.js"></script>
 <script src="app.js"></script>
 <script src="tools.js"></script>
+<script src="roof.js"></script>
 </body>
 </html>

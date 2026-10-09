@@ -1,11 +1,13 @@
 """Publish web/ to the stack's Amplify Hosting app.
 
-    python scripts/deploy_web.py
+    python scripts/deploy_web.py                 # write web/config.js from the stack, then publish
+    python scripts/deploy_web.py --config-only   # only write web/config.js, for a local preview
 """
 
 import io
 import json
 import os
+import sys
 import time
 import urllib.request
 import zipfile
@@ -24,9 +26,18 @@ outputs = {
 wa = {"number": "+1 415 523 8886", "join": os.environ.get("WA_JOIN", "")}
 # local previews (scripts/serve_local.py) answer the API at /api; everywhere else uses the deployed one
 api = json.dumps(outputs["ApiUrl"])
+# the roof tracer's map key: public by design, limited to map tiles from this site's addresses
+maps = {"region": REGION, "key": ""}
+if outputs.get("MapKeyName"):
+    maps["key"] = boto3.client("location", region_name=REGION).describe_key(KeyName=outputs["MapKeyName"])["Key"]
 (WEB / "config.js").write_text(
     f'window.SURYA_API = ["localhost", "127.0.0.1"].includes(location.hostname) ? "/api" : {api};\n'
-    f"window.SURYA_WA = {json.dumps(wa)};\n", encoding="utf-8")
+    f"window.SURYA_WA = {json.dumps(wa)};\n"
+    f"window.SURYA_MAPS = {json.dumps(maps)};\n", encoding="utf-8")
+
+if "--config-only" in sys.argv:
+    print("wrote", WEB / "config.js")
+    sys.exit(0)
 
 archive = io.BytesIO()
 with zipfile.ZipFile(archive, "w", zipfile.ZIP_DEFLATED) as z:

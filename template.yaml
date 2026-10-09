@@ -145,6 +145,9 @@ Resources:
         MarketOpen:
           Type: HttpApi
           Properties: {ApiId: !Ref Api, Path: /market/open, Method: GET}
+        Places:
+          Type: HttpApi
+          Properties: {ApiId: !Ref Api, Path: /places, Method: GET}
         MarketSubmit:
           Type: HttpApi
           Properties: {ApiId: !Ref Api, Path: "/market/requests/{id}/quotes", Method: POST}
@@ -374,6 +377,22 @@ Resources:
       LogGroupName: !Sub /aws/lambda/${WatcherFunction}
       RetentionInDays: 14
 
+  # Map tiles for the website's roof tracer. The key is public by design: it can only fetch map
+  # tiles and styles, and only from this site's addresses. deploy_web.py reads it into config.js.
+  MapKey:
+    Type: AWS::Location::APIKey
+    Properties:
+      KeyName: surya-saathi-maps
+      Description: Satellite map tiles for tracing a roof on the Surya Saathi website
+      NoExpiry: true
+      Restrictions:
+        AllowActions: ["geo-maps:*"]
+        AllowResources: [!Sub "arn:aws:geo-maps:${AWS::Region}::provider/default"]
+        AllowReferers:
+          - !Sub https://main.${WebApp.DefaultDomain}/*
+          - http://localhost:8766/*
+          - http://127.0.0.1:8766/*
+
   # Static site in web/, uploaded by scripts/deploy_web.py (manual deploys, no repo connection)
   WebApp:
     Type: AWS::Amplify::App
@@ -395,5 +414,7 @@ Outputs:
     Value: !Sub https://main.${WebApp.DefaultDomain}
   ApiUrl:
     Value: !Sub https://${Api}.execute-api.${AWS::Region}.amazonaws.com
+  MapKeyName:
+    Value: !Ref MapKey
   WhatsAppCallbackUrl:
     Value: !Sub https://${Api}.execute-api.${AWS::Region}.amazonaws.com/whatsapp
