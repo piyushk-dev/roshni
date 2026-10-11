@@ -14,7 +14,7 @@
   const copy = document.querySelector(".hero-copy");
   const brand = document.createElement("p");
   brand.className = "og-brand";
-  brand.innerHTML = document.querySelector(".brand-mark").outerHTML + "<span>Surya Saathi</span>";
+  brand.innerHTML = document.querySelector(".brand-mark").outerHTML + "<span>Roshni</span>";
   copy.prepend(brand);
   document.querySelector(".hero .lede").textContent = "Send a photo of your electricity bill on WhatsApp. Get the right solar size, your PM Surya Ghar subsidy, the EMI and the payback, in Hindi or English.";
   window.dispatchEvent(new Event("resize"));

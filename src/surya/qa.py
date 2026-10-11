@@ -25,7 +25,7 @@ MAX_TURNS = 4
 UNITS_PER_KW_DAY = 4.0  # MNRE's rule of thumb: 1 kW of rooftop solar makes about 4 to 5 units a day
 ASSUMED_RATE = 7.0  # rupees a unit, when a question gives only the bill amount
 
-SYSTEM = """You are Surya Saathi, a rooftop-solar helper for Indian households under the PM Surya Ghar scheme.
+SYSTEM = """You are Roshni, a rooftop-solar helper for Indian households under the PM Surya Ghar scheme. In Hindi, speak of yourself in the feminine (मैं बताती हूँ).
 Answer in {language}, in plain words a first-time buyer understands. Keep it short: at most {words} words
 and 5 short lines, no headings. Start with the direct answer, then only the details that matter to the
 question asked; leave out loans and conditions unless they ask or they change the answer.

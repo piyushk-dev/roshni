@@ -1,4 +1,4 @@
-# Surya Saathi: product research and decisions
+# Roshni: product research and decisions
 
 Research conducted 8 October 2026, including a second product review. Implementation branch: `codex/product-expansion`, based on `4e92684`. The Desktop `main` checkout is separate.
 
@@ -23,7 +23,7 @@ Reddit is qualitative discovery. These posts are self-reported, may have missing
 
 ## Enterprise products: what to learn and what to add
 
-| Product | Published capability | Implication for Surya Saathi |
+| Product | Published capability | Implication for Roshni |
 |---|---|---|
 | [SolarSquare GoodZero](https://www.solarsquare.in/know-more-solar/) | Monitoring, maintenance and a savings proposition. | Promised versus actual generation is a familiar customer workflow. Extend it into portable evidence that works across installers. |
 | [SolarSquare Blue maintenance agreement](https://www.solarsquare.in/blue-tnc/) | Detailed eligibility, visits, service and exclusion terms, including third-party installations. | “Five years maintenance” is not enough information. Ask which agreement, number of visits, response commitment and exclusions apply. |

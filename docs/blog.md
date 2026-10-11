@@ -1,4 +1,4 @@
-# Is rooftop solar worth it for my home? Building Surya Saathi, a WhatsApp solar companion, on AWS
+# Is rooftop solar worth it for my home? Building Roshni, a WhatsApp solar companion, on AWS
 
 *A family sends a photo of their electricity bill on WhatsApp. Amazon Bedrock reads it three times in parallel, a Lambda works out the size, subsidy, EMI and payback, and the same companion checks the vendor's quote, walks the application, checks the panels and looks after them for 25 years.*
 
@@ -10,7 +10,7 @@ Three conversations I wanted this to handle well:
 - **A vendor quote for ₹2,25,000** that promises ₹94,800 of subsidy. The scheme's maximum for 3 kW is ₹78,000, and the panels in the quote are imported, which means no subsidy at all. Signing it would cost the family ₹78,000 they were counting on.
 - **Panels that go quiet at noon on the sunniest day of the month.** Nothing is broken. Exports push the street's voltage past the inverter's cut-off. The owner needs to know whose job that is (the DISCOM's) and what evidence to send.
 
-Surya Saathi is built for all three, in Hindi and English, on WhatsApp where families already are.
+Roshni is built for all three, in Hindi and English, on WhatsApp where families already are.
 
 ## The problem isn't the subsidy. It's not knowing who to trust.
 
@@ -18,7 +18,7 @@ India wants one crore homes on rooftop solar under PM Surya Ghar by March 2027. 
 
 After installation the trouble changes shape. On owner forums like [Team-BHP](https://www.team-bhp.com/forum/shifting-gears/234323-solar-power-turning-my-roof-power-plant.html), the same stories repeat: inverters on standby at midday, monitoring apps that go blank, installers and inverter companies blaming each other, and bills that don't show the units sent to the grid. In July 2026 MNRE [acknowledged complaints](https://www.energetica-india.net/news/mnre-flags-incorrect-rooftop-solar-billing-by-discoms-refers-complaints-for-resolution) about wrong bills after net metering, and in August it deactivated 66 vendors over pending applications.
 
-So Surya Saathi isn't a calculator. It's one companion for the whole path:
+So Roshni isn't a calculator. It's one companion for the whole path:
 
 1. **Estimate** from a bill photo: the right size, the cost after subsidy, the EMI, the payback, or an honest "skip it".
 2. **Check a quote** before signing, and compare quotes by what the family actually pays after subsidy.
@@ -30,7 +30,7 @@ So Surya Saathi isn't a calculator. It's one companion for the whole path:
 
 Everything runs serverless in the Mumbai region (ap-south-1) and deploys from one AWS SAM template.
 
-| Service | What it does in Surya Saathi | Why this one |
+| Service | What it does in Roshni | Why this one |
 |---|---|---|
 | **Amazon Bedrock (Nova 2 Lite)** | Reads bills, quotes, inverter screens and panel labels with tool schemas, and answers questions through a tool-use loop | Vision and tool use in one model, inside the region, cheap enough to read every bill three times |
 | **AWS Lambda** | The calculator, the bot logic and the simulated inverter cloud | Bursty traffic with long quiet stretches |
@@ -78,7 +78,7 @@ The result page shows these steps with the times the API measured, so the AWS wo
 
 ## After installation, an app for the panels
 
-Once the panels are up, Surya Saathi becomes "My solar", an app installable on a phone. Real inverter clouds need each brand's access, so the demo runs a **simulated inverter cloud on Lambda**. It isn't random. Output follows [Open-Meteo](https://open-meteo.com)'s sunlight, temperature and rain for the home's own location over the past month and the next three days, less dust that builds faster on dusty days and washes off in rain. Every screen says it's simulated.
+Once the panels are up, Roshni becomes "My solar", an app installable on a phone. Real inverter clouds need each brand's access, so the demo runs a **simulated inverter cloud on Lambda**. It isn't random. Output follows [Open-Meteo](https://open-meteo.com)'s sunlight, temperature and rain for the home's own location over the past month and the next three days, less dust that builds faster on dusty days and washes off in rain. Every screen says it's simulated.
 
 What owners told forums and regulators shaped what it shows:
 
@@ -110,10 +110,10 @@ What owners told forums and regulators shaped what it shows:
 
 ## Try it
 
-- **Demo video:** [Surya Saathi in 3 minutes](https://youtu.be/REPLACE_WITH_VIDEO_ID)
+- **Demo video:** [Roshni in 3 minutes](https://youtu.be/REPLACE_WITH_VIDEO_ID)
 - **Website:** https://main.d3frlgja2w8q15.amplifyapp.com (press "See an example" to watch Bedrock read a sample bill)
 - **The app:** https://main.d3frlgja2w8q15.amplifyapp.com/app/
-- **Code:** https://github.com/piyushk-dev/surya-saathi
+- **Code:** https://github.com/piyushk-dev/roshni
 
 ## AI tools used
 

@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Transform: AWS::Serverless-2016-10-31
-Description: Surya Saathi - rooftop solar copilot for PM Surya Ghar households
+Description: Roshni - rooftop solar copilot for PM Surya Ghar households
 
 Parameters:
   BedrockModelId:
@@ -396,7 +396,7 @@ Resources:
     Type: AWS::Location::APIKey
     Properties:
       KeyName: surya-saathi-maps
-      Description: Satellite map tiles for tracing a roof on the Surya Saathi website
+      Description: Satellite map tiles for tracing a roof on the Surya Saathi website  # the old name stays: changing it needs ForceUpdate on a key in use, and no one sees it
       NoExpiry: true
       Restrictions:
         AllowActions: ["geo-maps:*"]

@@ -1,4 +1,4 @@
-"""Surya Saathi: a rooftop-solar copilot for households applying under PM Surya Ghar."""
+"""Roshni: a rooftop-solar copilot for households applying under PM Surya Ghar."""
 
 import json
 from importlib import resources

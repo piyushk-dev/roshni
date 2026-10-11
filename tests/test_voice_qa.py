@@ -27,7 +27,7 @@ def test_typed_questions_get_answers_and_greetings_get_the_welcome(monkeypatch):
     monkeypatch.setattr(qa, "answer", lambda q, user, lang: asked.append((q, lang)) or "Yes, up to ₹2 lakh without collateral.")
     wa = Wa()
     bot.handle(_msg("text", text={"body": "hello"}), {}, wa, None)
-    assert "Surya Saathi" in wa.sent[-1] and not asked
+    assert "Roshni" in wa.sent[-1] and not asked
     bot.handle(_msg("text", text={"body": "Can I get a loan for solar?"}), {"lang": "en"}, wa, None)
     assert asked == [("Can I get a loan for solar?", "en")] and "collateral" in wa.sent[-1]
     bot.handle(_msg("text", text={"body": "क्या लोन मिलेगा?"}), {"lang": "en"}, wa, None)

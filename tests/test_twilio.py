@@ -76,5 +76,5 @@ def test_worker_replies_through_twilio(monkeypatch):
     monkeypatch.setattr(twilio_wa.Client, "send_text", lambda self, to, text: sent.append((self.from_number, to, text)))
     wa_handler.worker({"channel": "twilio", "params": PARAMS}, None)
     assert sent[0][0] == "whatsapp:+14155238886" and sent[0][1] == PARAMS["From"]
-    assert "Surya Saathi" in sent[0][2]
+    assert "Roshni" in sent[0][2]
     assert saved[PARAMS["From"]]["lang"] == "en"

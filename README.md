@@ -1,4 +1,4 @@
-# Surya Saathi ☀️
+# Roshni ☀️
 
 **A rooftop-solar companion for Indian households, from the electricity bill to the subsidy in the bank, and after.** It works on WhatsApp in Hindi and English, by photo, text or voice note.
 
@@ -22,7 +22,7 @@ Delhi's newest deal goes unnoticed too. Homes using up to 400 units a month can 
 
 ## What it does
 
-| Stage | What Surya Saathi does |
+| Stage | What Roshni does |
 |---|---|
 | **Decide** | **Bill photo → right size, cost after subsidy, EMI, payback, CO₂**, or an honest "skip". Not sure the roof fits? **Trace it on Amazon Location's satellite map**: the usable area and location go into the estimate. Months missing from the bill are estimated from local temperature. A smaller system wins when it gets within 10% of the best 25-year value. Delhi's ₹0-upfront and state top-up are flagged when they apply |
 | **Save now** | **Bill doctor**: flags sanctioned load far above your actual peak (₹5,500/yr on our test bill), estimated readings, one-off charges, and missing export credit |
@@ -115,7 +115,7 @@ The local server runs the deterministic tools and uses captured Delhi sunlight f
 - **A typed-bill estimate is rough.** It sizes by the rule of thumb that 1 kW makes about 4 units a day and prices at the typical local rate per kW; a bill photo gives the full estimate.
 - **Ownership checks are evidence aids.** They do not certify equipment safety, DCR compliance, warranty liability or a monetary bill settlement. Generation review is manual and uses a completed month; low output alone does not diagnose dust.
 - **The inverter is simulated.** Real monitoring needs each brand's cloud (Growatt, Sungrow, Solis and others) and the installer's access, so `/plant` stands in. It isn't random: output follows Open-Meteo's sunlight, temperature and rain for the home's own location over the past month and the next three days, less dust that builds faster on dusty days and washes off in rain. Its events are drawn from what owners report, and every screen says it's simulated.
-- **The panel check reads what's printed.** It can't spot a forged label, and the duplicate-serial check only knows serials checked through Surya Saathi. The DCR certificate and MNRE's ALMM list remain the proof.
+- **The panel check reads what's printed.** It can't spot a forged label, and the duplicate-serial check only knows serials checked through Roshni. The DCR certificate and MNRE's ALMM list remain the proof.
 - **Support packs prepare the next conversation.** They distinguish monitoring, generation, billing, documents and maintenance, record dates and list relevant evidence. They do not submit tickets. Elapsed days are dated records, not regulatory deadlines.
 
 ## Built with

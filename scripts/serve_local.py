@@ -75,5 +75,5 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--port", type=int, default=8765)
     args = parser.parse_args()
-    print(f"Surya Saathi branch preview: http://127.0.0.1:{args.port} (local tools + captured Delhi sample sunlight)", flush=True)
+    print(f"Roshni branch preview: http://127.0.0.1:{args.port} (local tools + captured Delhi sample sunlight)", flush=True)
     ThreadingHTTPServer(("127.0.0.1", args.port), Preview).serve_forever()

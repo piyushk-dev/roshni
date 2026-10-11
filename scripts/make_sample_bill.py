@@ -127,6 +127,6 @@ for i, u in enumerate(bars):
     x = 740 + i * 18
     d.rectangle([x, top + 260 - h, x + 12, top + 260], fill=BLUE if i == len(bars) - 1 else "#8fb0d9")
 
-d.text((40, 1452), "Generated for Surya Saathi's demo. No real person, meter or account.", fill=MUTED, font=small)
+d.text((40, 1452), "Generated for Roshni's demo. No real person, meter or account.", fill=MUTED, font=small)
 img.save(OUT, optimize=True)
 print(OUT, round(total, 2))

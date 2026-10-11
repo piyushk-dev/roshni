@@ -36,9 +36,9 @@ def _msg(kind, **body):
 
 def test_first_text_gets_a_welcome_in_the_script_used(wa):
     user = bot.handle(_msg("text", text={"body": "नमस्ते"}), {}, wa, pipeline)
-    assert user["lang"] == "hi" and "सूर्य साथी" in wa.sent[-1]
+    assert user["lang"] == "hi" and "रोशनी" in wa.sent[-1]
     user = bot.handle(_msg("text", text={"body": "hello"}), {}, wa, pipeline)
-    assert user["lang"] == "en" and "Surya Saathi" in wa.sent[-1]
+    assert user["lang"] == "en" and "Roshni" in wa.sent[-1]
     assert wa.read == ["wamid.text", "wamid.text"]
 
 

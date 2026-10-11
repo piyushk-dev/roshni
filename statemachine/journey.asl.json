@@ -1,5 +1,5 @@
 {
-  "Comment": "Surya Saathi application journey: one wait per stage, a nudge whenever a stage runs past its usual length",
+  "Comment": "Roshni application journey: one wait per stage, a nudge whenever a stage runs past its usual length",
   "StartAt": "Wait for stage",
   "States": {
     "Wait for stage": {

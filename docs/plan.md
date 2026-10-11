@@ -1,4 +1,4 @@
-# Surya Saathi: product plan
+# Roshni: product plan
 
 Goal: win Track 3 (Waste and Energy) of WeMakeDevs × AWS Environmental Hacks, Oct 8–11 2026.
 Judges see only the 3-minute video, so every feature below has to be showable.

@@ -73,7 +73,7 @@
       settingsNote: "Saved on this phone only. Location is kept to about a kilometre.", placeNotFound: "Couldn't find that place; kept the old one.",
       connectTitle: "Connect your real inverter",
       connectBody: "Each brand has its own cloud, and reading it needs the installer to share access. Until then, a simulator stands in: it follows the real sunlight, cloud, temperature and dust where you live.",
-      connectWhat: "What connecting needs", connectSteps: "The brand of your inverter, the logger's serial number, and the installer adding Surya Saathi to the plant in the brand's app.",
+      connectWhat: "What connecting needs", connectSteps: "The brand of your inverter, the logger's serial number, and the installer adding Roshni to the plant in the brand's app.",
       down: "Couldn't reach the panels' cloud. Showing the last reading.", now: "Now", noData: "no data",
       unitShort: "units", kwh: (u) => `${u} units`,
     },
@@ -143,7 +143,7 @@
       settingsNote: "सिर्फ़ इसी फ़ोन पर सेव। लोकेशन लगभग एक किलोमीटर तक ही रखी जाती है।", placeNotFound: "यह जगह नहीं मिली; पुरानी रखी गई।",
       connectTitle: "अपना असली इन्वर्टर जोड़ें",
       connectBody: "हर ब्रांड का अपना क्लाउड है, और उसे पढ़ने के लिए इंस्टॉलर को एक्सेस देना होता है। तब तक एक सिम्युलेटर काम करता है: वह आपके इलाके की असली धूप, बादल, तापमान और धूल के हिसाब से चलता है।",
-      connectWhat: "जोड़ने के लिए क्या चाहिए", connectSteps: "इन्वर्टर का ब्रांड, लॉगर का सीरियल नंबर, और इंस्टॉलर ब्रांड के ऐप में सूर्य साथी को प्लांट से जोड़े।",
+      connectWhat: "जोड़ने के लिए क्या चाहिए", connectSteps: "इन्वर्टर का ब्रांड, लॉगर का सीरियल नंबर, और इंस्टॉलर ब्रांड के ऐप में रोशनी को प्लांट से जोड़े।",
       down: "पैनल के क्लाउड तक नहीं पहुँच पाए। आख़िरी रीडिंग दिख रही है।", now: "अभी", noData: "डेटा नहीं",
       unitShort: "यूनिट", kwh: (u) => `${u} यूनिट`,
     },
@@ -575,7 +575,7 @@
     document.documentElement.lang = lang;
     document.querySelectorAll("[data-t]").forEach((e) => { e.textContent = t(e.dataset.t); });
     document.querySelectorAll("[data-label]").forEach((e) => { e.label = t(e.dataset.label); });
-    document.title = `${t("appName")} – Surya Saathi`;
+    document.title = `${t("appName")} – Roshni`;
   }
   function render() {
     const first = !shown.size;

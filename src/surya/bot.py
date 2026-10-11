@@ -13,7 +13,7 @@ DEFAULT_LANG = "hi"
 TEXT = {
     "welcome": {
         "en": (
-            "☀️ Namaste! I'm Surya Saathi, your rooftop-solar helper.\n\n"
+            "☀️ Namaste! I'm Roshni, your rooftop-solar helper.\n\n"
             "Send a photo or PDF of your electricity bill to find out, honestly, whether solar is worth it for your "
             "home: the right size, the PM Surya Ghar subsidy, the EMI and the payback.\n\n"
             "You can also:\n"
@@ -24,7 +24,7 @@ TEXT = {
             "Reply हिंदी for Hindi."
         ),
         "hi": (
-            "☀️ नमस्ते! मैं सूर्य साथी हूँ, आपका रूफ़टॉप सोलर साथी।\n\n"
+            "☀️ नमस्ते! मैं रोशनी हूँ, आपकी रूफ़टॉप सोलर साथी।\n\n"
             "अपने बिजली बिल की फोटो या PDF भेजें और जानें कि आपके घर के लिए सोलर फ़ायदेमंद है या नहीं: "
             "सही साइज़, PM सूर्य घर सब्सिडी, EMI और कितने साल में लागत वसूल होगी।\n\n"
             "आप यह भी कर सकते हैं:\n"
