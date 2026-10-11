@@ -183,8 +183,9 @@ def handle(msg: dict, user: dict, wa, pipeline) -> dict | None:
             from . import plant
             last = user.get("last") or {}
             try:
-                r = plant.simulate(user.get("system_kw") or last.get("kw") or 3, user.get("lat") or 28.61, user.get("lon") or 77.21, lang=lang)
-                wa.send_text(to, plant.message(r, lang))
+                said = "hi" if DEVANAGARI.search(text) else lang  # a Hindi command gets a Hindi answer
+                r = plant.simulate(user.get("system_kw") or last.get("kw") or 3, user.get("lat") or 28.61, user.get("lon") or 77.21, lang=said)
+                wa.send_text(to, plant.message(r, said))
             except Exception:
                 wa.send_text(to, "The panels' data isn't available right now. Try again in a while." if lang == "en" else "पैनल का डेटा अभी नहीं मिल रहा। थोड़ी देर बाद फिर कोशिश करें।")
             return user

@@ -466,6 +466,7 @@
         </div>
         <ul class="services">
           <li><b>Amazon Bedrock (Nova 2 Lite)</b> reads bills, quotes, inverter screens and panel labels. Questions go through a tool-use loop: the model calls this site's own scheme list, estimate, scam check, dust forecast and application status, and the answer says which ones it used.</li>
+          <li><b>A simulated inverter cloud</b> runs in Lambda for the My solar app: output follows Open-Meteo's sunlight, temperature and rain for the home, less the dust on the panels, and its inverter events come with what to do.</li>
           <li><b>Amazon Location Service</b> turns the places people name, like "Saket, Delhi" or "Lucknow", into a state and coordinates, for the right schemes and the local dust forecast. Its satellite tiles let a household trace its roof on the map; the API key can only fetch map tiles, and only for this site.</li>
           <li><b>AWS Step Functions</b> pauses on a task token at each application step. If a step runs long, the timeout sends a reminder.</li>
           <li><b>Amazon EventBridge Scheduler</b> re-reads the official sources every week and flags any fact whose page has changed.</li>

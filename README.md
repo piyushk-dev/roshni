@@ -31,6 +31,7 @@ Delhi's newest deal goes unnoticed too. Homes using up to 400 units a month can 
 | **Apply** | **8-step plan on Step Functions**, starting with a pre-flight check for the common rejections. A nudge when a step runs long. **STUCK** drafts a complaint for whoever is holding things up: helpline, then nodal officer, then grievance portal, then RTI. The household sends it |
 | **Install** | **Is this the panel you paid for?** A photo of a panel's back label is read for the maker, wattage, serial and origin, and flagged when the module or its cells are imported, the DCR mark is missing, the wattage differs from the quote, or the serial was already checked at another home. The portal flags repeated serials, and since May 2026 a vendor's undertaking no longer clears them, so this runs before the final payment |
 | **Get paid** | E-token and claim-deadline reminders inside the same plan |
+| **Live with it** | **My solar, the app for the panels** (installable on a phone, at `/app/`): power now under a sky that follows the time of day, where it's going (home, grid, bought back), today's curve against clean panels, the next three days from the weather and dust forecast, the month against the vendor's promise, 25 years of output above the warranty floor, and when to clean. **Inverter events are explained** the way owners need: grid voltage too high at midday, supply too low, a power cut, the Wi-Fi logger dropping out, each with what to do and evidence to send the installer or the DISCOM. It runs on a **simulated inverter cloud** (see Honest limits). On WhatsApp: `MY SOLAR` |
 | **Keep it running** | **Dust this week**: a live CAMS forecast (via Open-Meteo) rates each day by India's AQI bands for PM10 and picks the day to clean the panels, after the dust settles. A **solar passport** of signing and handover checks, **promised vs actual** generation with a note for the installer, the **first bill's energy flow** (generation is not export), and **support requests** with the evidence to attach. On WhatsApp, an inverter photo is checked against what the panels should make |
 | **No roof of your own** | **Flats and societies**: common-area solar at ₹18,000/kW, a calculator, and a ready message for the RWA |
 | **Any question** | Typed or spoken, in Hindi or English. A Bedrock tool-use loop works the answer out with the product's own tools: the scheme list for a state, a rough estimate from a typed bill, the scam check, the dust forecast and the household's application step. Places are found with Amazon Location Service, and every answer says which tools it used. Voice note in (Transcribe), voice note out (Polly) |
@@ -60,6 +61,8 @@ flowchart LR
   API --> AQ[Open-Meteo<br/>dust forecast]
   WORK & API --> LOC[Amazon Location<br/>places]
   WEB --> TILES[Amazon Location<br/>satellite tiles]
+  APP[My solar app<br/>Ionic PWA] --> GW
+  API --> PLANT[simulated inverter cloud<br/>Open-Meteo weather + dust]
   SCH[EventBridge Scheduler<br/>weekly] --> WATCH[Lambda<br/>watcher] --> DDB
   API --> SUN[PVGIS + NASA POWER]
 ```
@@ -87,7 +90,7 @@ flowchart LR
 
 ```bash
 python -m venv .venv && .venv/Scripts/pip install pytest boto3 aws-sam-cli
-.venv/Scripts/python -m pytest            # 205 tests, offline
+.venv/Scripts/python -m pytest            # 213 tests, offline
 sam build && sam deploy --guided          # the whole backend
 python scripts/deploy_web.py              # the website, to Amplify (--config-only just writes web/config.js)
 ```
@@ -111,12 +114,15 @@ The local server runs the deterministic tools and uses captured Delhi sunlight f
 - **The demo vendors are fictional.** The marketplace's four vendors, their replies and scorecards are sample data, labelled on every screen, each showing a different trap. Real vendors can answer requests, and their scores come only from the quotes they actually send. No real company is shown with prices it didn't quote. The comparison that runs when someone opens Get quotes is a sample: vendors see one, labelled, only when an area has no real requests.
 - **A typed-bill estimate is rough.** It sizes by the rule of thumb that 1 kW makes about 4 units a day and prices at the typical local rate per kW; a bill photo gives the full estimate.
 - **Ownership checks are evidence aids.** They do not certify equipment safety, DCR compliance, warranty liability or a monetary bill settlement. Generation review is manual and uses a completed month; low output alone does not diagnose dust.
+- **The inverter is simulated.** Real monitoring needs each brand's cloud (Growatt, Sungrow, Solis and others) and the installer's access, so `/plant` stands in. It isn't random: output follows Open-Meteo's sunlight, temperature and rain for the home's own location over the past month and the next three days, less dust that builds faster on dusty days and washes off in rain. Its events are drawn from what owners report, and every screen says it's simulated.
 - **The panel check reads what's printed.** It can't spot a forged label, and the duplicate-serial check only knows serials checked through Surya Saathi. The DCR certificate and MNRE's ALMM list remain the proof.
 - **Support packs prepare the next conversation.** They distinguish monitoring, generation, billing, documents and maintenance, record dates and list relevant evidence. They do not submit tickets. Elapsed days are dated records, not regulatory deadlines.
 
 ## Built with
 
 **AWS**, as above.
+
+**Open source in the browser:** [Ionic](https://ionicframework.com) for the app's native tabs and sheets, [Apache ECharts](https://echarts.apache.org) for its charts, [devices.css](https://github.com/picturepan2/devices.css) for the iPhone frame, [MapLibre GL](https://maplibre.org) for the roof map and [qrcode-generator](https://github.com/kazuhikoarase/qrcode-generator) for the QR codes. Weather for the panels comes from [Open-Meteo](https://open-meteo.com).
 
 **AI tools:** Claude Code (Anthropic) and Codex (OpenAI) helped with research, code and writing. Amazon Bedrock (Nova 2 Lite) runs inside the product.
 
