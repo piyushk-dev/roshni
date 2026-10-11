@@ -77,3 +77,11 @@ def test_promise_check_and_route(monkeypatch):
     monkeypatch.setattr(plant, "simulate", lambda *a, **k: {"ok": a[:2]})
     event = {"requestContext": {"http": {"method": "GET"}}, "rawPath": "/plant", "queryStringParameters": {"kw": "4"}}
     assert json.loads(handler.lambda_handler(event, None)["body"]) == {"ok": ["4", 28.61]}
+
+
+def test_whatsapp_summary_links_the_app(monkeypatch):
+    monkeypatch.setenv("SITE_URL", "https://example.test")
+    r = plant.simulate(3, 28.6, 77.2, fetch=weather(), dust=DUST, now=NOON)
+    msg = plant.message(r, "en")
+    assert "units so far" in msg and "https://example.test/app/" in msg and "simulated" in msg
+    assert "आज" in plant.message(r, "hi")

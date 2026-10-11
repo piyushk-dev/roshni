@@ -199,6 +199,7 @@ Resources:
       Timeout: 90
       Environment:
         Variables:
+          SITE_URL: !Sub https://main.${WebApp.DefaultDomain}
           SSM_PREFIX: /surya-saathi/whatsapp
           SESSION_TABLE: !Ref SessionTable
           YIELD_TABLE: !Ref YieldCache

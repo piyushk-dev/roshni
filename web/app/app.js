@@ -53,7 +53,8 @@
       helpTitle: "Help", helpSupport: "Something wrong? Prepare a request", helpBill: "Read the first bill after solar",
       helpPanel: "Check a panel's label", helpConnect: "Connect your real inverter",
       install: "Install the app",
-      settingsTitle: "Your system", cancel: "Cancel", save: "Save",
+      settingsTitle: "Your system", cancel: "Cancel", save: "Save", setupTitle: "Set up your panels",
+      setupNote: "These shape how your panels are modelled: size, place, install date and what the vendor promised. Change them any time.",
       sKw: "System size (kW)", sPlace: "Area and city", sInstalled: "Installed on", sCleaned: "Last cleaned on",
       sUse: "Electricity used a month (units)", sPromised: "Vendor's promised units a month", sRate: "Your rate (₹ a unit)", sLang: "Language",
       settingsNote: "Saved on this phone only. Location is kept to about a kilometre.", placeNotFound: "Couldn't find that place; kept the old one.",
@@ -109,7 +110,8 @@
       helpTitle: "मदद", helpSupport: "कुछ गड़बड़? अनुरोध तैयार करें", helpBill: "सोलर के बाद पहला बिल पढ़ें",
       helpPanel: "पैनल का लेबल जाँचें", helpConnect: "अपना असली इन्वर्टर जोड़ें",
       install: "ऐप इंस्टॉल करें",
-      settingsTitle: "आपका सिस्टम", cancel: "रद्द करें", save: "सेव करें",
+      settingsTitle: "आपका सिस्टम", cancel: "रद्द करें", save: "सेव करें", setupTitle: "अपने पैनल सेट करें",
+      setupNote: "इनसे आपके पैनल का मॉडल बनता है: साइज़, जगह, लगने की तारीख़ और वेंडर का वादा। कभी भी बदल सकते हैं।",
       sKw: "सिस्टम साइज़ (kW)", sPlace: "इलाका और शहर", sInstalled: "लगने की तारीख़", sCleaned: "आख़िरी सफ़ाई",
       sUse: "महीने की बिजली खपत (यूनिट)", sPromised: "वेंडर की वादा की गई मासिक यूनिट", sRate: "आपकी दर (₹ प्रति यूनिट)", sLang: "भाषा",
       settingsNote: "सिर्फ़ इसी फ़ोन पर सेव। लोकेशन लगभग एक किलोमीटर तक ही रखी जाती है।", placeNotFound: "यह जगह नहीं मिली; पुरानी रखी गई।",
@@ -244,6 +246,7 @@
     const c = chart("chart-today");
     if (!c) return;
     const pts = data.today.points, now = data.now.hour;
+    $("chart-today").setAttribute("aria-label", `${t("todayTitle")}: ${t("kwh", fmt(data.today.so_far_kwh, 1))} ${t("cSoFar")}, ${t("kwh", fmt(data.today.day_kwh, 1))} ${t("cDay")}`);
     const past = pts.filter((p) => p.h <= now).map((p) => [p.h, +p.kw.toFixed(3)]);
     const ahead = pts.filter((p) => p.h >= now - 0.17).map((p) => [p.h, +p.kw.toFixed(3)]);
     const gaps = (data.today.gaps || []).map((g) => [{ xAxis: g.start, name: t("noData") }, { xAxis: g.end }]);
@@ -491,10 +494,11 @@
   function toast(message) { const tt = $("toast"); tt.message = message; tt.present(); }
 
   // settings
-  function openSettings() {
+  function openSettings(first) {
+    $("settings").querySelector("ion-title").textContent = t(first === true ? "setupTitle" : "settingsTitle");
     $("s-kw").value = cfg.kw; $("s-place").value = cfg.place; $("s-installed").value = cfg.installed; $("s-cleaned").value = cfg.cleaned;
     $("s-use").value = cfg.use; $("s-promised").value = cfg.promised || ""; $("s-rate").value = cfg.rate; $("s-lang").value = lang;
-    $("settings-note").textContent = t("settingsNote");
+    $("settings-note").textContent = first === true ? `${t("setupNote")} ${t("settingsNote")}` : t("settingsNote");
     $("settings").present();
   }
   async function saveSettings() {
@@ -532,7 +536,7 @@
   window.addEventListener("beforeinstallprompt", (e) => { e.preventDefault(); installEvent = e; $("install").hidden = false; });
   function wire() {
     $("open-settings").addEventListener("click", openSettings);
-    $("settings-cancel").addEventListener("click", () => $("settings").dismiss());
+    $("settings-cancel").addEventListener("click", () => { write("surya-plant", cfg); $("settings").dismiss(); });
     $("settings-save").addEventListener("click", saveSettings);
     $("open-connect").addEventListener("click", openConnect);
     $("install").addEventListener("click", async () => { if (!installEvent) return; installEvent.prompt(); await installEvent.userChoice; installEvent = null; $("install").hidden = true; });
@@ -549,6 +553,8 @@
     wire();
     if (data) render();
     await load();
+    // the first time the installed app opens, set the system up; the website's iPhone keeps the demo home
+    if (!new URLSearchParams(location.search).has("embed") && !read("surya-plant", null)) setTimeout(() => openSettings(true), 600);
     // charts wait for their container's size, which Ionic sets after its first layout
     setTimeout(() => { if (data) { renderToday(); renderHistory(); renderYears(); } }, 400);
     if ("serviceWorker" in navigator && location.protocol === "https:") navigator.serviceWorker.register("sw.js").catch(() => {});

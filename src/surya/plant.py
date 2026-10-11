@@ -12,6 +12,7 @@ what to do, because the usual answer from installers is that someone else is to 
 from __future__ import annotations
 
 import hashlib
+import os
 import time
 from datetime import date, datetime, timedelta, timezone
 
@@ -324,3 +325,44 @@ def _at(points: list[tuple[float, float]], h: float) -> float:
         if h1 <= h <= h2:
             return p1 + (p2 - p1) * (h - h1) / (h2 - h1)
     return 0.0
+
+
+SUMMARY = {
+    "en": {"now": "☀️ Your panels now: {kw} kW, {pct}% of {size} kW.", "night": "🌙 Your panels are asleep for the night.",
+           "paused": "⚠️ Right now: {title}. {meaning}",
+           "today": "Today: {sofar} units so far, about {day} by sunset (₹{rs} saved so far).",
+           "dust": "🧽 Dust is taking {pct}% of the output (₹{rs} today).", "tomorrow": "Tomorrow: about {kwh} units.",
+           "event": "Last inverter event: {title}, {day} {start}–{end}.",
+           "app": "The full picture, with the curve and the next three days: {url}", "sim": "(A simulated inverter until yours is connected.)"},
+    "hi": {"now": "☀️ अभी आपके पैनल: {kw} kW, {size} kW का {pct}%।", "night": "🌙 आपके पैनल रात में बंद हैं।",
+           "paused": "⚠️ अभी: {title}। {meaning}",
+           "today": "आज: अब तक {sofar} यूनिट, सूर्यास्त तक लगभग {day} (अब तक ₹{rs} की बचत)।",
+           "dust": "🧽 धूल {pct}% उत्पादन ले रही है (आज ₹{rs})।", "tomorrow": "कल: लगभग {kwh} यूनिट।",
+           "event": "पिछली इन्वर्टर घटना: {title}, {day} {start}–{end}।",
+           "app": "पूरी जानकारी, कर्व और अगले तीन दिन के साथ: {url}", "sim": "(आपका इन्वर्टर जुड़ने तक सिम्युलेटेड इन्वर्टर।)"},
+}
+
+
+def message(r: dict, lang: str = "en") -> str:
+    """Today's panels in one WhatsApp message, with a link to the app."""
+    t = SUMMARY[lang if lang in SUMMARY else "en"]
+    now, today = r["now"], r["today"]
+    if now["status"] == "night":
+        lines = [t["night"]]
+    elif now.get("event"):
+        lines = [t["paused"].format(title=now["event"]["title"], meaning=now["event"]["meaning"])]
+    else:
+        lines = [t["now"].format(kw=f"{now['power_kw']:.2f}", pct=round(now["power_kw"] / r["device"]["kw"] * 100), size=f"{r['device']['kw']:g}")]
+    lines.append(t["today"].format(sofar=f"{today['so_far_kwh']:g}", day=f"{today['day_kwh']:g}", rs=today["saved_rs"]))
+    if today["soiling_pct"] >= 1:
+        lines.append(t["dust"].format(pct=f"{today['soiling_pct']:g}", rs=today["dust_loss_rs"]))
+    if r["ahead"]:
+        lines.append(t["tomorrow"].format(kwh=f"{r['ahead'][0]['kwh']:g}"))
+    if r["events"]:
+        e = r["events"][0]
+        lines.append(t["event"].format(title=e["title"], day=date.fromisoformat(e["day"]).strftime("%d %b"), start=e["start"], end=e["end"]))
+    site = os.environ.get("SITE_URL", "")
+    if site:
+        lines += ["", t["app"].format(url=site.rstrip("/") + "/app/")]
+    lines.append(t["sim"])
+    return "\n".join(lines)

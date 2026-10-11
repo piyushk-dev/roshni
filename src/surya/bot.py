@@ -179,6 +179,15 @@ def handle(msg: dict, user: dict, wa, pipeline) -> dict | None:
         if low.startswith("scam ") or low.startswith("check offer ") or scam.looks_like_offer(text):
             wa.send_text(to, scam.message(text, lang))
             return user
+        if low in ("my solar", "solar", "plant", "panels", "मेरा सोलर", "सोलर", "पैनल"):
+            from . import plant
+            last = user.get("last") or {}
+            try:
+                r = plant.simulate(user.get("system_kw") or last.get("kw") or 3, user.get("lat") or 28.61, user.get("lon") or 77.21, lang=lang)
+                wa.send_text(to, plant.message(r, lang))
+            except Exception:
+                wa.send_text(to, "The panels' data isn't available right now. Try again in a while." if lang == "en" else "पैनल का डेटा अभी नहीं मिल रहा। थोड़ी देर बाद फिर कोशिश करें।")
+            return user
         if low in ("dust", "clean", "cleaning", "धूल", "सफ़ाई", "सफाई"):
             try:
                 wa.send_text(to, product.dust_message(product.dust(user.get("lat"), user.get("lon")), lang))

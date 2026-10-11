@@ -276,6 +276,15 @@ h3 { font-size: 1.35rem; font-weight: 700; font-stretch: 106%; line-height: 1.2;
 .use > p { color: var(--ink-2); }
 .use-actions { display: flex; flex-wrap: wrap; gap: 10px 20px; align-items: center; margin-top: 4px; }
 
+/* After install: the way into the app */
+.app-link { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 16px; align-items: center; margin-top: clamp(20px, 3vw, 32px);
+  padding: 16px 18px; border-radius: 18px; background: linear-gradient(120deg, #e8f2fd, #f7fbff); border: 1px solid #d6e6f8; color: var(--ink); text-decoration: none; }
+.app-link img { border-radius: 14px; box-shadow: 0 4px 12px -4px rgba(20, 60, 120, 0.35); }
+.app-link b { display: block; font: 700 1.1rem/1.3 var(--font-display); }
+.app-link > span:nth-of-type(1) > span { color: var(--ink-2); font-size: 0.98rem; }
+.app-link:hover { border-color: #b9d3f1; }
+@media (max-width: 680px) { .app-link { grid-template-columns: auto minmax(0, 1fr); } .app-link .btn { grid-column: 1 / -1; } }
+
 /* the app band: the real app, running inside an iPhone (devices.css) */
 .appband { margin-inline: calc(-1 * var(--fpad)); padding: clamp(56px, 7vw, 96px) var(--fpad); border-top: 1px solid var(--line);
   background: radial-gradient(90% 70% at 85% 30%, #dcebfb 0%, rgba(220, 235, 251, 0) 70%), linear-gradient(180deg, #f6f9fc, var(--page));

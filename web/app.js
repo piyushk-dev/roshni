@@ -448,6 +448,8 @@ Object.assign(T.en, {
   appF3: "Inverter events, explained", appF3d: "Grid voltage, power cuts, a dropped logger: what each means, and evidence to send.",
   appF4: "25 years of care", appF4d: "Savings against the vendor's promise, warranties, and the checks that keep it running.",
   appOpen: "Open the app", appScan: "Open it on your phone",
+  appLinkTitle: "Your panels, live, in the app", appLinkSub: "Output now, the next three days, the day to clean, and inverter events explained.",
+  c20d: "your panels today: output, dust and the latest inverter event, with the app's link",
   cmdTitle: "Everything you can send on WhatsApp",
   applyCta: "See the application guide",
 });
@@ -490,6 +492,8 @@ Object.assign(T.hi, {
   appF3: "इन्वर्टर की घटनाएँ, आसान शब्दों में", appF3d: "ग्रिड वोल्टेज, बिजली कटना, लॉगर बंद: हर एक का मतलब, और भेजने लायक सबूत।",
   appF4: "25 साल की देखभाल", appF4d: "वेंडर के वादे के मुकाबले बचत, वारंटी, और चलते रहने की जाँचें।",
   appOpen: "ऐप खोलें", appScan: "अपने फ़ोन पर खोलें",
+  appLinkTitle: "आपके पैनल, लाइव, ऐप में", appLinkSub: "अभी का उत्पादन, अगले तीन दिन, सफ़ाई का दिन, और इन्वर्टर की घटनाएँ आसान शब्दों में।",
+  c20d: "आज आपके पैनल: उत्पादन, धूल और पिछली इन्वर्टर घटना, ऐप के लिंक के साथ",
   cmdTitle: "WhatsApp पर क्या-क्या भेज सकते हैं",
   applyCta: "आवेदन गाइड देखें",
 });
