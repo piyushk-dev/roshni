@@ -1224,6 +1224,21 @@ if ("IntersectionObserver" in window && !matchMedia("(prefers-reduced-motion: re
   }, { threshold: 0.35 }).observe(grid);
 }
 
+// sections rise in as they scroll into view (Motion's inView); nothing moves for people who'd rather it didn't
+if (window.Motion && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+  const groups = [".use-grid .use", ".app-points li", ".why-copy > *", ".app-copy > h2, .app-copy > .sec-lede, .app-cta", ".wa-band > *"];
+  for (const sel of groups) {
+    document.querySelectorAll(sel).forEach((node, i) => {
+      node.style.opacity = "0";
+      Motion.inView(node, () => {
+        Motion.animate(node, { opacity: [0, 1], y: [18, 0] }, { duration: 0.6, delay: (i % 4) * 0.07, ease: [0.2, 0.8, 0.2, 1] });
+      }, { amount: 0.25 });
+    });
+  }
+  const phone = document.querySelector(".phone-stage");
+  if (phone) { phone.style.opacity = "0"; Motion.inView(phone, () => { Motion.animate(phone, { opacity: [0, 1], y: [40, 0], rotate: [-2, 0] }, { duration: 0.9, ease: [0.2, 0.8, 0.2, 1] }); }, { amount: 0.2 }); }
+}
+
 $("privacy-link").href = API + "/privacy";
 applyLang();
 loadStats();

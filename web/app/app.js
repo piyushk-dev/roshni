@@ -144,6 +144,24 @@
   let scrub = null;
   const charts = {};
 
+  // --- motion: cards rise in as a tab opens, numbers count to their new value (Motion, motion.dev) ----
+  const M = window.Motion;
+  const calm = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const shown = new Set();
+  function reveal(tab) {
+    if (!M || calm || shown.has(tab)) return;
+    shown.add(tab);
+    const items = document.querySelectorAll(`ion-tab[tab="${tab}"] .wrap > *, ion-tab[tab="${tab}"] .days > .day, ion-tab[tab="${tab}"] .tiles > .tile`);
+    M.animate(items, { opacity: [0, 1], y: [16, 0] }, { duration: 0.5, delay: M.stagger(0.06), ease: [0.2, 0.8, 0.2, 1] });
+  }
+  function count(node, value, digits = 0, prefix = "", suffix = "") {
+    const from = parseFloat(node.dataset.v || "0");
+    node.dataset.v = String(value);
+    const show = (v) => { node.textContent = `${prefix}${fmt(v, digits)}${suffix}`; };
+    if (!M || calm || Math.abs(value - from) < 10 ** -digits) { show(value); return; }
+    M.animate(from, value, { duration: 0.9, ease: [0.2, 0.8, 0.2, 1], onUpdate: show });
+  }
+
   // --- data ------------------------------------------------------------------------------------
   async function load() {
     const q = new URLSearchParams({ kw: cfg.kw, lat: cfg.lat, lon: cfg.lon, installed: cfg.installed, cleaned: cfg.cleaned,
@@ -189,11 +207,11 @@
     const status = $("sky-status");
     const pct = Math.round((m.kw / data.device.kw) * 100);
     if (live && data.now.status === "night") {
-      kw.textContent = fmt(data.today.day_kwh, 1);
+      count(kw, data.today.day_kwh, 1);
       kw.nextElementSibling.textContent = t("unitShort");
       status.textContent = t("madeToday");
     } else {
-      kw.textContent = fmt(m.kw, 2);
+      if (live) count(kw, m.kw, 2); else { kw.textContent = fmt(m.kw, 2); kw.dataset.v = String(m.kw); }
       kw.nextElementSibling.textContent = "kW";
       status.textContent = live && data.now.status !== "producing" ? t(`st_${data.now.status}`)
         : m.kw <= 0.01 ? t("idle") : m.ahead ? t("forecastAt", pct) : t("producing", pct);
@@ -330,9 +348,9 @@
       box.append(b);
       live.append(ic, box);
     }
-    $("t-sofar").textContent = fmt(d.today.so_far_kwh, 1);
-    $("t-saved").textContent = `₹${fmt(d.today.saved_rs)}`;
-    $("t-day").textContent = fmt(d.today.day_kwh, 1);
+    count($("t-sofar"), d.today.so_far_kwh, 1);
+    count($("t-saved"), d.today.saved_rs, 0, "₹");
+    count($("t-day"), d.today.day_kwh, 1);
     const split = $("t-split"), self = d.today.self_used_kwh, out = d.today.exported_kwh, total = self + out;
     split.innerHTML = "";
     if (total > 0.05) {
@@ -391,13 +409,14 @@
   }
 
   // --- forecast ------------------------------------------------------------------------------------------
-  const SKY_ICON = { sun: "sunny", part: "partly-sunny", cloud: "cloudy", haze: "cloudy-outline", rain: "rainy", storm: "thunderstorm" };
+  const SKY_ICON = { sun: "clear-day", part: "partly-cloudy-day", cloud: "overcast", haze: "haze", rain: "rain", storm: "thunderstorms" };
+  const WX = "https://cdn.jsdelivr.net/npm/@bybas/weather-icons@2.0.0/production/fill/all/";
   function renderAhead() {
     const box = $("days");
     box.innerHTML = "";
     for (const a of data.ahead) {
       const c = el("div", "day");
-      const ic = el("ion-icon", `sky-${a.sky}`); ic.setAttribute("name", SKY_ICON[a.sky] || "sunny");
+      const ic = el("img", "wx"); ic.src = `${WX}${SKY_ICON[a.sky] || "clear-day"}.svg`; ic.alt = t("sky")[a.sky] || ""; ic.width = 64; ic.height = 64;
       const u = el("p", "units", fmt(a.kwh, 1)); u.append(el("small", null, t("unitShort")));
       const meta = [t("sky")[a.sky], `${Math.round(a.max_c)}°C`, a.dust ? t("dustLevel")[a.dust] : null].filter(Boolean).join(", ");
       c.append(el("p", "dname", dayName(a.date, { weekday: "long" })), el("p", "ddate", dayName(a.date, { day: "numeric", month: "short" })), ic, u,
@@ -411,7 +430,7 @@
   // --- savings ---------------------------------------------------------------------------------------------
   function renderMoney() {
     const m = data.month;
-    $("m-rs").textContent = `₹${fmt(m.rs)}`;
+    count($("m-rs"), m.rs, 0, "₹");
     $("m-kwh").textContent = t("monthUnits", fmt(m.kwh));
     const pr = $("promise");
     pr.innerHTML = "";
@@ -423,11 +442,13 @@
     const life = $("life");
     life.innerHTML = "";
     const L = data.lifetime;
-    for (const [icon, color, v, cap] of [["wallet-outline", C.save, `₹${fmt(L.rs)}`, t("lifeRs")], ["flash-outline", C.solar, fmt(L.kwh), t("lifeUnits")],
-      ["leaf-outline", C.save, fmt(L.co2_t, 2), t("lifeCo2")], ["earth-outline", C.clean, fmt(L.trees), t("lifeTrees")]]) {
+    for (const [icon, color, v, digits, prefix, cap] of [["wallet-outline", C.save, L.rs, 0, "₹", t("lifeRs")], ["flash-outline", C.solar, L.kwh, 0, "", t("lifeUnits")],
+      ["leaf-outline", C.save, L.co2_t, 2, "", t("lifeCo2")], ["earth-outline", C.clean, L.trees, 0, "", t("lifeTrees")]]) {
       const tile = el("div", "tile"); const ic = el("ion-icon"); ic.setAttribute("name", icon); ic.style.color = color;
-      tile.append(ic, el("p", "fig", v), el("p", "cap", cap));
+      const fig = el("p", "fig");
+      tile.append(ic, fig, el("p", "cap", cap));
       life.append(tile);
+      count(fig, v, digits, prefix);
     }
     renderYears();
   }
@@ -484,12 +505,14 @@
     document.title = `${t("appName")} – Surya Saathi`;
   }
   function render() {
+    const first = !shown.size;
     renderTodayCards();
     renderMoment();
     renderToday();
     renderAhead();
     renderMoney();
     renderCare();
+    if (first) reveal("today");
   }
   function toast(message) { const tt = $("toast"); tt.message = message; tt.present(); }
 
@@ -541,7 +564,8 @@
     $("open-connect").addEventListener("click", openConnect);
     $("install").addEventListener("click", async () => { if (!installEvent) return; installEvent.prompt(); await installEvent.userChoice; installEvent = null; $("install").hidden = true; });
     document.querySelector(".refresher").addEventListener("ionRefresh", async (e) => { await load(); e.target.complete(); });
-    $("tabs").addEventListener("ionTabsDidChange", () => { setTimeout(() => { if (data) { renderToday(); renderHistory(); renderYears(); } Object.values(charts).forEach((c) => c.resize()); }, 60); });
+    $("tabs").addEventListener("ionTabsDidChange", (e) => {
+      reveal(e.detail.tab); setTimeout(() => { if (data) { renderToday(); renderHistory(); renderYears(); } Object.values(charts).forEach((c) => c.resize()); }, 60); });
     window.addEventListener("resize", () => Object.values(charts).forEach((c) => c.resize()));
     document.addEventListener("visibilitychange", () => { if (!document.hidden) load(); });
     setInterval(() => { if (!document.hidden && scrub === null) load(); }, 60000);

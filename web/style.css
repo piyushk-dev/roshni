@@ -163,7 +163,7 @@ h1 { font-size: clamp(2.6rem, min(4.8vw, 7.6vh), 4.4rem); font-weight: 780; font
 .phone {
   margin: 0; position: relative; flex: none;
   height: clamp(560px, calc(100svh - 136px), 740px); aspect-ratio: 9 / 19.5;
-  padding: 9px; border-radius: 44px;
+  padding: 5px; border-radius: 41px;
   background: linear-gradient(150deg, #3b3f47, #17191e 28%, #0f1013 72%, #2d3138);
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08), 0 40px 70px -32px rgba(10, 25, 50, 0.6), 0 12px 24px -12px rgba(10, 25, 50, 0.3);
 }
@@ -172,7 +172,7 @@ h1 { font-size: clamp(2.6rem, min(4.8vw, 7.6vh), 4.4rem); font-weight: 780; font
 .phone::before { top: 18%; height: 7%; }
 .phone::after { top: 29%; height: 13%; }
 .phone-screen {
-  height: 100%; border-radius: 35px; overflow: hidden; background: var(--wa-wall); position: relative;
+  height: 100%; border-radius: 36px; overflow: hidden; background: var(--wa-wall); position: relative;
   display: grid; grid-template-rows: auto auto minmax(0, 1fr) auto auto; font-family: var(--font-wa); color: var(--wa-text);
 }
 .wa-status { position: relative; display: flex; align-items: center; justify-content: space-between; padding: 11px 22px 5px; background: var(--wa-teal); color: #fff; font-size: 0.8rem; font-weight: 600; }
@@ -303,11 +303,18 @@ h3 { font-size: 1.35rem; font-weight: 700; font-stretch: 106%; line-height: 1.2;
 .app-qr svg { display: block; width: 92px; height: 92px; padding: 5px; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
 .app-qr .qr-bg { fill: var(--surface); } .app-qr .qr-on { fill: var(--ink); }
 .app-qr figcaption { font-size: 0.9rem; color: var(--muted); max-width: 9rem; }
-.phone-stage { --s: 0.8; width: calc(428px * var(--s)); height: calc(868px * var(--s)); justify-self: center; position: relative;
+/* devices.css draws a 19px bezel; real phones are thinner, so the frame is trimmed to 11px and its parts move in */
+.phone-stage .device-iphone-14-pro .device-frame { padding: 11px; width: 412px; height: 852px; border-radius: 60px;
+  box-shadow: inset 0 0 2px 1px #c0b7cd, inset 0 0 0 3px #342c3f; }
+.phone-stage .device-iphone-14-pro .device-screen { border-radius: 50px; }
+.phone-stage .device-iphone-14-pro .device-header { top: 21px; }
+.phone-stage .device-iphone-14-pro .device-sensors::after { top: 22px; }
+.phone-stage .device-iphone-14-pro .device-sensors::before { top: 34px; }
+.phone-stage { --s: 0.8; width: calc(412px * var(--s)); height: calc(852px * var(--s)); justify-self: center; position: relative;
   filter: drop-shadow(0 40px 50px rgba(20, 45, 90, 0.28)); }
 .phone-stage .device { transform: scale(var(--s)); transform-origin: top left; position: absolute; left: 0; top: 0; }
 .phone-stage iframe.device-screen { border: 0; display: block; background: var(--page); }
-.ios-status { position: absolute; left: 19px; right: 19px; top: 19px; height: 54px; padding: 18px 34px 0 44px; display: flex; justify-content: space-between;
+.ios-status { position: absolute; left: 11px; right: 11px; top: 11px; height: 54px; padding: 18px 34px 0 44px; display: flex; justify-content: space-between;
   font: 600 16px/1 -apple-system, "SF Pro Text", Inter, sans-serif; color: #111; pointer-events: none; z-index: 2; }
 .ios-icons { display: inline-flex; gap: 6px; align-items: center; }
 .ios-icons svg { height: 12px; width: auto; fill: currentColor; }
