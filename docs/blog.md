@@ -6,7 +6,7 @@
 
 Three conversations I wanted this to handle well:
 
-- **A ₹4,567 bill from Malviya Nagar.** The family has heard about "free electricity" and doesn't know whether it applies to them. Four seconds after the photo goes in, they know: 4 kW, ₹1,54,000 after the ₹78,000 subsidy, pays for itself in about 4 years, and their monthly bill falls from ₹3,393 to under ₹50.
+- **A ₹4,567 bill from Malviya Nagar.** The family has heard about "free electricity" and doesn't know whether it applies to them. Seconds after the photo goes in, they know: 4 kW, ₹1,54,000 after the ₹78,000 subsidy, pays for itself in about 4 years, and their monthly bill falls from ₹3,393 to under ₹50.
 - **A vendor quote for ₹2,25,000** that promises ₹94,800 of subsidy. The scheme's maximum for 3 kW is ₹78,000, and the panels in the quote are imported, which means no subsidy at all. Signing it would cost the family ₹78,000 they were counting on.
 - **Panels that go quiet at noon on the sunniest day of the month.** Nothing is broken. Exports push the street's voltage past the inverter's cut-off. The owner needs to know whose job that is (the DISCOM's) and what evidence to send.
 
