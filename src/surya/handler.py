@@ -79,6 +79,18 @@ def _handle(event: dict, context) -> dict:
         flags = panel.check(fields, float(expect) if expect not in (None, "") else None, str(body.get("owner") or "")[:64] or None,
                             sample=bool(body.get("sample")))
         return _response(200, {"fields": fields, "flags": flags, "views": {code: panel.render(fields, flags, code) for code in ("en", "hi")}})
+    if route == "GET /plant":
+        from . import plant
+
+        num = lambda k, d: params.get(k) if params.get(k) not in (None, "") else d
+        try:
+            return _response(200, plant.simulate(num("kw", 3), num("lat", 28.61), num("lon", 77.21), params.get("cleaned") or None,
+                                                 params.get("installed") or None, num("rate", 7), float(params["promised"]) if params.get("promised") else None,
+                                                 num("use", 300), lang=params.get("lang", "en")))
+        except ValueError:
+            raise
+        except Exception:  # the weather service is down or slow
+            return _response(502, {"error": "the panel simulator can't reach the weather service right now"})
     if route == "GET /places":
         found = places.find(str(params.get("q", ""))[:120])
         return _response(200, found) if found else _response(404, {"error": "couldn't find that place in India"})

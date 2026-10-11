@@ -157,6 +157,9 @@ Resources:
         Places:
           Type: HttpApi
           Properties: {ApiId: !Ref Api, Path: /places, Method: GET}
+        Plant:
+          Type: HttpApi
+          Properties: {ApiId: !Ref Api, Path: /plant, Method: GET}
         MarketSubmit:
           Type: HttpApi
           Properties: {ApiId: !Ref Api, Path: "/market/requests/{id}/quotes", Method: POST}

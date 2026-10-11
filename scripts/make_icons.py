@@ -11,11 +11,11 @@ SUN = [(5, 5, 6, 6), (7, 1, 2, 2), (7, 13, 2, 2), (1, 7, 2, 2), (13, 7, 2, 2),
        (3, 3, 1, 1), (12, 3, 1, 1), (3, 12, 1, 1), (12, 12, 1, 1)]  # x, y, w, h on a 16-pixel grid, as in the logo
 
 
-def icon(size: int, path: Path) -> None:
+def icon(size: int, path: Path, scale: float = 0.8) -> None:
     img = Image.new("RGB", (size, size), (142, 200, 242))
     d = ImageDraw.Draw(img)
-    cell = size * 0.8 / 16
-    off = size * 0.1
+    cell = size * scale / 16
+    off = size * (1 - scale) / 2
     for x, y, w, h in SUN:
         d.rectangle((off + x * cell, off + y * cell, off + (x + w) * cell - 1, off + (y + h) * cell - 1), fill=(242, 165, 22))
     img.save(path, optimize=True)
@@ -23,3 +23,6 @@ def icon(size: int, path: Path) -> None:
 
 
 icon(180, WEB / "icon-180.png")
+icon(192, WEB / "app" / "icon-192.png")
+icon(512, WEB / "app" / "icon-512.png")
+icon(512, WEB / "app" / "icon-maskable.png", scale=0.56)  # inside the safe zone launchers crop to

@@ -440,6 +440,14 @@ Object.assign(T.en, {
   waTitle: "Try it on WhatsApp",
   waSub: "Send a bill or quote photo, or ask with a voice note, in Hindi or English. During the hackathon the bot runs on Twilio's WhatsApp sandbox.",
   waOpen: "Open WhatsApp", waScan: "Scan to open the chat",
+  navApp: "My solar app",
+  appTitle: "After installation, it becomes the app for your panels",
+  appSub: "Everything owners struggle with once the panels are up, in one place: what they're making, where the power goes, and what to do when something looks wrong.",
+  appF1: "See it live", appF1d: "Power now, today's curve against clean panels, and how much went to the grid.",
+  appF2: "Know what's coming", appF2d: "The next three days from the weather and dust forecast, and the day to clean.",
+  appF3: "Inverter events, explained", appF3d: "Grid voltage, power cuts, a dropped logger: what each means, and evidence to send.",
+  appF4: "25 years of care", appF4d: "Savings against the vendor's promise, warranties, and the checks that keep it running.",
+  appOpen: "Open the app", appScan: "Open it on your phone",
   cmdTitle: "Everything you can send on WhatsApp",
   applyCta: "See the application guide",
 });
@@ -474,6 +482,14 @@ Object.assign(T.hi, {
   waTitle: "WhatsApp पर आज़माएँ",
   waSub: "हिंदी या अंग्रेज़ी में बिल या कोटेशन की फोटो भेजें, या वॉइस नोट से पूछें। हैकथॉन के दौरान बॉट Twilio के WhatsApp सैंडबॉक्स पर चलता है।",
   waOpen: "WhatsApp खोलें", waScan: "चैट खोलने के लिए स्कैन करें",
+  navApp: "मेरा सोलर ऐप",
+  appTitle: "लगने के बाद, यह आपके पैनल का ऐप बन जाता है",
+  appSub: "पैनल लगने के बाद जिन बातों से लोग जूझते हैं, सब एक जगह: कितनी बिजली बन रही है, कहाँ जा रही है, और कुछ गड़बड़ लगे तो क्या करें।",
+  appF1: "लाइव देखें", appF1d: "अभी की बिजली, साफ़ पैनल के मुकाबले आज का कर्व, और ग्रिड को कितनी गई।",
+  appF2: "आगे का पता", appF2d: "मौसम और धूल के अनुमान से अगले तीन दिन, और सफ़ाई का दिन।",
+  appF3: "इन्वर्टर की घटनाएँ, आसान शब्दों में", appF3d: "ग्रिड वोल्टेज, बिजली कटना, लॉगर बंद: हर एक का मतलब, और भेजने लायक सबूत।",
+  appF4: "25 साल की देखभाल", appF4d: "वेंडर के वादे के मुकाबले बचत, वारंटी, और चलते रहने की जाँचें।",
+  appOpen: "ऐप खोलें", appScan: "अपने फ़ोन पर खोलें",
   cmdTitle: "WhatsApp पर क्या-क्या भेज सकते हैं",
   applyCta: "आवेदन गाइड देखें",
 });
@@ -1028,6 +1044,17 @@ function renderWhatsApp() {
     qr.innerHTML = `<svg viewBox="0 0 ${size} ${size}" shape-rendering="crispEdges" aria-hidden="true"><rect width="${size}" height="${size}" class="qr-bg"/><path d="${d}" class="qr-on"/></svg>`;
   }
   $("wa-qr").hidden = !qr.firstChild;
+  const aq = $("app-qr-code");
+  if (typeof qrcode === "function" && aq && !aq.firstChild) {
+    const q = qrcode(0, "M");
+    q.addData(new URL("app/", location.href).href);
+    q.make();
+    const n = q.getModuleCount(), pad = 2, size = n + 2 * pad;
+    let d = "";
+    for (let r = 0; r < n; r++) for (let c = 0; c < n; c++) if (q.isDark(r, c)) d += `M${c + pad} ${r + pad}h1v1h-1z`;
+    aq.innerHTML = `<svg viewBox="0 0 ${size} ${size}" shape-rendering="crispEdges" aria-hidden="true"><rect width="${size}" height="${size}" class="qr-bg"/><path d="${d}" class="qr-on"/></svg>`;
+    $("app-qr").hidden = false;
+  }
 }
 
 // One document, several pages: #guide, #rules and #built are views of their own; other links scroll.

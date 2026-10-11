@@ -1,0 +1,200 @@
+/* My solar: an Ionic app in the website's own colours and type */
+:root {
+  --page: #f4f7fa;
+  --surface: #ffffff;
+  --ink: #14233f;
+  --ink-2: #3b4a66;
+  --muted: #6b7890;
+  --line: #e4e9f0;
+  --green: #1d8a4e;
+  --green-ink: #13693a;
+  --green-soft: #e3f3e9;
+  --sun: #f2a516;
+  --sun-soft: #fff4dc;
+  --stop: #c2412b;
+  /* chart marks, checked for colour-blind separation and contrast on white */
+  --c-solar: #c27c00;
+  --c-clean: #3f6fc4;
+  --c-save: #22905a;
+  --c-buy: #8a96ab;
+  --font-display: "Plus Jakarta Sans", "Mukta", system-ui, sans-serif;
+
+  --ion-font-family: "Inter", "Mukta", system-ui, -apple-system, sans-serif;
+  --ion-background-color: var(--page);
+  --ion-text-color: var(--ink);
+  --ion-color-primary: #1d8a4e;
+  --ion-color-primary-rgb: 29, 138, 78;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-shade: #197a45;
+  --ion-color-primary-tint: #349660;
+  --ion-toolbar-background: var(--page);
+  --ion-toolbar-border-color: transparent;
+  --ion-tab-bar-background: rgba(255, 255, 255, 0.86);
+  --ion-tab-bar-border-color: rgba(20, 35, 63, 0.08);
+  --ion-tab-bar-color: #8590a6;
+  --ion-tab-bar-color-selected: #1d8a4e;
+  --ion-item-background: transparent;
+  --ion-border-color: var(--line);
+  color-scheme: light;
+}
+[hidden] { display: none !important; }
+body { background: var(--page); -webkit-font-smoothing: antialiased; font-feature-settings: "cv11"; }
+ion-tab-bar { backdrop-filter: saturate(180%) blur(18px); -webkit-backdrop-filter: saturate(180%) blur(18px); }
+ion-tab-button ion-label { font-weight: 600; font-size: 11px; letter-spacing: 0; }
+ion-button { text-transform: none; letter-spacing: 0; font-weight: 600; }
+ion-title { font-family: var(--font-display); font-weight: 750; letter-spacing: -0.02em; }
+ion-content { --padding-bottom: 24px; }
+
+.wrap { max-width: 560px; margin: 0 auto; padding: 2px 16px 28px; display: grid; gap: 14px; }
+.site { margin: 0 2px -4px; color: var(--muted); font-size: 0.86rem; }
+.card { background: var(--surface); border-radius: 22px; padding: 16px 18px 18px;
+  box-shadow: 0 1px 1px rgba(20, 35, 63, 0.04), 0 8px 24px -14px rgba(20, 35, 63, 0.22); display: grid; gap: 12px; min-width: 0; }
+.card-head { display: grid; gap: 2px; }
+.card-title { margin: 0; font: 700 1.04rem/1.25 var(--font-display); letter-spacing: -0.015em; }
+.hint { margin: 0; color: var(--muted); font-size: 0.84rem; line-height: 1.4; }
+.note, .foot { margin: 0; color: var(--muted); font-size: 0.82rem; line-height: 1.45; }
+.foot { text-align: center; padding: 4px 8px 0; }
+.cap { margin: 0; color: var(--muted); font-size: 0.8rem; line-height: 1.35; }
+.fig { margin: 0; font: 700 1.3rem/1.15 var(--font-display); letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+.fig small, .sky-big small { font-size: 0.55em; font-weight: 600; margin-left: 3px; }
+
+/* the sky: Apple Weather's idea, a gradient that follows the time of day, with the sun on its arc */
+.sky { position: relative; min-height: 262px; border-radius: 26px; padding: 18px 20px 16px; color: #fff; overflow: hidden;
+  display: grid; align-content: end; isolation: isolate; transition: background 0.6s ease; box-shadow: 0 14px 34px -18px rgba(20, 60, 120, 0.6); }
+.sky[data-phase="day"] { background: linear-gradient(180deg, #3d84d8 0%, #6aa9ef 55%, #a8d0f7 100%); }
+.sky[data-phase="dawn"] { background: linear-gradient(180deg, #5b7fcf 0%, #e8a27a 70%, #f6c48f 100%); }
+.sky[data-phase="dusk"] { background: linear-gradient(180deg, #3f4f9a 0%, #b9668f 60%, #f19566 100%); }
+.sky[data-phase="night"] { background: radial-gradient(120% 90% at 50% 0%, #22386a 0%, #101d3c 60%, #0b1530 100%); }
+.sky[data-phase="night"]::before { content: ""; position: absolute; inset: 0; z-index: -1; opacity: 0.8;
+  background-image: radial-gradient(1.5px 1.5px at 12% 22%, #fff 99%, transparent), radial-gradient(1px 1px at 28% 12%, #fff 99%, transparent),
+    radial-gradient(1.5px 1.5px at 62% 18%, #fff 99%, transparent), radial-gradient(1px 1px at 84% 30%, #fff 99%, transparent),
+    radial-gradient(1px 1px at 45% 34%, #fff 99%, transparent), radial-gradient(1.5px 1.5px at 92% 10%, #fff 99%, transparent); }
+.arc { position: absolute; left: 50%; top: 14px; width: min(100%, 340px); transform: translateX(-50%); overflow: visible; z-index: -1; }
+.arc-all { fill: none; stroke: rgba(255, 255, 255, 0.4); stroke-width: 2; stroke-dasharray: 2 7; stroke-linecap: round; }
+.arc-done { fill: none; stroke: rgba(255, 255, 255, 0.85); stroke-width: 2.5; stroke-linecap: round; transition: stroke-dasharray 0.6s ease; }
+#sun-mark { transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1); }
+#sun-mark .glow { fill: rgba(255, 220, 120, 0.38); filter: blur(4px); }
+#sun-mark .pixsun rect { fill: #ffd34d; shape-rendering: crispEdges; }
+.sky[data-phase="night"] #sun-mark { opacity: 0; }
+.sky-read { text-align: center; display: grid; gap: 2px; padding-top: 68px; }
+.sky-when { margin: 0; font-size: 0.86rem; font-weight: 600; opacity: 0.9; }
+.sky-big { margin: 0; font: 800 4rem/1 var(--font-display); letter-spacing: -0.04em; font-variant-numeric: tabular-nums; text-shadow: 0 2px 16px rgba(10, 30, 70, 0.18); }
+.sky-status { margin: 4px 0 0; font-size: 0.95rem; font-weight: 600; }
+.sky-times { margin: 14px 0 0; display: flex; justify-content: space-between; font-size: 0.8rem; font-weight: 600; opacity: 0.85; }
+
+.alert { background: #fff6e8; box-shadow: inset 0 0 0 1px #f5d9a6; grid-template-columns: auto minmax(0, 1fr); align-items: start; gap: 12px; }
+.alert ion-icon { font-size: 26px; color: #b86b00; margin-top: 2px; }
+.alert h3 { margin: 0; font: 700 1rem/1.3 var(--font-display); }
+.alert p { margin: 4px 0 0; font-size: 0.9rem; color: var(--ink-2); line-height: 1.45; }
+.alert ion-button { margin: 8px 0 0; }
+
+/* where the power goes: Tesla's flow, with dots running along the lanes */
+.flow { width: 100%; height: auto; overflow: visible; }
+.lane { fill: none; stroke: #e7ecf3; stroke-width: 4; stroke-linecap: round; }
+.lane.on { stroke: #f0e1c2; }
+.lane.on.blue { stroke: #d9e3f6; }
+.node circle { fill: #fff; stroke: var(--line); stroke-width: 2; }
+.node ion-icon { font-size: 28px; display: block; }
+.node.solar ion-icon { color: #e09a12; }
+.node.home ion-icon { color: var(--ink); }
+.node.grid ion-icon { color: var(--c-clean); }
+.node.on circle { stroke: #f4c770; filter: drop-shadow(0 0 8px rgba(242, 165, 22, 0.35)); }
+.node.grid.on circle { stroke: #9db6e6; filter: drop-shadow(0 0 8px rgba(63, 111, 196, 0.25)); }
+.dot { fill: var(--sun); }
+.dot.blue { fill: var(--c-clean); }
+.flow-legend { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; text-align: center; }
+.flow-legend p { margin: 0; display: grid; gap: 2px; font-size: 0.78rem; color: var(--muted); line-height: 1.3; }
+.flow-legend b { font: 700 1.1rem/1.2 var(--font-display); color: var(--ink); font-variant-numeric: tabular-nums; }
+
+.chart { width: 100%; height: 210px; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 0.78rem; color: var(--muted); }
+.legend > span { display: inline-flex; align-items: center; gap: 6px; }
+.key { display: inline-block; width: 16px; height: 0; border-top: 2.5px solid var(--c-solar); }
+.key.k-ahead { border-top-style: dashed; opacity: 0.75; }
+.key.k-clean { border-top: 2px dashed var(--c-clean); }
+.figs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; padding-top: 4px; border-top: 1px solid var(--line); }
+.figs > div { padding-top: 10px; }
+.split { display: grid; gap: 8px; }
+.split-bar { display: flex; gap: 2px; height: 10px; border-radius: 6px; overflow: hidden; }
+.split-bar i { display: block; height: 100%; }
+.split-bar .self { background: var(--c-solar); border-radius: 6px 0 0 6px; }
+.split-bar .out { background: var(--c-clean); border-radius: 0 6px 6px 0; }
+.split-keys { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 0.8rem; color: var(--ink-2); }
+.split-keys span { display: inline-flex; align-items: center; gap: 6px; }
+.split-keys i { width: 9px; height: 9px; border-radius: 3px; display: inline-block; }
+
+.dust { grid-template-columns: auto minmax(0, 1fr); gap: 14px; align-items: start; }
+.badge-ic { width: 44px; height: 44px; border-radius: 14px; display: grid; place-items: center; font-size: 24px; }
+.badge-ic.sun { background: var(--sun-soft); color: #b86b00; }
+.badge-ic.green { background: var(--green-soft); color: var(--green-ink); }
+.badge-ic.blue { background: #e6eefb; color: #2f5aa8; }
+.badge-ic.grey { background: #eef1f5; color: #5d6a80; }
+.dust h3, .clean h3 { margin: 0; font: 700 1rem/1.3 var(--font-display); }
+.dust p, .clean p { margin: 4px 0 0; color: var(--ink-2); font-size: 0.9rem; line-height: 1.45; }
+.dust ion-button, .clean ion-button { margin: 10px 0 0; }
+
+.events ion-item, .cal ion-item, .help ion-item { --padding-start: 0; --inner-padding-end: 0; --min-height: 58px; }
+.events ion-icon[slot="start"], .help ion-icon[slot="start"] { margin-inline-end: 12px; font-size: 22px; }
+.ev-title { font-weight: 600; font-size: 0.95rem; }
+.ev-when { color: var(--muted); font-size: 0.8rem; }
+.empty { margin: 0; color: var(--muted); font-size: 0.9rem; }
+
+/* forecast */
+.days { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(150px, 1fr); gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory;
+  padding: 2px 2px 6px; margin: 0 -2px; scrollbar-width: none; }
+.days::-webkit-scrollbar { display: none; }
+.day { scroll-snap-align: start; background: var(--surface); border-radius: 22px; padding: 16px; display: grid; gap: 6px; justify-items: start;
+  box-shadow: 0 1px 1px rgba(20, 35, 63, 0.04), 0 8px 24px -14px rgba(20, 35, 63, 0.22); }
+.day .dname { margin: 0; font: 700 1rem/1.2 var(--font-display); }
+.day .ddate { margin: 0; color: var(--muted); font-size: 0.8rem; }
+.day ion-icon { font-size: 38px; margin: 6px 0 2px; }
+.day .sky-sun { color: #e09a12; } .day .sky-part { color: #d08a1a; } .day .sky-cloud, .day .sky-haze { color: #7d8aa3; }
+.day .sky-rain, .day .sky-storm { color: #3f6fc4; }
+.day .units { margin: 0; font: 800 1.6rem/1 var(--font-display); letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+.day .units small { font-size: 0.5em; font-weight: 600; color: var(--muted); margin-left: 3px; }
+.day .rs { margin: 0; color: var(--green-ink); font-weight: 600; font-size: 0.9rem; }
+.day .meta { margin: 2px 0 0; color: var(--muted); font-size: 0.78rem; line-height: 1.35; }
+
+/* money */
+.month { gap: 4px; }
+.eyebrow { margin: 0; color: var(--muted); font-size: 0.86rem; font-weight: 600; }
+.hero-fig { margin: 2px 0 0; font: 800 2.9rem/1.05 var(--font-display); letter-spacing: -0.04em; color: var(--green-ink); font-variant-numeric: tabular-nums; }
+.promise { margin-top: 12px; display: grid; gap: 6px; }
+.track { height: 10px; border-radius: 6px; background: #edf1f6; overflow: hidden; }
+.track i { display: block; height: 100%; border-radius: 6px; background: var(--c-save); transition: width 0.8s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.track.low i { background: #d9921b; }
+.promise p { margin: 0; font-size: 0.86rem; color: var(--ink-2); }
+.tiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.tile { background: var(--surface); border-radius: 20px; padding: 14px 16px; display: grid; gap: 6px; align-content: start;
+  box-shadow: 0 1px 1px rgba(20, 35, 63, 0.04), 0 8px 24px -14px rgba(20, 35, 63, 0.22); }
+.tile ion-icon { font-size: 22px; }
+.tile .fig { font-size: 1.35rem; }
+
+/* care */
+.clean { grid-template-columns: auto minmax(0, 1fr); gap: 14px; align-items: start; }
+.cal .when { display: grid; place-items: center; width: 46px; height: 46px; margin-inline-end: 12px; border-radius: 13px; background: #f1f4f8;
+  font: 700 1.05rem/1 var(--font-display); }
+.cal .when small { display: block; font: 600 0.62rem/1 var(--ion-font-family); color: var(--muted); margin-top: 3px; text-transform: none; }
+.cal-what { font-weight: 600; font-size: 0.95rem; }
+.cal-in { color: var(--muted); font-size: 0.8rem; }
+.warranty { display: grid; gap: 12px; position: relative; }
+.w-row { display: grid; gap: 5px; }
+.w-row p { margin: 0; display: flex; justify-content: space-between; gap: 10px; font-size: 0.86rem; }
+.w-row p span:last-child { color: var(--muted); }
+.w-track { position: relative; height: 8px; border-radius: 5px; background: #eef1f5; }
+.w-track i { position: absolute; inset: 0 auto 0 0; border-radius: 5px; background: var(--c-save); opacity: 0.85; }
+.w-track b { position: absolute; top: -4px; bottom: -4px; width: 2px; border-radius: 1px; background: var(--ink); }
+.install { margin: 4px 0 0; --border-radius: 14px; font-weight: 600; }
+
+/* sheets */
+.sheet { padding: 24px 20px 32px; display: grid; gap: 12px; }
+.sheet h3 { margin: 0; font: 750 1.3rem/1.25 var(--font-display); letter-spacing: -0.02em; }
+.sheet .when { margin: 0; color: var(--muted); font-size: 0.86rem; }
+.sheet p { margin: 0; line-height: 1.5; color: var(--ink-2); }
+.sheet h4 { margin: 6px 0 0; font: 700 0.95rem/1.3 var(--font-display); }
+.evidence { padding: 12px 14px; border-radius: 14px; background: #f3f6fa; font-size: 0.9rem; line-height: 1.45; color: var(--ink); }
+.sheet .row { display: flex; gap: 10px; flex-wrap: wrap; }
+.brands { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.brands span { padding: 10px 6px; border-radius: 12px; background: #f3f6fa; text-align: center; font-weight: 600; font-size: 0.86rem; }
+.settings-note { margin: 4px 16px; color: var(--muted); font-size: 0.82rem; line-height: 1.45; }
+.t-title { font-family: var(--font-display); }

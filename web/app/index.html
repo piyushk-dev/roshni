@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>My solar – Surya Saathi</title>
+<meta name="description" content="The app for your rooftop solar: live output, today's curve, the next three days, savings, dust and the day to clean, inverter events explained, and 25 years of care.">
+<meta name="theme-color" content="#f4f7fa">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="My solar">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..700&family=Mukta:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500..800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@ionic/core@8.4.1/css/ionic.bundle.css">
+<link rel="stylesheet" href="app.css">
+<script>
+  // On the website the app runs inside an iPhone frame, so it takes iOS styling whatever the browser is
+  window.Ionic = { config: new URLSearchParams(location.search).has("embed") ? { mode: "ios" } : {} };
+  // inside the website's iPhone frame there are no safe-area insets, so leave room for the island and home bar
+  if (new URLSearchParams(location.search).has("embed")) {
+    document.documentElement.classList.add("embed");
+    document.documentElement.style.setProperty("--ion-safe-area-top", "50px");
+    document.documentElement.style.setProperty("--ion-safe-area-bottom", "20px");
+  }
+</script>
+<script src="../config.js"></script>
+<script type="module" src="https://cdn.jsdelivr.net/npm/@ionic/core@8.4.1/dist/ionic/ionic.esm.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js" defer></script>
+<script src="app.js" defer></script>
+</head>
+<body>
+<ion-app>
+  <ion-tabs id="tabs">
+
+    <!-- today -->
+    <ion-tab tab="today">
+      <div class="ion-page">
+        <ion-header class="ion-no-border">
+          <ion-toolbar>
+            <ion-title><span class="t-title" data-t="appName"></span></ion-title>
+            <ion-buttons slot="end"><ion-button id="open-settings" aria-label="Settings"><ion-icon slot="icon-only" name="options-outline"></ion-icon></ion-button></ion-buttons>
+          </ion-toolbar>
+        </ion-header>
+        <ion-content>
+          <ion-refresher slot="fixed" class="refresher"><ion-refresher-content></ion-refresher-content></ion-refresher>
+          <div class="wrap">
+            <p class="site" id="site"></p>
+
+            <section class="sky" id="sky" aria-live="polite">
+              <svg class="arc" viewBox="0 0 320 150" aria-hidden="true">
+                <path id="arc-path" class="arc-all" d="M20 140 A140 125 0 0 1 300 140"/>
+                <path id="arc-done" class="arc-done" d="M20 140 A140 125 0 0 1 300 140"/>
+                <g id="sun-mark"><circle class="glow" r="17"/><g class="pixsun" transform="translate(-9 -9)"><rect x="6" y="6" width="6" height="6"/><rect x="8" y="1" width="2" height="3"/><rect x="8" y="14" width="2" height="3"/><rect x="1" y="8" width="3" height="2"/><rect x="14" y="8" width="3" height="2"/><rect x="3" y="3" width="2" height="2"/><rect x="13" y="3" width="2" height="2"/><rect x="3" y="13" width="2" height="2"/><rect x="13" y="13" width="2" height="2"/></g></g>
+              </svg>
+              <div class="sky-read">
+                <p class="sky-when" id="sky-when"></p>
+                <p class="sky-big"><span id="sky-kw">0</span><small>kW</small></p>
+                <p class="sky-status" id="sky-status"></p>
+              </div>
+              <p class="sky-times"><span id="sky-rise"></span><span id="sky-set"></span></p>
+            </section>
+
+            <section class="card alert" id="live-event" hidden></section>
+
+            <section class="card flow-card">
+              <h2 class="card-title" data-t="flowTitle"></h2>
+              <svg class="flow" viewBox="0 0 320 170" aria-hidden="true">
+                <path id="p-sh" class="lane" d="M160 46 C160 90 70 92 70 126"/>
+                <path id="p-sg" class="lane" d="M160 46 C160 90 250 92 250 126"/>
+                <path id="p-gh" class="lane" d="M226 140 L94 140"/>
+                <g id="dots"></g>
+                <g class="node solar" transform="translate(160 30)"><circle r="24"/><foreignObject x="-14" y="-14" width="28" height="28"><ion-icon name="sunny"></ion-icon></foreignObject></g>
+                <g class="node home" transform="translate(70 140)"><circle r="24"/><foreignObject x="-14" y="-14" width="28" height="28"><ion-icon name="home"></ion-icon></foreignObject></g>
+                <g class="node grid" transform="translate(250 140)"><circle r="24"/><foreignObject x="-14" y="-14" width="28" height="28"><ion-icon name="flash"></ion-icon></foreignObject></g>
+              </svg>
+              <div class="flow-legend">
+                <p><b id="f-solar"></b><span data-t="fSolar"></span></p>
+                <p><b id="f-home"></b><span data-t="fHome"></span></p>
+                <p><b id="f-grid"></b><span id="f-grid-label"></span></p>
+              </div>
+            </section>
+
+            <section class="card">
+              <div class="card-head">
+                <h2 class="card-title" data-t="todayTitle"></h2>
+                <p class="hint" data-t="scrubHint"></p>
+              </div>
+              <div class="chart" id="chart-today" role="img"></div>
+              <div class="legend">
+                <span><i class="key k-sun"></i><span data-t="kYours"></span></span>
+                <span><i class="key k-ahead"></i><span data-t="kAhead"></span></span>
+                <span><i class="key k-clean"></i><span data-t="kClean"></span></span>
+              </div>
+              <div class="figs">
+                <div><p class="fig" id="t-sofar"></p><p class="cap" data-t="cSoFar"></p></div>
+                <div><p class="fig" id="t-saved"></p><p class="cap" data-t="cSaved"></p></div>
+                <div><p class="fig" id="t-day"></p><p class="cap" data-t="cDay"></p></div>
+              </div>
+              <div class="split" id="t-split"></div>
+            </section>
+
+            <section class="card dust" id="dust-card"></section>
+
+            <section class="card">
+              <div class="card-head"><h2 class="card-title" data-t="eventsTitle"></h2><p class="hint" data-t="eventsSub"></p></div>
+              <ion-list lines="inset" id="events" class="events"></ion-list>
+            </section>
+
+            <p class="foot" id="foot"></p>
+          </div>
+        </ion-content>
+      </div>
+    </ion-tab>
+
+    <!-- forecast -->
+    <ion-tab tab="ahead">
+      <div class="ion-page">
+        <ion-header class="ion-no-border"><ion-toolbar><ion-title data-t="tAhead"></ion-title></ion-toolbar></ion-header>
+        <ion-content>
+          <div class="wrap">
+            <div class="days" id="days"></div>
+            <section class="card">
+              <div class="card-head"><h2 class="card-title" data-t="historyTitle"></h2><p class="hint" id="history-avg"></p></div>
+              <div class="chart" id="chart-history" role="img"></div>
+            </section>
+            <p class="foot" data-t="aheadFoot"></p>
+          </div>
+        </ion-content>
+      </div>
+    </ion-tab>
+
+    <!-- money -->
+    <ion-tab tab="money">
+      <div class="ion-page">
+        <ion-header class="ion-no-border"><ion-toolbar><ion-title data-t="tMoney"></ion-title></ion-toolbar></ion-header>
+        <ion-content>
+          <div class="wrap">
+            <section class="card month">
+              <p class="eyebrow" data-t="monthTitle"></p>
+              <p class="hero-fig" id="m-rs"></p>
+              <p class="cap" id="m-kwh"></p>
+              <div class="promise" id="promise"></div>
+            </section>
+            <section class="tiles" id="life"></section>
+            <section class="card">
+              <div class="card-head"><h2 class="card-title" data-t="yearsTitle"></h2><p class="hint" data-t="yearsSub"></p></div>
+              <div class="chart" id="chart-years" role="img"></div>
+              <p class="note" data-t="inverterNote"></p>
+            </section>
+          </div>
+        </ion-content>
+      </div>
+    </ion-tab>
+
+    <!-- care -->
+    <ion-tab tab="care">
+      <div class="ion-page">
+        <ion-header class="ion-no-border"><ion-toolbar><ion-title data-t="tCare"></ion-title></ion-toolbar></ion-header>
+        <ion-content>
+          <div class="wrap">
+            <section class="card clean" id="clean-card"></section>
+            <section class="card">
+              <h2 class="card-title" data-t="calTitle"></h2>
+              <ion-list lines="inset" id="calendar" class="cal"></ion-list>
+            </section>
+            <section class="card">
+              <h2 class="card-title" data-t="warrantyTitle"></h2>
+              <div class="warranty" id="warranty"></div>
+            </section>
+            <section class="card">
+              <h2 class="card-title" data-t="helpTitle"></h2>
+              <ion-list lines="inset" class="help">
+                <ion-item button detail href="../#support" target="_top"><ion-icon slot="start" name="chatbubbles-outline"></ion-icon><ion-label><span data-t="helpSupport"></span></ion-label></ion-item>
+                <ion-item button detail href="../#firstbill" target="_top"><ion-icon slot="start" name="receipt-outline"></ion-icon><ion-label><span data-t="helpBill"></span></ion-label></ion-item>
+                <ion-item button detail href="../#panel" target="_top"><ion-icon slot="start" name="scan-outline"></ion-icon><ion-label><span data-t="helpPanel"></span></ion-label></ion-item>
+                <ion-item button detail id="open-connect"><ion-icon slot="start" name="link-outline"></ion-icon><ion-label><span data-t="helpConnect"></span></ion-label></ion-item>
+              </ion-list>
+            </section>
+            <ion-button expand="block" fill="outline" class="install" id="install" hidden><ion-icon slot="start" name="download-outline"></ion-icon><span data-t="install"></span></ion-button>
+          </div>
+        </ion-content>
+      </div>
+    </ion-tab>
+
+    <ion-tab-bar slot="bottom">
+      <ion-tab-button tab="today"><ion-icon name="sunny-outline"></ion-icon><ion-label><span data-t="tToday"></span></ion-label></ion-tab-button>
+      <ion-tab-button tab="ahead"><ion-icon name="partly-sunny-outline"></ion-icon><ion-label><span data-t="tAhead"></span></ion-label></ion-tab-button>
+      <ion-tab-button tab="money"><ion-icon name="wallet-outline"></ion-icon><ion-label><span data-t="tMoney"></span></ion-label></ion-tab-button>
+      <ion-tab-button tab="care"><ion-icon name="construct-outline"></ion-icon><ion-label><span data-t="tCare"></span></ion-label></ion-tab-button>
+    </ion-tab-bar>
+  </ion-tabs>
+
+  <!-- an inverter event, explained -->
+  <ion-modal id="event-sheet" initial-breakpoint="0.75" breakpoints="[0, 0.75, 1]">
+    <div class="sheet" id="event-body"></div>
+  </ion-modal>
+
+  <!-- the home's system -->
+  <ion-modal id="settings">
+    <ion-header><ion-toolbar>
+      <ion-buttons slot="start"><ion-button id="settings-cancel" data-t="cancel"></ion-button></ion-buttons>
+      <ion-title data-t="settingsTitle"></ion-title>
+      <ion-buttons slot="end"><ion-button id="settings-save" strong data-t="save"></ion-button></ion-buttons>
+    </ion-toolbar></ion-header>
+    <ion-content class="ion-padding settings">
+      <ion-list inset>
+        <ion-item><ion-input id="s-kw" type="number" inputmode="decimal" min="0.5" max="20" step="0.5" label-placement="stacked" data-label="sKw"></ion-input></ion-item>
+        <ion-item><ion-input id="s-place" type="text" enterkeyhint="search" label-placement="stacked" data-label="sPlace"></ion-input></ion-item>
+        <ion-item><ion-input id="s-installed" type="date" label-placement="stacked" data-label="sInstalled"></ion-input></ion-item>
+        <ion-item><ion-input id="s-cleaned" type="date" label-placement="stacked" data-label="sCleaned"></ion-input></ion-item>
+      </ion-list>
+      <ion-list inset>
+        <ion-item><ion-input id="s-use" type="number" inputmode="numeric" min="30" label-placement="stacked" data-label="sUse"></ion-input></ion-item>
+        <ion-item><ion-input id="s-promised" type="number" inputmode="numeric" min="0" label-placement="stacked" data-label="sPromised"></ion-input></ion-item>
+        <ion-item><ion-input id="s-rate" type="number" inputmode="decimal" min="1" max="20" step="0.1" label-placement="stacked" data-label="sRate"></ion-input></ion-item>
+      </ion-list>
+      <ion-list inset>
+        <ion-item><ion-select id="s-lang" interface="action-sheet" label-placement="stacked" data-label="sLang"><ion-select-option value="en">English</ion-select-option><ion-select-option value="hi">हिंदी</ion-select-option></ion-select></ion-item>
+      </ion-list>
+      <p class="settings-note" id="settings-note"></p>
+    </ion-content>
+  </ion-modal>
+
+  <!-- connecting a real inverter -->
+  <ion-modal id="connect" initial-breakpoint="0.8" breakpoints="[0, 0.8, 1]">
+    <div class="sheet" id="connect-body"></div>
+  </ion-modal>
+
+  <ion-toast id="toast" duration="1800" position="top"></ion-toast>
+</ion-app>
+</body>
+</html>
