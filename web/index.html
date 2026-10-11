@@ -737,7 +737,8 @@
   <!-- ============ results ============ -->
   <div class="wrap views">
     <section id="busy" hidden>
-      <div class="loader" aria-hidden="true"><i></i><i></i><i></i></div>
+      <figure class="scan" id="scan" hidden aria-hidden="true"><img id="scan-img" alt=""><i class="beam"></i><i class="beam"></i><i class="beam"></i></figure>
+      <div class="loader" id="loader" aria-hidden="true"><i></i><i></i><i></i></div>
       <p id="busy-text" role="status"></p>
     </section>
 
@@ -748,8 +749,10 @@
 
     <section id="result" class="view" hidden>
       <div id="verdict" class="verdict"></div>
+      <div id="trace" class="aws-trace" hidden></div>
       <div id="tiles" class="tiles"></div>
       <p id="emi-note" class="hint"></p>
+      <div id="bills" class="bills" hidden></div>
       <div id="bonus" class="bonus" hidden></div>
       <div id="doctor" class="panel-card doctor" hidden></div>
       <div class="panel-card">
@@ -779,6 +782,7 @@
     <section id="quote-result" class="view" hidden>
       <p id="qr-head" class="panel-title"></p>
       <div id="q-verdict" class="verdict"></div>
+      <div id="q-trace" class="aws-trace" hidden></div>
       <ul id="q-issues" class="notes issues"></ul>
       <ul id="q-notes" class="notes hint"></ul>
       <div class="panel-card" id="q-ask-card">

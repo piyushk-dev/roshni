@@ -147,6 +147,27 @@ def test_bill_route(monkeypatch, delhi_yield):
     assert body["analysis"]["verdict"] == "go"
     assert body["analysis"]["calibration"] == pytest.approx(1.0, abs=0.02)  # the energy-charge model matches the bill
     assert "consumer" not in json.dumps(body["bill"]).lower()
+    steps = [(x["service"], x["what"]) for x in body["trace"]]
+    assert steps[0] == ("bedrock", "bill") and ("lambda", "sums") in steps  # the result says which AWS service did what
+    assert body["trace"][0]["reads"] == bill_reader.READS and all(x["ms"] >= 0 for x in body["trace"])
+
+
+def test_the_sample_bill_moves_no_counters(monkeypatch, delhi_yield):
+    from surya import knowledge
+
+    monkeypatch.setattr(pipeline, "yield_for", lambda lat, lon: delhi_yield)
+    real = bill_reader.read_bill
+    monkeypatch.setattr(bill_reader, "read_bill", lambda data, mt: real(data, mt, client=FakeBedrock()))
+    calls = []
+    monkeypatch.setattr(knowledge, "count", lambda **k: calls.append(("count", k)))
+    monkeypatch.setattr(knowledge, "record_tariff", lambda *a, **k: calls.append(("tariff", a)))
+
+    def post(sample):
+        body = {"file_base64": base64.b64encode(b"img").decode(), "media_type": "image/png", **({"sample": True} if sample else {})}
+        return handler.lambda_handler({"requestContext": {"http": {"method": "POST"}}, "rawPath": "/bill", "body": json.dumps(body)}, None)
+
+    assert post(True)["statusCode"] == 200 and calls == []
+    assert post(False)["statusCode"] == 200 and "count" in {c[0] for c in calls}  # a real bill counts
 
 
 def test_slabs_are_learned_from_the_bill_itself():

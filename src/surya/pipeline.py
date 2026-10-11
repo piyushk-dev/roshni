@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 import os
 
-from . import bill_reader, knowledge, quote
+from . import bill_reader, knowledge, quote, trace
 from .calculator import Analysis, Household, analyze
 from .format import BillProblem
 from .solar import SolarYield, fetch_sources, solar_yield
@@ -20,19 +20,22 @@ def yield_for(lat: float, lon: float) -> SolarYield:
     lat, lon = round(lat, 1), round(lon, 1)
     key = f"v2:{lat}:{lon}"  # v2 added monthly temperature
     if key in _yields:
-        return _yields[key]
+        with trace.step("lambda", "sun_warm"):
+            return _yields[key]
 
     table = None
     if os.environ.get("YIELD_TABLE"):
         import boto3
 
         table = boto3.resource("dynamodb").Table(os.environ["YIELD_TABLE"])
-        item = table.get_item(Key={"pk": key}).get("Item")
+        with trace.step("dynamodb", "sun_cache"):
+            item = table.get_item(Key={"pk": key}).get("Item")
         if item:
             _yields[key] = SolarYield(**{k: tuple(v) if isinstance(v, list) else v for k, v in json.loads(item["yield"]).items()})
             return _yields[key]
 
-    sy = solar_yield(fetch_sources(lat, lon))
+    with trace.step("pvgis_nasa", "sun_fetch"):
+        sy = solar_yield(fetch_sources(lat, lon))
     if table:
         table.put_item(Item={"pk": key, "yield": json.dumps(sy.__dict__)})
     _yields[key] = sy
@@ -47,7 +50,8 @@ def _media_type(media_type: str) -> str:
 
 
 def check_quote(data: bytes, media_type: str, sample: bool = False) -> tuple[dict, list[quote.Flag], dict]:
-    fields, _ = quote.read_quote(data, _media_type(media_type))
+    with trace.step("bedrock", "quote"):
+        fields, _ = quote.read_quote(data, _media_type(media_type))
     if not fields.get("is_solar_quote"):
         return fields, [], {}
     state = (fields.get("state") or "DL").upper()[:2]
@@ -75,9 +79,11 @@ def _learned_tariff(reading: bill_reader.BillReading) -> dict | None:
     return None
 
 
-def request_from_bill(data: bytes, media_type: str) -> tuple[dict, bill_reader.BillReading]:
-    """Read a bill and turn it into the same request body POST /analyze takes."""
-    reading = bill_reader.read_bill(data, _media_type(media_type))
+def request_from_bill(data: bytes, media_type: str, sample: bool = False) -> tuple[dict, bill_reader.BillReading]:
+    """Read a bill and turn it into the same request body POST /analyze takes. The bundled sample teaches nothing."""
+    with trace.step("bedrock", "bill", reads=bill_reader.READS) as s:
+        reading = bill_reader.read_bill(data, _media_type(media_type))
+        s["model"] = reading.model_id
     if not reading.is_electricity_bill:
         raise BillProblem("not_a_bill")
     if not reading.sanctioned_load_kw or not reading.monthly_units:
@@ -89,7 +95,7 @@ def request_from_bill(data: bytes, media_type: str) -> tuple[dict, bill_reader.B
         "last_bill_units": reading.units_billed,
         "last_bill_energy_rs": reading.energy_charge_rs,
     }
-    if reading.slabs:  # every bill teaches its provider's current tariff
+    if reading.slabs and not sample:  # every bill teaches its provider's current tariff
         fixed_per_kw = reading.fixed_charge_rs / reading.sanctioned_load_kw if reading.fixed_charge_rs else None
         knowledge.record_tariff(reading.state or "IN", reading.discom_name or reading.discom, reading.slabs, fixed_per_kw, None, reading.billing_month)
     if reading.discom not in SUPPORTED_DISCOMS:
@@ -110,11 +116,12 @@ def tariff_for(body: dict) -> Tariff:
     return Tariff.from_spec(body["tariff"]) if body.get("tariff") else Tariff.for_discom(body["discom"])
 
 
-def bill_checkup(reading: bill_reader.BillReading, body: dict) -> list:
+def bill_checkup(reading: bill_reader.BillReading, body: dict, sample: bool = False) -> list:
     from . import doctor
 
     found = doctor.check(reading, tariff_for(body))
-    knowledge.count(bill_savings_rs=sum(f.saves_rs for f in found))
+    if not sample:
+        knowledge.count(bill_savings_rs=sum(f.saves_rs for f in found))
     return found
 
 
@@ -131,4 +138,6 @@ def run(body: dict) -> Analysis:
     )
     lat = float(body.get("lat") or tariff.default_lat)
     lon = float(body.get("lon") or tariff.default_lon)
-    return analyze(h, yield_for(lat, lon), tariff)
+    sun = yield_for(lat, lon)
+    with trace.step("lambda", "sums"):
+        return analyze(h, sun, tariff)

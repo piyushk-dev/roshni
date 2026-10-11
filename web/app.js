@@ -5,7 +5,7 @@ const MAX_EDGE_PX = 2000; // keeps bill text legible while staying far under the
 const SAMPLE = {
   discom: "BRPL",
   sanctioned_kw: 5,
-  monthly_units: { 1: 380, 2: 350, 3: 420, 4: 560, 5: 720, 6: 780, 7: 690, 8: 610, 9: 560, 10: 470, 11: 390, 12: 400 },
+  monthly_units: { 1: 335, 2: 394, 3: 447, 4: 621, 5: 731, 6: 793, 7: 685, 8: 630, 9: 599, 10: 440, 11: 382, 12: 382 },
 };
 
 const T = {
@@ -23,6 +23,15 @@ const T = {
     privacy: "Your name, address and consumer number are never read, and the bill isn't stored.",
     sample: "No bill handy? See a sample home →",
     reading: "Reading your bill…",
+    readingAws: "Amazon Bedrock is reading your bill: three reads at once, keeping what they agree on…",
+    traceTitle: (s) => `Answered on AWS in ${s} seconds, in the Mumbai region`,
+    traceSvc: { bedrock: "Amazon Bedrock", dynamodb: "Amazon DynamoDB", lambda: "AWS Lambda", pvgis_nasa: "PVGIS and NASA POWER" },
+    traceWhat: { bill: (n) => `read the bill ${n} times in parallel`, quote: "read the quotation", panel: "read the panel's label",
+      sun_cache: "this area's sunlight, from the cache", sun_fetch: "this area's sunlight, fetched once and cached", sun_warm: "this area's sunlight, already in memory",
+      sums: "four sizes, the subsidy, EMI and payback" },
+    billsTitle: "Your monthly bill", billsNow: "Today", billsAfter: (kw) => `With ${kw} kW solar`,
+    billsNowSub: (u) => `about ${u} units a month`, billsAfterSub: "an average month, after net metering",
+    billsZero: "Your panels cover the bill; units you export earn credit.",
     analyzing: "Working out the numbers…",
     go: (kw) => `Go solar: ${kw} kW`,
     skip: "Honest answer: skip solar for now",
@@ -79,6 +88,15 @@ const T = {
     privacy: "आपका नाम, पता और कंज़्यूमर नंबर कभी नहीं पढ़ा जाता, और बिल सेव नहीं होता।",
     sample: "बिल पास नहीं है? एक सैंपल घर देखें →",
     reading: "आपका बिल पढ़ा जा रहा है…",
+    readingAws: "Amazon Bedrock आपका बिल पढ़ रहा है: एक साथ तीन बार, और जिस पर तीनों सहमत हों वही रखता है…",
+    traceTitle: (s) => `AWS पर ${s} सेकंड में जवाब, मुंबई रीजन में`,
+    traceSvc: { bedrock: "Amazon Bedrock", dynamodb: "Amazon DynamoDB", lambda: "AWS Lambda", pvgis_nasa: "PVGIS और NASA POWER" },
+    traceWhat: { bill: (n) => `बिल एक साथ ${n} बार पढ़ा`, quote: "कोटेशन पढ़ा", panel: "पैनल का लेबल पढ़ा",
+      sun_cache: "इस इलाके की धूप, कैश से", sun_fetch: "इस इलाके की धूप, एक बार लाकर कैश की", sun_warm: "इस इलाके की धूप, पहले से मेमोरी में",
+      sums: "चार साइज़, सब्सिडी, EMI और लागत वसूली" },
+    billsTitle: "आपका महीने का बिल", billsNow: "आज", billsAfter: (kw) => `${kw} kW सोलर के साथ`,
+    billsNowSub: (u) => `महीने में लगभग ${u} यूनिट`, billsAfterSub: "औसत महीना, नेट मीटरिंग के बाद",
+    billsZero: "पैनल पूरा बिल चुका देते हैं; ग्रिड को भेजी यूनिट का क्रेडिट मिलता है।",
     analyzing: "हिसाब लगाया जा रहा है…",
     go: (kw) => `सोलर लगाएँ: ${kw} kW`,
     skip: "सच कहें तो: अभी सोलर न लगाएँ",
@@ -586,8 +604,11 @@ function toBase64(blob) {
   });
 }
 
-async function run(label, work) {
-  $("busy-text").textContent = t(label);
+async function run(label, work, photo) {
+  $("busy-text").textContent = t(photo ? "readingAws" : label);
+  $("scan").hidden = !photo;
+  $("loader").hidden = !!photo;
+  if (photo) $("scan-img").src = photo;
   show("busy");
   try {
     state.last = await work();
@@ -597,7 +618,75 @@ async function run(label, work) {
   } catch (e) {
     $("problem-text").textContent = e.message || t("error");
     show("problem");
+  } finally {
+    if (photo && photo.startsWith("blob:")) URL.revokeObjectURL(photo);
   }
+}
+
+// which AWS service did each step of the answer, and how long it took, as the API measured it
+function renderTrace(id, steps) {
+  steps = (steps || []).filter((x) => x.what !== "sun_warm");  // a lookup already in memory takes no time worth showing
+  const box = $(id);
+  box.hidden = !steps || !steps.length;
+  if (box.hidden) return;
+  box.innerHTML = "";
+  const total = steps.reduce((s, x) => s + x.ms, 0);
+  const head = document.createElement("p");
+  head.className = "trace-head";
+  head.textContent = t("traceTitle", (total / 1000).toFixed(1));
+  const ol = document.createElement("ol");
+  for (const x of steps) {
+    const li = document.createElement("li");
+    const mark = document.createElement("i");
+    mark.className = "svc " + x.service;
+    const name = document.createElement("b");
+    const model = x.model ? (/nova-2-lite/.test(x.model) ? "Nova 2 Lite" : /haiku/.test(x.model) ? "Claude Haiku" : "") : "";
+    name.textContent = t("traceSvc")[x.service] + (model ? ` (${model})` : "");
+    const what = document.createElement("span");
+    const w = t("traceWhat")[x.what];
+    what.textContent = typeof w === "function" ? w(x.reads || 1) : w || x.what;
+    const ms = document.createElement("em");
+    ms.textContent = x.ms >= 1000 ? `${(x.ms / 1000).toFixed(1)} s` : `${x.ms} ms`;
+    li.append(mark, name, what, ms);
+    ol.append(li);
+  }
+  box.append(head, ol);
+}
+
+// today's bill beside the bill with solar; the second one counts down to its new amount
+function renderBills(a) {
+  const box = $("bills"), o = a.recommended;
+  box.hidden = !o;
+  if (!o) return;
+  const now = a.bill_now_rs_per_year / 12, after = Math.max(0, (a.bill_now_rs_per_year - o.savings_rs) / 12);
+  box.innerHTML = "";
+  const title = document.createElement("p");
+  title.className = "panel-title";
+  title.textContent = t("billsTitle");
+  const paper = (cls, label, amount, sub) => {
+    const d = document.createElement("div");
+    d.className = "paper " + cls;
+    const l = document.createElement("span");
+    l.textContent = label;
+    const v = document.createElement("b");
+    v.textContent = rupees(amount);
+    const s = document.createElement("small");
+    s.textContent = sub;
+    d.append(l, v, s);
+    return [d, v];
+  };
+  const [p1] = paper("now", t("billsNow"), now, t("billsNowSub", num(a.usage_units_per_year / 12)));
+  const [p2, amount] = paper("after", t("billsAfter", o.kw), now, after < 1 ? t("billsZero") : t("billsAfterSub"));
+  const arrow = document.createElement("i");
+  arrow.className = "bills-arrow";
+  arrow.setAttribute("aria-hidden", "true");
+  const row = document.createElement("div");
+  row.className = "bills-row";
+  row.append(p1, arrow, p2);
+  box.append(title, row);
+  const M = window.Motion;
+  if (!M || matchMedia("(prefers-reduced-motion: reduce)").matches) { amount.textContent = rupees(after); return; }
+  M.inView(row, () => { M.animate(now, after, { duration: 1.6, delay: 0.3, ease: [0.2, 0.8, 0.2, 1], onUpdate: (v) => { amount.textContent = rupees(v); } }); }, { amount: 0.6 });
 }
 
 async function runQuote(work, isSample) {
@@ -641,6 +730,7 @@ function renderQuote(data) {
   $("q-ask-title").textContent = v.ask_title;
   $("q-ask-card").hidden = v.ask.length === 0;
   $("qr-foot").textContent = v.foot;
+  renderTrace("q-trace", data.trace);
 }
 
 function render(data) {
@@ -684,6 +774,8 @@ function render(data) {
 
   optionsTable(a);
   billRead(data.bill);
+  renderTrace("trace", data.trace);
+  renderBills(a);
   $("share").href = shareLink(data);
   // the same text WhatsApp sends ("🎁 Delhi bonus: ..."); here the label becomes a title
   const bonus = $("bonus"), parts = (data.bonus || "").match(/^[^\p{L}\p{N}]*([^:]{3,40}):\s*([\s\S]*)$/u);
@@ -804,7 +896,7 @@ $("file").addEventListener("change", (e) => {
     const b = data.bill;
     state.lastBody = { discom: b.discom, sanctioned_kw: b.sanctioned_load_kw, monthly_units: b.monthly_units, last_bill_units: b.units_billed, last_bill_energy_rs: b.energy_charge_rs, ...extras() };
     return data;
-  });
+  }, file.type.startsWith("image/") ? URL.createObjectURL(file) : null);
 });
 
 $("quote-file").addEventListener("change", (e) => {
@@ -827,10 +919,18 @@ $("to-quote").addEventListener("click", () => {
   route("#quote-card", true);
 });
 
-$("sample").addEventListener("click", () => {
-  state.lastBody = { ...SAMPLE, ...extras() };
-  run("analyzing", () => post("/analyze", state.lastBody));
-});
+$("sample").addEventListener("click", () => run("reading", async () => {
+  try {
+    const blob = await (await fetch("sample-bill.png")).blob();
+    const data = await post("/bill", { file_base64: await toBase64(blob), media_type: "image/png", sample: true, ...extras() });
+    const b = data.bill;
+    state.lastBody = { discom: b.discom, sanctioned_kw: b.sanctioned_load_kw, monthly_units: b.monthly_units, last_bill_units: b.units_billed, last_bill_energy_rs: b.energy_charge_rs, ...extras() };
+    return data;
+  } catch (_) {
+    state.lastBody = { ...SAMPLE, ...extras() };
+    return post("/analyze", state.lastBody);
+  }
+}, "sample-bill.png"));
 
 $("locate").addEventListener("click", () => {
   if (!navigator.geolocation) return;

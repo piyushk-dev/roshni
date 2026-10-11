@@ -7,7 +7,7 @@ import json
 from dataclasses import asdict
 from importlib import resources
 
-from . import doctor, knowledge, market, panel, pipeline, places, product, quote, scam
+from . import doctor, knowledge, market, panel, pipeline, places, product, quote, scam, trace
 from .format import BillProblem, bonus_text, explain, message
 
 
@@ -40,6 +40,7 @@ def _fact_action(fact: tuple[str, str], event: dict) -> dict:
 
 def _handle(event: dict, context) -> dict:
     route = f"{event['requestContext']['http']['method']} {event['rawPath']}"
+    trace.start()
     params = event.get("queryStringParameters") or {}
     body = json.loads(event.get("body") or "{}")
     if route == "GET /vendors":
@@ -74,11 +75,13 @@ def _handle(event: dict, context) -> dict:
         if not data:
             raise ValueError("send a photo of the panel's label")
         media_type = pipeline._media_type(body.get("media_type", "image/jpeg"))
-        fields, _ = panel.read_label(data, media_type)
+        with trace.step("bedrock", "panel"):
+            fields, _ = panel.read_label(data, media_type)
         expect = body.get("expect_watt")
         flags = panel.check(fields, float(expect) if expect not in (None, "") else None, str(body.get("owner") or "")[:64] or None,
                             sample=bool(body.get("sample")))
-        return _response(200, {"fields": fields, "flags": flags, "views": {code: panel.render(fields, flags, code) for code in ("en", "hi")}})
+        return _response(200, {"fields": fields, "flags": flags, "views": {code: panel.render(fields, flags, code) for code in ("en", "hi")},
+                                "trace": trace.steps()})
     if route == "GET /plant":
         from . import plant
 
@@ -176,22 +179,25 @@ def _handle(event: dict, context) -> dict:
                 "band": band,
                 "views": {code: quote.render(q, flags, code, band) for code in ("en", "hi")},
                 "message": quote.message(q, flags, lang, band),
+                "trace": trace.steps(),
             })
+        sample = bool(body.get("sample"))  # the bundled sample bill moves no counters
         if route == "POST /bill":
-            request, reading = pipeline.request_from_bill(base64.b64decode(body["file_base64"]), body.get("media_type", "image/jpeg"))
+            request, reading = pipeline.request_from_bill(base64.b64decode(body["file_base64"]), body.get("media_type", "image/jpeg"), sample)
             body = {**{k: body[k] for k in ("lat", "lon", "roof_sqft") if k in body}, **request}
         a = pipeline.run(body)
-        if reading:
+        if reading and not sample:
             pipeline.count_analysis(a)
     except BillProblem as p:
         return _response(422, {"error": p.text(lang), "code": p.code})
     except (KeyError, ValueError, TypeError) as e:
         return _response(400, {"error": str(e)})
     reason, notes = explain(a, lang)
-    result = {"analysis": a.to_dict(), "reason": reason, "notes": notes, "bonus": bonus_text(a, lang), "message": message(a, lang)}
+    result = {"analysis": a.to_dict(), "reason": reason, "notes": notes, "bonus": bonus_text(a, lang), "message": message(a, lang),
+              "trace": trace.steps()}
     if reading:
         result["bill"] = asdict(reading)
-        found = pipeline.bill_checkup(reading, body)
+        found = pipeline.bill_checkup(reading, body, sample)
         result["doctor"] = {"findings": doctor.to_dict(found), "views": {code: doctor.render(found, code) for code in ("en", "hi")}}
     return _response(200, result)
 

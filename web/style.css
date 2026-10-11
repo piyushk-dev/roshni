@@ -540,7 +540,49 @@ code { font: 500 0.9rem/1.4 var(--font-code); background: var(--tint); color: va
 .views:has(> section:not([hidden])) { padding-block: clamp(36px, 6vw, 72px); }
 .view { display: grid; gap: 18px; max-width: 900px; margin-inline: auto; }
 #busy { display: grid; justify-items: center; gap: 22px; padding-block: 18vh; text-align: center; }
-#busy-text { font-size: 1.2rem; font-weight: 600; }
+#busy-text { font-size: 1.2rem; font-weight: 600; max-width: 34rem; text-wrap: balance; }
+/* the bill being read: three passes of light, one per parallel read */
+.scan { position: relative; width: min(300px, 72vw); aspect-ratio: 1000 / 1490; margin: 0; border-radius: 12px; overflow: hidden; background: #fff;
+  box-shadow: 0 1px 2px rgba(20, 35, 63, 0.08), 0 24px 48px -24px rgba(20, 35, 63, 0.45); }
+.scan img { width: 100%; height: 100%; display: block; object-fit: cover; object-position: top; }
+.scan .beam { position: absolute; left: 0; right: 0; top: -24%; height: 24%; animation: scan-pass 2.4s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+  background: linear-gradient(to bottom, rgba(34, 144, 90, 0), rgba(34, 144, 90, 0.14) 75%, rgba(34, 144, 90, 0.9) 100%); }
+.scan .beam:nth-of-type(2) { animation-duration: 2.9s; animation-delay: 0.5s;
+  background: linear-gradient(to bottom, rgba(63, 111, 196, 0), rgba(63, 111, 196, 0.12) 75%, rgba(63, 111, 196, 0.85) 100%); }
+.scan .beam:nth-of-type(3) { animation-duration: 3.4s; animation-delay: 1.1s;
+  background: linear-gradient(to bottom, rgba(194, 124, 0, 0), rgba(194, 124, 0, 0.12) 75%, rgba(194, 124, 0, 0.85) 100%); }
+@keyframes scan-pass { to { top: 100%; } }
+@media (prefers-reduced-motion: reduce) { .scan .beam { animation: none; display: none; } }
+
+/* which AWS service did each step, with the time the API measured */
+.aws-trace { margin: 14px 0 4px; padding: 14px 16px; border-radius: 14px; background: var(--surface); border: 1px solid var(--line); }
+.trace-head { font-weight: 650; color: var(--ink); margin-bottom: 8px; }
+.aws-trace ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.aws-trace li { display: grid; grid-template-columns: 12px auto minmax(0, 1fr) auto; gap: 10px; align-items: baseline; font-size: 0.95rem; color: var(--ink-2); }
+.aws-trace li b { font-weight: 600; color: var(--ink); white-space: nowrap; }
+.aws-trace li em { font-style: normal; font-variant-numeric: tabular-nums; color: var(--ink); font-weight: 600; }
+.svc { width: 12px; height: 12px; border-radius: 3px; align-self: center; background: #8a94a6; }
+.svc.bedrock { background: #01a88d; }
+.svc.lambda { background: #ed7100; }
+.svc.dynamodb { background: #c925d1; }
+.svc.pvgis_nasa { background: #3f6fc4; }
+@media (max-width: 560px) { .aws-trace li { grid-template-columns: 12px minmax(0, 1fr) auto; } .aws-trace li span { grid-column: 2 / -1; grid-row: 2; } }
+
+/* today's bill and the bill with solar, as two slips of paper */
+.bills { margin: 18px 0 6px; }
+.bills-row { display: grid; grid-template-columns: minmax(0, 1fr) 40px minmax(0, 1fr); align-items: center; gap: 8px; margin-top: 10px; }
+.paper { position: relative; display: grid; gap: 4px; padding: 18px 18px 26px; background: #fffdf7; border: 1px solid #ece4d0; border-bottom: 0;
+  box-shadow: 0 10px 24px -18px rgba(60, 45, 10, 0.5);
+  -webkit-mask: linear-gradient(#000 0 0) top / 100% calc(100% - 10px) no-repeat, conic-gradient(from 135deg at 50% 0, #000 90deg, #0000 0) bottom / 16px 10px repeat-x;
+  mask: linear-gradient(#000 0 0) top / 100% calc(100% - 10px) no-repeat, conic-gradient(from 135deg at 50% 0, #000 90deg, #0000 0) bottom / 16px 10px repeat-x; }
+.paper span { font-size: 0.92rem; color: var(--ink-2); font-weight: 600; }
+.paper b { font: 750 clamp(1.8rem, 4vw, 2.5rem)/1.1 var(--font-display); font-variant-numeric: tabular-nums; color: var(--ink); letter-spacing: -0.01em; }
+.paper small { font-size: 0.85rem; color: var(--muted); line-height: 1.35; }
+.paper.after { background: #f2fbf5; border-color: #cfe9d9; }
+.paper.after b { color: var(--green-ink); }
+.bills-arrow { height: 2px; background: var(--line); position: relative; }
+.bills-arrow::after { content: ""; position: absolute; right: -1px; top: -5px; border: 6px solid transparent; border-left-color: var(--line); border-right: 0; }
+@media (max-width: 560px) { .bills-row { grid-template-columns: minmax(0, 1fr); } .bills-arrow { display: none; } }
 .loader { display: flex; gap: 8px; }
 .loader i { width: 14px; height: 14px; background: var(--sun); animation: hop 0.9s steps(3, jump-none) infinite; }
 .loader i:nth-child(2) { animation-delay: 0.15s; background: var(--panel); }
