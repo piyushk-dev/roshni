@@ -4,6 +4,7 @@
 
 Built for the WeMakeDevs × AWS **Bharat Builds Tour: Environmental Hacks** · Track 3, Waste and Energy.
 
+- **Demo video (3 min):** https://youtu.be/owERy3rFx-o
 - **Website:** https://main.d3frlgja2w8q15.amplifyapp.com
 - **WhatsApp:** Twilio sandbox, +1 415 523 8886 (send the join code first)
 - **API:** https://26iznf3yc7.execute-api.ap-south-1.amazonaws.com

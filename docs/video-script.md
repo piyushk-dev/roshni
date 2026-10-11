@@ -1,5 +1,7 @@
 # Demo video: 3 minutes
 
+Published: https://youtu.be/owERy3rFx-o
+
 Judges see only this video, and a feature that isn't shown doesn't count. Show AWS on screen, not just in narration.
 
 ## Before recording

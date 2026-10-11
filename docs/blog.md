@@ -110,7 +110,7 @@ What owners told forums and regulators shaped what it shows:
 
 ## Try it
 
-- **Demo video:** [Roshni in 3 minutes](https://youtu.be/REPLACE_WITH_VIDEO_ID)
+- **Demo video:** [Roshni in 3 minutes](https://youtu.be/owERy3rFx-o)
 - **Website:** https://main.d3frlgja2w8q15.amplifyapp.com (press "See an example" to watch Bedrock read a sample bill)
 - **The app:** https://main.d3frlgja2w8q15.amplifyapp.com/app/
 - **Code:** https://github.com/piyushk-dev/roshni
