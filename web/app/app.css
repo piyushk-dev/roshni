@@ -92,6 +92,48 @@ ion-content { --padding-bottom: 24px; }
 
 /* where the power goes: Tesla's flow, with dots running along the lanes */
 .flow { width: 100%; height: auto; overflow: visible; }
+/* your roof, live: the house with the panels, the dust on them, and the power leaving */
+.roof { display: block; margin: 4px 0 10px; }
+.roof .sky-bg { fill: url(#roof-day); transition: fill 0.6s; }
+.roof.night .sky-bg { fill: url(#roof-night); }
+.roof .stars circle { fill: #fff; opacity: 0; transition: opacity 0.6s; }
+.roof.night .stars circle { opacity: 0.85; }
+.roof .sun circle { fill: #ffc93c; filter: drop-shadow(0 0 8px rgba(255, 190, 60, 0.75)); }
+.roof .sun .rays { stroke: #f6b21b; stroke-width: 2.4; stroke-linecap: round; transform-origin: 0 0; animation: rays 18s linear infinite; }
+@keyframes rays { to { transform: rotate(360deg); } }
+.roof .sun, .roof .moon { transition: opacity 0.6s; }
+.roof .moon { fill: #f4ecc8; opacity: 0; }
+.roof.night .sun { opacity: 0; }
+.roof.night .moon { opacity: 1; }
+.roof .ground { fill: #e3edd8; transition: fill 0.6s; }
+.roof.night .ground { fill: #2a3b5c; }
+.roof .tree rect { fill: #8a6a4a; }
+.roof .tree circle { fill: #7cb36a; }
+.roof.night .tree circle { fill: #3d6b52; }
+.roof .wire { fill: none; stroke: #6b7486; stroke-width: 1.1; }
+.roof .pylon path { fill: none; stroke: #7a8496; stroke-width: 1.6; stroke-linecap: round; }
+.roof .pylon .arm { stroke-width: 2.2; }
+.roof .pylon.on path { stroke: #5b7fc4; }
+.roof .r-back { fill: #8f4632; }
+.roof .r-gable { fill: #e7dccb; }
+.roof .w-left { fill: #e2d6c3; }
+.roof .w-right { fill: #f4ede2; }
+.roof .r-front { fill: #b95a41; }
+.roof .door { fill: #8a5a3c; }
+.roof .win { fill: #cfe2f4; stroke: #fff; stroke-width: 1; transition: fill 0.6s; }
+.roof.night .w-left { fill: #9aa3b8; }
+.roof.night .w-right { fill: #b3bacb; }
+.roof.night .r-gable { fill: #a7adbd; }
+.roof.night .win { fill: #ffd27a; filter: drop-shadow(0 0 5px rgba(255, 200, 90, 0.9)); }
+.roof .cell { fill: url(#panel-glass); stroke: #8fb3e3; stroke-width: 0.7; }
+.roof .glint { opacity: 0; }
+.roof .panels.on .glint { opacity: 1; animation: glint 4.5s ease-in-out infinite; }
+@keyframes glint { from { transform: skewX(-20deg) translateX(0); } 60%, to { transform: skewX(-20deg) translateX(200px); } }
+.roof .panels.on .cell { filter: drop-shadow(0 0 3px rgba(255, 200, 80, 0.35)); }
+.roof .dust { fill: url(#dust-pat); opacity: var(--dust, 0); transition: opacity 1.4s ease; }
+.roof .lane, .roof .lane.on { stroke: none; }
+.roof .drop { fill: #7fc4ff; }
+@media (prefers-reduced-motion: reduce) { .roof .sun .rays, .roof .panels.on .glint { animation: none; } }
 .lane { fill: none; stroke: #e7ecf3; stroke-width: 4; stroke-linecap: round; }
 .lane.on { stroke: #f0e1c2; }
 .lane.on.blue { stroke: #d9e3f6; }

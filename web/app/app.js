@@ -244,7 +244,20 @@
     }
     $("sky-rise").textContent = t("sunrise", hhmm(rise));
     $("sky-set").textContent = t("sunset", hhmm(set));
+    $("roof").classList.toggle("night", phase === "night");
     renderFlow(phase === "night" && live ? 0 : m.kw, m.home);
+  }
+
+  // water runs down the panels and the dust goes with it
+  function wash() {
+    const g = $("drops");
+    if (!M || calm || !g) return;
+    g.innerHTML = "";
+    for (let i = 0; i < 18; i++) {
+      const x = 104 + ((i * 37) % 84), y = 40 + ((i * 23) % 50) + (x - 104) * -0.4;
+      g.insertAdjacentHTML("beforeend", `<ellipse class="drop" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" rx="1.6" ry="3"/>`);
+    }
+    M.animate([...g.children], { opacity: [0, 1, 0], y: [-14, 26] }, { duration: 1.1, delay: M.stagger(0.07), ease: "easeIn" });
   }
 
   // --- today: where the power goes ------------------------------------------------------------------
@@ -394,10 +407,20 @@
     const dust = $("dust-card");
     dust.innerHTML = "";
     const lossy = d.today.soiling_pct >= 1;
+    // the dust on the roof is the simulation's soiling; after a clean it washes off
+    const roof = $("roof"), was = parseFloat(roof.dataset.soil || "-1");
+    roof.dataset.soil = String(d.today.soiling_pct);
+    roof.style.setProperty("--dust", Math.min(0.8, (d.today.soiling_pct / 100) * 5.5).toFixed(2));
+    if (was - d.today.soiling_pct > 1) wash();
     const ic = el("div", `badge-ic ${lossy ? "sun" : "green"}`); const i2 = el("ion-icon"); i2.setAttribute("name", lossy ? "partly-sunny-outline" : "sparkles-outline"); ic.append(i2);
     const box = el("div");
     box.append(el("h3", null, lossy ? t("dustTitle", fmt(d.today.soiling_pct, 1)) : t("dustClean")),
       el("p", null, lossy ? t("dustBody", fmt(d.today.dust_loss_kwh, 1), fmt(d.today.dust_loss_rs)) : t("dustCleanBody")));
+    if (lossy) {
+      const b = el("ion-button", null, t("cleanedToday")); b.setAttribute("size", "small"); b.setAttribute("fill", "outline");
+      b.addEventListener("click", () => { cfg.cleaned = day(0); write("surya-plant", cfg); toast(t("markedClean")); load(); });
+      box.append(b);
+    }
     dust.append(ic, box);
     renderEvents();
   }
