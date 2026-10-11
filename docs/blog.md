@@ -119,5 +119,6 @@ What owners told forums and regulators shaped what it shows:
 
 - **Claude Code (Anthropic)** and **Codex (OpenAI)** as coding assistants, for research, code and writing.
 - **Amazon Bedrock (Nova 2 Lite)** inside the product, to read bills, quotes, inverter screens and panel labels, and to answer questions with the product's own tools.
+- **Sarvam AI (Bulbul)** text-to-speech for the demo video's voiceover.
 
 Built for the WeMakeDevs × AWS Bharat Builds Tour: Environmental Hacks, October 2026.

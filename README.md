@@ -125,7 +125,7 @@ The local server runs the deterministic tools and uses captured Delhi sunlight f
 
 **Open source in the browser:** [Ionic](https://ionicframework.com) for the app's native tabs and sheets, [Apache ECharts](https://echarts.apache.org) for its charts, [devices.css](https://github.com/picturepan2/devices.css) for the iPhone frame, [MapLibre GL](https://maplibre.org) for the roof map and [qrcode-generator](https://github.com/kazuhikoarase/qrcode-generator) for the QR codes. Weather for the panels comes from [Open-Meteo](https://open-meteo.com).
 
-**AI tools:** Claude Code (Anthropic) and Codex (OpenAI) helped with research, code and writing. Amazon Bedrock (Nova 2 Lite) runs inside the product.
+**AI tools:** Claude Code (Anthropic) and Codex (OpenAI) helped with research, code and writing. Amazon Bedrock (Nova 2 Lite) runs inside the product. Sarvam AI (Bulbul) voiced the demo video.
 
 **Data sources:**
 - Sunlight: [PVGIS](https://re.jrc.ec.europa.eu/pvg_tools/en/) and [NASA POWER](https://power.larc.nasa.gov/)
