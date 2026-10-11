@@ -4,7 +4,8 @@ Judges see only this video, and a feature that isn't shown doesn't count. Show A
 
 ## Before recording
 
-- **Blur personal details on the real bill:** CA number, name and address. Or use a family member's bill with their OK.
+- **Recording after dark?** Open the site as `https://main.d3frlgja2w8q15.amplifyapp.com/?at=10.5`: the widget, both iPhones and the app show today's simulated panels at 10:30. `?at=13` lands on a simulated "grid voltage too high" event for the inverter-events shot (open `/app/?at=13`).
+- **The bill:** "See an example" reads the fictional `web/sample-bill.png` on Bedrock, with the scan and the AWS timing line, so no personal bill is needed. If you use a real one, blur the CA number, name and address.
 - **Phone:** WhatsApp joined to the Twilio sandbox. Send "hi" once so the 24-hour window is open.
 - **Tabs to have open:**
   - the website, on the home page

@@ -1352,6 +1352,10 @@ loadStats();
 loadJourney().then(loadTimes);
 loadFacts();
 
+// ?at=12.5 on the site shows the simulated panels at that hour of today, in the widget and both iPhones
+const DEMO_AT = new URLSearchParams(location.search).get("at");
+if (DEMO_AT) document.querySelectorAll(".phone-stage iframe").forEach((f) => { f.src = `app/?embed=1&at=${encodeURIComponent(DEMO_AT)}`; });
+
 // the hero iPhone plays the whole story on a loop (Motion drives it): the home screen, WhatsApp with the bill going
 // in and the estimate coming back, a reply typed and sent, then home again and into the My solar app as the panels go live
 function playDemo() {
@@ -1406,7 +1410,7 @@ function playDemo() {
   function say(state) { status.textContent = t(state); }
   const tell = (tab) => { try { frame.contentWindow.postMessage({ suryaTab: tab }, location.origin); } catch (_) { /* not loaded yet */ } };
   function loadApp() {
-    const src = `app/?embed=1&lang=${state.lang}`;
+    const src = `app/?embed=1&lang=${state.lang}${DEMO_AT ? `&at=${DEMO_AT}` : ""}`;
     if (frame.getAttribute("src") !== src) frame.setAttribute("src", src);
   }
 
@@ -1471,7 +1475,8 @@ async function widget() {
   $("d-cal-day").textContent = now.toLocaleDateString("en-US", { weekday: "short" });
   $("d-cal-date").textContent = now.getDate();
   const day = (n) => new Date(Date.now() + n * 864e5).toISOString().slice(0, 10);
-  const q = new URLSearchParams({ kw: 3, lat: 28.53, lon: 77.21, installed: day(-190), cleaned: day(-10), use: 300, rate: 7, promised: 360, lang: state.lang });
+  const q = new URLSearchParams({ kw: 3, lat: 28.53, lon: 77.21, installed: day(-190), cleaned: day(-10), use: 300, rate: 7, promised: 360, lang: state.lang,
+    ...(DEMO_AT ? { at: DEMO_AT } : {}) });
   try {
     const r = await fetch(`${API}/plant?${q}`);
     if (r.ok) state.widget = await r.json();

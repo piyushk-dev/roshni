@@ -190,8 +190,9 @@
 
   // --- data ------------------------------------------------------------------------------------
   async function load() {
+    const at = new URLSearchParams(location.search).get("at");  // a demo hour of today, from the website's ?at=
     const q = new URLSearchParams({ kw: cfg.kw, lat: cfg.lat, lon: cfg.lon, installed: cfg.installed, cleaned: cfg.cleaned,
-      use: cfg.use, rate: cfg.rate, lang, ...(cfg.promised ? { promised: cfg.promised } : {}) });
+      use: cfg.use, rate: cfg.rate, lang, ...(cfg.promised ? { promised: cfg.promised } : {}), ...(at ? { at } : {}) });
     try {
       const r = await fetch(`${API}/plant?${q}`);
       if (!r.ok) throw new Error(r.status);

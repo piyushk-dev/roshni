@@ -86,10 +86,17 @@ def _handle(event: dict, context) -> dict:
         from . import plant
 
         num = lambda k, d: params.get(k) if params.get(k) not in (None, "") else d
+        # ?at=12.5 shows today at that hour (India time), so a demo recorded after dark can still show the panels at noon
+        now = None
+        if params.get("at") not in (None, ""):
+            from datetime import datetime, timedelta, timezone
+
+            ist = datetime.now(timezone(timedelta(hours=5, minutes=30)))
+            now = ist.replace(hour=0, minute=0, second=0, microsecond=0).timestamp() + product.number(params["at"], "hour", 0, 23.99) * 3600
         try:
             return _response(200, plant.simulate(num("kw", 3), num("lat", 28.61), num("lon", 77.21), params.get("cleaned") or None,
                                                  params.get("installed") or None, num("rate", 7), float(params["promised"]) if params.get("promised") else None,
-                                                 num("use", 300), lang=params.get("lang", "en")))
+                                                 num("use", 300), now=now, lang=params.get("lang", "en")))
         except ValueError:
             raise
         except Exception:  # the weather service is down or slow
