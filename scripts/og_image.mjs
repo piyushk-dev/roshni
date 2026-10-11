@@ -1,6 +1,6 @@
 // Full-page or viewport screenshots of the local preview, with headless Edge over the DevTools protocol.
 // The link-preview image web/og.png came from it: serve the site (python scripts/serve_local.py --port 8766), then
-//   VIEWPORT=1 INJECT=scripts/og_inject.js AFTER=2500 node scripts/og_image.mjs og 1600 840 13000 http://localhost:8766/
+//   VIEWPORT=1 INJECT=scripts/og_inject.js AFTER=2500 node scripts/og_image.mjs og 1600 840 13000 "http://localhost:8766/?still=1"
 // and downscale og/1-home-1600.png to 1200x630. og_inject.js hides the page chrome for the capture only.
 // usage: node og_image.mjs <out-dir> <width> <height> <wait-ms> <url> [<url> ...]
 import { spawn } from "node:child_process";

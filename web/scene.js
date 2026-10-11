@@ -80,7 +80,7 @@
     }));
     this.stars = Array.from({ length: Math.round(W * H / 220) }, () => ({ x: Math.floor(r() * W), y: Math.floor(r() * (skyTop + S * 0.5)), tw: r() * 6.28 }));
     this.sunAt = null;
-    const copy = document.querySelector(".hero-copy"), phone = document.querySelector(".phone");
+    const copy = document.querySelector(".hero-copy"), phone = document.querySelector(".hero-phone");
     if (wide && copy && phone) {
       const a = copy.getBoundingClientRect(), b = phone.getBoundingClientRect();
       if (b.left - a.right > 120) this.sunAt = [Math.round(((a.right + b.left) / 2 - box.left) / px), Math.round(H - S * 0.6)];

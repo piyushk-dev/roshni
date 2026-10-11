@@ -159,31 +159,6 @@ h1 { font-size: clamp(2.6rem, min(4.8vw, 7.6vh), 4.4rem); font-weight: 780; font
 .roof { display: inline-flex; align-items: center; gap: 10px; font-size: 1rem; color: var(--ink-2); }
 .roof input { width: 7rem; }
 
-/* ---------- the phone ---------- */
-.phone {
-  margin: 0; position: relative; flex: none;
-  height: clamp(560px, calc(100svh - 136px), 740px); aspect-ratio: 9 / 19.5;
-  padding: 5px; border-radius: 41px;
-  background: linear-gradient(150deg, #3b3f47, #17191e 28%, #0f1013 72%, #2d3138);
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08), 0 40px 70px -32px rgba(10, 25, 50, 0.6), 0 12px 24px -12px rgba(10, 25, 50, 0.3);
-}
-/* power key and volume rocker */
-.phone::before, .phone::after { content: ""; position: absolute; right: -3px; width: 3px; border-radius: 0 2px 2px 0; background: #2a2d33; }
-.phone::before { top: 18%; height: 7%; }
-.phone::after { top: 29%; height: 13%; }
-.phone-screen {
-  height: 100%; border-radius: 36px; overflow: hidden; background: var(--wa-wall); position: relative;
-  display: grid; grid-template-rows: auto auto minmax(0, 1fr) auto auto; font-family: var(--font-wa); color: var(--wa-text);
-}
-.wa-status { position: relative; display: flex; align-items: center; justify-content: space-between; padding: 11px 22px 5px; background: var(--wa-teal); color: #fff; font-size: 0.8rem; font-weight: 600; }
-.cam { position: absolute; left: 50%; top: 8px; width: 13px; height: 13px; margin-left: -6.5px; border-radius: 50%; background: #0b0c0f; box-shadow: inset 0 0 0 3px #1c1e23; }
-.gesture { height: 20px; display: grid; place-items: center; background: var(--wa-wall); }
-.gesture::before { content: ""; width: 34%; height: 4px; border-radius: 2px; background: rgba(17, 27, 33, 0.5); }
-.sys { display: inline-flex; gap: 5px; align-items: center; }
-.sys svg { height: 11px; width: auto; fill: currentColor; }
-.wa-bar { display: flex; align-items: center; gap: 10px; padding: 6px 12px 10px 8px; background: var(--wa-teal); color: #fff; }
-.wa-ic { width: 22px; height: 22px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
-.wa-dots { fill: currentColor; stroke: none; }
 .wa-avatar { width: 38px; height: 38px; border-radius: 50%; background: var(--sun-soft); color: var(--sun-ink); display: grid; place-items: center; font-size: 1.15rem; flex: none; }
 .wa-who { flex: 1; display: grid; line-height: 1.2; min-width: 0; }
 .wa-who b { font-size: 1.02rem; font-weight: 600; }
@@ -195,12 +170,107 @@ h1 { font-size: clamp(2.6rem, min(4.8vw, 7.6vh), 4.4rem); font-weight: 780; font
 .ask-answer .m { white-space: pre-line; }
 .ask-used { margin: 10px 0 0; max-width: 92%; text-align: center; font-size: 0.85rem; line-height: 1.4; }
 .wa-day { align-self: center; background: #fff; color: var(--wa-meta); font-size: 0.75rem; padding: 4px 10px; border-radius: 8px; margin-bottom: 6px; box-shadow: 0 1px 0.5px rgba(11, 20, 26, 0.13); }
-.wa-input { display: flex; align-items: center; gap: 6px; padding: 6px 8px 4px; background: var(--wa-wall); }
-.wa-field { flex: 1; display: flex; align-items: center; gap: 10px; background: #fff; border-radius: 24px; padding: 10px 12px; color: #8696a0; font-size: 0.95rem; box-shadow: 0 1px 0.5px rgba(11, 20, 26, 0.13); }
-.wa-field span { flex: 1; }
-.wa-field .wa-ic { width: 21px; height: 21px; color: #8696a0; }
-.wa-mic { width: 46px; height: 46px; border-radius: 50%; background: var(--wa-green); display: grid; place-items: center; flex: none; }
-.wa-mic svg { width: 22px; height: 22px; fill: none; stroke: #fff; stroke-width: 2; stroke-linecap: round; }
+/* ---------- the hero iPhone: the home screen, WhatsApp and the app, played on a loop ---------- */
+/* devices.css makes everything inside the device a block, so inline text inside the screen says so */
+.iphone.hero-phone { --s: 0.87; }
+@media (max-height: 940px) { .iphone.hero-phone { --s: 0.8; } }
+@media (max-height: 840px) { .iphone.hero-phone { --s: 0.73; } }
+@media (max-height: 760px) { .iphone.hero-phone { --s: 0.67; } }
+.ios { --ios: -apple-system, "SF Pro Text", Inter, "Noto Sans Devanagari", system-ui, sans-serif;
+  position: relative; overflow: hidden; isolation: isolate; background: #10204a; font-family: var(--ios); color: #000; -webkit-font-smoothing: antialiased; }
+.ios p { margin: 0; }
+.ios [hidden] { display: none !important; }
+.ios-home, .ios .scene { position: absolute; inset: 0; }
+.ios .scene { z-index: 2; background: #fff; }
+.hero-phone .ios-status { left: 0; right: 0; top: 0; z-index: 5; transition: color 0.3s; }
+.hero-phone[data-scene="home"] .ios-status { color: #fff; }
+
+/* the home screen: a dawn wallpaper, the My solar widget, the icons and the dock */
+.ios-home { z-index: 1; padding: 66px 22px 0; display: grid; align-content: start; gap: 30px; color: #fff;
+  background: radial-gradient(70% 34% at 50% 100%, rgba(255, 205, 130, 0.95), rgba(255, 205, 130, 0) 100%),
+    linear-gradient(180deg, #12295c 0%, #24508f 34%, #5f86c4 60%, #e2a46f 88%, #f4c47e 100%); }
+.widget { position: relative; height: 158px; padding: 16px 18px; border-radius: 24px; overflow: hidden; color: #fff;
+  background: linear-gradient(165deg, #2c7bd3, #58a1ea 68%, #8ac3f3); box-shadow: 0 14px 30px -16px rgba(0, 0, 0, 0.55); }
+.widget-name { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; }
+.widget-name img { border-radius: 5px; }
+.widget-kw { margin-top: 20px !important; font-size: 18px; font-weight: 600; }
+.widget-kw b { display: inline; font: 700 46px/1 var(--font-display); letter-spacing: -0.02em; }
+.widget-sub { margin-top: 8px !important; font-size: 13.5px; opacity: 0.94; max-width: 190px; line-height: 1.3; }
+.widget-arc { position: absolute; right: 14px; bottom: 14px; width: 128px; height: 68px; overflow: visible; }
+.arc-path { fill: none; stroke: rgba(255, 255, 255, 0.5); stroke-width: 2; stroke-dasharray: 3 4; }
+.arc-done { fill: none; stroke: #fff; stroke-width: 2.6; stroke-linecap: round; stroke-dasharray: 50 100; }
+#d-sun { fill: #ffd34d; filter: drop-shadow(0 0 5px rgba(255, 214, 90, 0.95)); }
+.icons { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px 0; justify-items: center; }
+.icon { display: grid; justify-items: center; gap: 6px; }
+.icon b { font-size: 12px; font-weight: 500; line-height: 1.1; white-space: nowrap; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3); }
+.ic { width: 62px; height: 62px; border-radius: 15px; display: block; font-style: normal; overflow: hidden; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2); }
+.ic svg, .ic img { width: 100%; height: 100%; display: block; }
+.ic-wa { background: linear-gradient(180deg, #5df27a, #1fbb4a); }
+.ic-photos, .ic-safari { background: #fff; }
+.ic-camera { background: linear-gradient(180deg, #ececf0, #b4b4bc); }
+.ic-weather { background: linear-gradient(180deg, #3a8bef, #73bcff); }
+.ic-clock { background: #000; }
+.ic-settings { background: linear-gradient(180deg, #c3c3c9, #8e8e93); }
+.ic-phone, .ic-messages { background: linear-gradient(180deg, #6ef07a, #2cc84a); }
+.ic-music { background: linear-gradient(180deg, #ff6b78, #fc3c44); }
+.ic-calendar, .ic-notes, .ic-files { background: #fff; }
+.ic-mail { background: linear-gradient(180deg, #4fb2ff, #1477f0); }
+.ios-search { position: absolute; left: 50%; bottom: 124px; transform: translateX(-50%); display: flex; align-items: center; gap: 5px;
+  padding: 6px 13px; border-radius: 16px; background: rgba(255, 255, 255, 0.24); backdrop-filter: blur(12px); font-size: 13px; font-weight: 500; }
+.ios-search svg { width: 13px; height: 13px; fill: none; stroke: #fff; stroke-width: 2; stroke-linecap: round; }
+.dock { position: absolute; left: 12px; right: 12px; bottom: 12px; height: 94px; padding: 0 12px; border-radius: 34px;
+  display: flex; justify-content: space-between; align-items: center; background: rgba(255, 255, 255, 0.28); backdrop-filter: blur(18px); }
+
+/* WhatsApp, as it looks on an iPhone */
+.ios-wa { display: grid; grid-template-rows: auto minmax(0, 1fr) auto; background: var(--wa-wall); }
+.iwa-bar { display: flex; align-items: center; gap: 9px; padding: 54px 16px 8px 8px; background: rgba(247, 247, 247, 0.97);
+  border-bottom: 0.5px solid rgba(60, 60, 67, 0.3); }
+.iwa-back { display: inline-flex; align-items: center; gap: 5px; font-size: 17px; }
+.iwa-back svg { width: 12px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2.8; stroke-linecap: round; stroke-linejoin: round; }
+.ios-wa .wa-avatar { width: 36px; height: 36px; font-size: 18px; }
+.ios-wa .wa-who b { font-size: 16.5px; font-weight: 600; color: #000; }
+.ios-wa .wa-who span { font-size: 12.5px; color: #8e8e93; opacity: 1; }
+.iwa-ic { width: 27px; height: 27px; flex: none; fill: none; stroke: #111; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.iwa-bar .iwa-ic + .iwa-ic { margin-left: 16px; }
+.ios-wa .wa-chat { padding: 10px 14px; gap: 2px; }
+.ios-wa .wa-chat .m { font: 16px/1.34 var(--ios); max-width: 84%; padding: 7px 11px 8px 12px; margin-top: 6px; border-radius: 18px; }
+.ios-wa .wa-chat .m::before { display: none; }
+.ios-wa .wa-chat .m.in { border-radius: 18px 18px 18px 6px; }
+.ios-wa .wa-chat .m.out { border-radius: 18px 18px 6px 18px; }
+.ios-wa .wa-chat .m.img { padding: 3px; border-radius: 18px 18px 6px 18px; }
+.ios-wa .bill-photo { width: 236px; border-radius: 15px 15px 4px 15px; }
+.ios-wa .meta { font-size: 11px; }
+.ios-wa .wa-more { font-size: 15px; }
+.ios-wa .typing { padding: 13px 15px; }
+.iwa-input { display: flex; align-items: center; gap: 13px; padding: 7px 14px 34px; background: rgba(247, 247, 247, 0.97); border-top: 0.5px solid rgba(60, 60, 67, 0.3); }
+.iwa-field { flex: 1; min-width: 0; display: flex; align-items: center; gap: 6px; height: 36px; padding: 0 8px 0 13px; border-radius: 18px;
+  background: #fff; border: 1px solid #d1d1d6; font-size: 16px; color: #000; }
+.iwa-field > span { flex: 1; white-space: nowrap; overflow: hidden; }
+.iwa-field svg { width: 22px; height: 22px; flex: none; fill: none; stroke: #8e8e93; stroke-width: 1.7; stroke-linejoin: round; }
+#d-typed:not(:empty)::after { content: ""; display: inline-block; width: 2px; height: 20px; margin-left: 1px; vertical-align: -4px; background: #25d366; animation: caret 1s steps(1) infinite; }
+@keyframes caret { 50% { opacity: 0; } }
+.iwa-send { display: none; width: 32px; height: 32px; border-radius: 50%; background: #21c063; place-items: center; flex: none; }
+.iwa-send svg { width: 18px; height: 18px; fill: none; stroke: #fff; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+.ios-wa.writing .iwa-cam, .ios-wa.writing .iwa-mic { display: none; }
+.ios-wa.writing .iwa-send { display: grid; }
+
+/* the app, the notification that leads to it, and the finger */
+.ios-app { background: #f3f6fa; }
+.ios-app iframe { width: 100%; height: 100%; border: 0; display: block; pointer-events: none; }
+.ios-banner { position: absolute; z-index: 4; left: 9px; right: 9px; top: 52px; display: grid; grid-template-columns: 40px minmax(0, 1fr); gap: 11px; align-items: start;
+  padding: 12px 15px 13px 12px; border-radius: 26px; background: rgba(246, 246, 248, 0.9); backdrop-filter: blur(24px) saturate(1.6);
+  box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.4); opacity: 0; transform: translateY(-160%); }
+.ios-banner .ic { width: 40px; height: 40px; border-radius: 10px; box-shadow: none; }
+.ios-banner p { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 1px 8px; font-size: 15px; line-height: 1.3; }
+.ios-banner b { font-weight: 600; }
+.ios-banner small { font-size: 13px; color: #6e6e73; }
+.ios-banner span { grid-column: 1 / -1; }
+.tap { position: absolute; z-index: 6; left: 0; top: 0; width: 56px; height: 56px; margin: -28px 0 0 -28px; border-radius: 50%;
+  background: rgba(255, 255, 255, 0.42); box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.92), 0 3px 12px rgba(0, 0, 0, 0.28); opacity: 0; pointer-events: none; }
+.home-bar { position: absolute; z-index: 5; left: 50%; bottom: 8px; width: 136px; height: 5px; margin-left: -68px; border-radius: 3px; background: #111; transition: background 0.3s; }
+.hero-phone[data-scene="home"] .home-bar { background: #fff; }
+.hero-phone.playing .wa-chat > .m:not(.shown) { display: none; }
+.hero-phone.playing .wa-chat > .transient.shown { display: inline-flex; }
 
 /* messages, shared by the phone and the chat snippets */
 .m {
@@ -220,8 +290,6 @@ h1 { font-size: clamp(2.6rem, min(4.8vw, 7.6vh), 4.4rem); font-weight: 780; font
 .wa-more { display: block; color: var(--wa-link); font-size: 0.88rem; margin-top: 2px; }
 .meta { float: right; margin: 6px 0 -4px 10px; font-size: 0.68rem; color: var(--wa-meta); display: inline-flex; align-items: center; gap: 3px; white-space: nowrap; line-height: 1; position: relative; top: 4px; }
 .ticks { width: 16px; height: 11px; fill: none; stroke: var(--wa-tick); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
-.phone .m { max-width: 93%; font-size: 0.86rem; }
-.phone .wa-chat { gap: 2px; }
 .m.img { padding: 3px; }
 .bill-photo { display: block; width: 196px; height: auto; border-radius: 6px; }
 .meta.on-img { position: absolute; right: 8px; bottom: 8px; top: auto; margin: 0; color: #fff; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5); }
@@ -231,13 +299,8 @@ h1 { font-size: clamp(2.6rem, min(4.8vw, 7.6vh), 4.4rem); font-weight: 780; font
 .typing i:nth-child(3) { animation-delay: 0.3s; }
 @keyframes dot { 0%, 60%, 100% { opacity: 0.35; transform: none; } 30% { opacity: 1; transform: translateY(-2px); } }
 
-/* the one orchestrated moment: the chat plays once on load */
-.transient { display: none; }
-.playing [data-at]:not(.shown) { display: none; }
-.playing .transient.shown:not(.gone) { display: inline-flex; }
-.playing .shown { animation: pop 0.28s ease-out; }
-@keyframes pop { from { opacity: 0; transform: translateY(8px) scale(0.98); } }
-@media (prefers-reduced-motion: reduce) { .typing i, .playing .shown { animation: none; } }
+.wa-chat > .transient { display: none; }
+@media (prefers-reduced-motion: reduce) { .typing i { animation: none; } }
 
 /* documents and voice notes */
 .m.doc { display: grid; grid-template-columns: auto 1fr; gap: 4px 10px; align-items: center; min-width: 230px; }
@@ -304,15 +367,19 @@ h3 { font-size: 1.35rem; font-weight: 700; font-stretch: 106%; line-height: 1.2;
 .app-qr .qr-bg { fill: var(--surface); } .app-qr .qr-on { fill: var(--ink); }
 .app-qr figcaption { font-size: 0.9rem; color: var(--muted); max-width: 9rem; }
 /* devices.css draws a 19px bezel; real phones are thinner, so the frame is trimmed to 11px and its parts move in */
-.phone-stage .device-iphone-14-pro .device-frame { padding: 11px; width: 412px; height: 852px; border-radius: 60px;
+.iphone .device-iphone-14-pro { width: 412px; height: 852px; }
+.iphone .device-iphone-14-pro .device-frame { padding: 11px; width: 412px; height: 852px; border-radius: 60px;
   box-shadow: inset 0 0 2px 1px #c0b7cd, inset 0 0 0 3px #342c3f; }
-.phone-stage .device-iphone-14-pro .device-screen { border-radius: 50px; }
-.phone-stage .device-iphone-14-pro .device-header { top: 21px; }
-.phone-stage .device-iphone-14-pro .device-sensors::after { top: 22px; }
-.phone-stage .device-iphone-14-pro .device-sensors::before { top: 34px; }
-.phone-stage { --s: 0.8; width: calc(412px * var(--s)); height: calc(852px * var(--s)); justify-self: center; position: relative;
+.iphone .device-iphone-14-pro .device-screen { border-radius: 50px; }
+.iphone .device-iphone-14-pro .device-header { top: 21px; z-index: 7; }
+.iphone .device-iphone-14-pro .device-sensors::after { top: 22px; z-index: 7; }
+.iphone .device-iphone-14-pro .device-sensors::before { top: 34px; z-index: 8; }
+.iphone .device-iphone-14-pro .device-stripe::after { top: 77px; }
+.iphone .device-iphone-14-pro .device-stripe::before { bottom: 77px; }
+.iphone { --s: 0.8; width: calc(412px * var(--s)); height: calc(852px * var(--s)); position: relative; flex: none; margin: 0;
   filter: drop-shadow(0 40px 50px rgba(20, 45, 90, 0.28)); }
-.phone-stage .device { transform: scale(var(--s)); transform-origin: top left; position: absolute; left: 0; top: 0; }
+.iphone .device { transform: scale(var(--s)); transform-origin: top left; position: absolute; left: 0; top: 0; }
+.phone-stage { justify-self: center; }
 .phone-stage iframe.device-screen { border: 0; display: block; background: var(--page); }
 .ios-status { position: absolute; left: 11px; right: 11px; top: 11px; height: 54px; padding: 18px 34px 0 44px; display: flex; justify-content: space-between;
   font: 600 16px/1 -apple-system, "SF Pro Text", Inter, sans-serif; color: #111; pointer-events: none; z-index: 2; }
@@ -323,7 +390,7 @@ h3 { font-size: 1.35rem; font-weight: 700; font-stretch: 106%; line-height: 1.2;
   .app-qr { display: none; }
   .phone-stage { --s: 0.72; }
 }
-@media (max-width: 400px) { .phone-stage { --s: 0.66; } }
+@media (max-width: 400px) { .phone-stage, .iphone.hero-phone { --s: 0.66; } }
 
 .why {
   margin-inline: calc(-1 * var(--fpad)); padding: clamp(48px, 6vw, 72px) var(--fpad);
@@ -738,7 +805,7 @@ code { font: 500 0.9rem/1.4 var(--font-code); background: var(--tint); color: va
   .hero { --band: 190px; height: auto; }
   .hero-inner { grid-template-columns: minmax(0, 1fr); gap: 40px; padding-bottom: calc(var(--band) - 120px); }
   .hero-copy { padding-bottom: 0; }
-  .phone { justify-self: center; }
+  .iphone.hero-phone { --s: 0.74; justify-self: center; }
   .why, .split, .wa-band { grid-template-columns: minmax(0, 1fr); }
   .sticky { position: static; }
   .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }

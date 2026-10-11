@@ -28,6 +28,19 @@
       dustClean: "Panels are clean", dustCleanBody: "No dust loss to speak of today.",
       eventsTitle: "Inverter events", eventsSub: "What happened this week, in plain words.", noEvents: "Nothing unusual this week.",
       howToFix: "What to do", evidence: "For the installer or the DISCOM", copy: "Copy", sendWa: "Send on WhatsApp", copied: "Copied",
+      whoTitle: "Who fixes it",
+      who: {
+        overvoltage: (d, free) => `The DISCOM fixes the voltage: it's on their side of the meter. Your vendor checks the inverter's grid settings${free ? `, free until ${d}` : ""}.`,
+        undervoltage: () => "The DISCOM: the voltage is on their side of the meter. Use the complaint number on your bill and quote the evidence below.",
+        outage: () => "No one needs to. An on-grid inverter must switch off in a power cut, so nobody is working on a live line.",
+        offline: (d, free) => (free ? `Your vendor, free until ${d}. Under PM Surya Ghar they fix faults at their own cost for five years.` : `Your vendor or an electrician, at your cost; the free service ended on ${d}.`) },
+      owedTitle: (d) => `Your vendor owes you free service until ${d}`,
+      owedBody: "Under PM Surya Ghar, the vendor who installed your panels must clean them and fix any fault at their own cost for five years. Most owners don't know, and pay for it.",
+      owedPastTitle: (d) => `Free service from your vendor ended on ${d}`,
+      owedPastBody: "Cleaning and repairs are paid now. The panel and inverter warranties below still cover faults.",
+      owedAsk: "Ask the vendor",
+      owedMsg: (kw, model, serial, on, d) => `Hello. You installed my ${kw} kW rooftop solar system under PM Surya Ghar on ${on} (inverter ${model}, serial ${serial}). It is within the five years of free maintenance, until ${d}. Please tell me when you can clean the panels and check the system.`,
+      owedEscalate: "No reply in 8 days? File a complaint on the PM Surya Ghar portal. Since June 2026, MNRE gives the vendor 8 days to answer, a 7-day reminder, then a show-cause notice, and a vendor who ignores it is taken off the portal.",
       historyTitle: "The last 14 days", historyAvg: (u) => `Average ${u} units a day`,
       aheadFoot: "Forecast from Open-Meteo's sunlight, cloud and temperature for your roof, less the dust building up on the panels.",
       rainWash: "Rain may wash the panels", dustLevel: { clear: "Low dust", dusty: "Dusty", high: "Very dusty" },
@@ -47,8 +60,8 @@
       lastCleaned: (n) => `Last cleaned ${n} day${n === 1 ? "" : "s"} ago.`, cleanedToday: "I cleaned them today", markedClean: "Marked as cleaned today",
       calTitle: "Coming up", inDays: (n) => (n <= 0 ? "today" : n === 1 ? "tomorrow" : n < 60 ? `in ${n} days` : n < 730 ? `in ${Math.round(n / 30)} months` : `in ${Math.round(n / 365)} years`),
       cal: { bill_check: "Check the bill against the app", earthing: "Check the earthing pit and isolators", inspection: "Yearly inspection by the installer",
-        workmanship_warranty: "Workmanship warranty ends" },
-      warrantyTitle: "Warranties", w: [["Panel output", 25], ["Panel product", 12], ["Inverter", 8], ["Workmanship", 5]],
+        workmanship_warranty: "Free service from the vendor ends" },
+      warrantyTitle: "Warranties", w: [["Panel output", 25], ["Panel product", 12], ["Inverter", 7], ["Free service by the vendor", 5]],
       wEnds: (y) => `to ${y}`,
       helpTitle: "Help", helpSupport: "Something wrong? Prepare a request", helpBill: "Read the first bill after solar",
       helpPanel: "Check a panel's label", helpConnect: "Connect your real inverter",
@@ -85,6 +98,19 @@
       dustClean: "पैनल साफ़ हैं", dustCleanBody: "आज धूल से कोई ख़ास नुकसान नहीं।",
       eventsTitle: "इन्वर्टर की घटनाएँ", eventsSub: "इस हफ़्ते क्या हुआ, आसान शब्दों में।", noEvents: "इस हफ़्ते कुछ असामान्य नहीं।",
       howToFix: "क्या करें", evidence: "इंस्टॉलर या DISCOM के लिए", copy: "कॉपी करें", sendWa: "WhatsApp पर भेजें", copied: "कॉपी हो गया",
+      whoTitle: "कौन ठीक करेगा",
+      who: {
+        overvoltage: (d, free) => `वोल्टेज DISCOM ठीक करेगा, यह मीटर के उनकी तरफ़ है। इन्वर्टर की ग्रिड सेटिंग वेंडर जाँचेगा${free ? `, ${d} तक मुफ़्त` : ""}।`,
+        undervoltage: () => "DISCOM, क्योंकि वोल्टेज मीटर के उनकी तरफ़ है। बिल पर दिए शिकायत नंबर पर नीचे वाला सबूत बताएँ।",
+        outage: () => "किसी को नहीं। बिजली कटने पर ऑन-ग्रिड इन्वर्टर का बंद होना ज़रूरी है, ताकि लाइन पर काम कर रहे व्यक्ति को करंट न लगे।",
+        offline: (d, free) => (free ? `आपका वेंडर, ${d} तक मुफ़्त। पीएम सूर्य घर में उन्हें पाँच साल तक ख़राबी अपने ख़र्च पर ठीक करनी होती है।` : `आपका वेंडर या कोई इलेक्ट्रीशियन, आपके ख़र्च पर; मुफ़्त सर्विस ${d} को ख़त्म हुई।`) },
+      owedTitle: (d) => `${d} तक वेंडर की सर्विस मुफ़्त है`,
+      owedBody: "पीएम सूर्य घर में पैनल लगाने वाले वेंडर को पाँच साल तक अपने ख़र्च पर पैनल साफ़ करने और हर ख़राबी ठीक करनी होती है। ज़्यादातर लोगों को यह पता नहीं होता और वे पैसे दे देते हैं।",
+      owedPastTitle: (d) => `वेंडर की मुफ़्त सर्विस ${d} को ख़त्म हुई`,
+      owedPastBody: "अब सफ़ाई और मरम्मत के पैसे लगते हैं। नीचे दी पैनल और इन्वर्टर वारंटी ख़राबी पर अब भी लागू है।",
+      owedAsk: "वेंडर से कहें",
+      owedMsg: (kw, model, serial, on, d) => `नमस्ते। आपने मेरा ${kw} kW रूफ़टॉप सोलर सिस्टम पीएम सूर्य घर में ${on} को लगाया था (इन्वर्टर ${model}, सीरियल ${serial})। यह ${d} तक पाँच साल की मुफ़्त मेंटेनेंस में है। कृपया बताएँ कि आप पैनल की सफ़ाई और सिस्टम की जाँच कब कर सकते हैं।`,
+      owedEscalate: "8 दिन में जवाब नहीं? पीएम सूर्य घर पोर्टल पर शिकायत दर्ज करें। जून 2026 से MNRE वेंडर को जवाब के लिए 8 दिन देता है, फिर 7 दिन का रिमाइंडर, फिर कारण बताओ नोटिस, और अनदेखी करने वाला वेंडर पोर्टल से हटा दिया जाता है।",
       historyTitle: "पिछले 14 दिन", historyAvg: (u) => `औसत ${u} यूनिट रोज़`,
       aheadFoot: "Open-Meteo की आपकी छत की धूप, बादल और तापमान के अनुमान से, पैनल पर जमती धूल घटाकर।",
       rainWash: "बारिश पैनल धो सकती है", dustLevel: { clear: "धूल कम", dusty: "धूल", high: "बहुत धूल" },
@@ -104,8 +130,8 @@
       lastCleaned: (n) => `आख़िरी सफ़ाई ${n} दिन पहले।`, cleanedToday: "मैंने आज साफ़ किए", markedClean: "आज साफ़ किया दर्ज हुआ",
       calTitle: "आगे क्या", inDays: (n) => (n <= 0 ? "आज" : n === 1 ? "कल" : n < 60 ? `${n} दिन में` : n < 730 ? `${Math.round(n / 30)} महीने में` : `${Math.round(n / 365)} साल में`),
       cal: { bill_check: "बिल को ऐप से मिलाएँ", earthing: "अर्थिंग पिट और आइसोलेटर जाँचें", inspection: "इंस्टॉलर से सालाना जाँच",
-        workmanship_warranty: "काम की वारंटी ख़त्म" },
-      warrantyTitle: "वारंटी", w: [["पैनल उत्पादन", 25], ["पैनल प्रोडक्ट", 12], ["इन्वर्टर", 8], ["काम (वर्कमैनशिप)", 5]],
+        workmanship_warranty: "वेंडर की मुफ़्त सर्विस ख़त्म" },
+      warrantyTitle: "वारंटी", w: [["पैनल उत्पादन", 25], ["पैनल प्रोडक्ट", 12], ["इन्वर्टर", 7], ["वेंडर की मुफ़्त सर्विस", 5]],
       wEnds: (y) => `${y} तक`,
       helpTitle: "मदद", helpSupport: "कुछ गड़बड़? अनुरोध तैयार करें", helpBill: "सोलर के बाद पहला बिल पढ़ें",
       helpPanel: "पैनल का लेबल जाँचें", helpConnect: "अपना असली इन्वर्टर जोड़ें",
@@ -394,11 +420,21 @@
     }
   }
 
+  // PM Surya Ghar vendors service the system free for five years from installation
+  function freeService() {
+    const end = new Date(`${data.device.installed}T00:00:00`);
+    end.setFullYear(end.getFullYear() + 5);
+    return { free: Date.now() < end, on: end.toLocaleDateString(lang === "hi" ? "hi-IN" : "en-IN", { day: "numeric", month: "long", year: "numeric" }) };
+  }
+
   function openEvent(e) {
     const body = $("event-body");
     body.innerHTML = "";
+    const fs = freeService(), who = t("who")[e.code];
     body.append(el("h3", null, e.title), el("p", "when", `${dayName(e.day, { weekday: "long", day: "numeric", month: "long" })}, ${e.start}–${e.end}${e.volts ? `, ${e.volts} V` : ""}`),
-      el("p", null, e.meaning), el("h4", null, t("howToFix")), el("p", null, e.todo), el("h4", null, t("evidence")), el("div", "evidence", e.evidence));
+      el("p", null, e.meaning), el("h4", null, t("howToFix")), el("p", null, e.todo));
+    if (who) body.append(el("h4", null, t("whoTitle")), el("p", null, who(fs.on, fs.free)));
+    body.append(el("h4", null, t("evidence")), el("div", "evidence", e.evidence));
     const row = el("div", "row");
     const copy = el("ion-button", null, t("copy")); copy.setAttribute("fill", "outline");
     copy.addEventListener("click", async () => { try { await navigator.clipboard.writeText(e.evidence); toast(t("copied")); } catch (_) { /* clipboard blocked */ } });
@@ -471,6 +507,19 @@
     b.addEventListener("click", () => { cfg.cleaned = day(0); write("surya-plant", cfg); toast(t("markedClean")); load(); });
     box.append(b);
     card.append(ic, box);
+
+    const owed = $("owed-card"), fs = freeService();
+    owed.innerHTML = "";
+    const oi = el("div", `badge-ic ${fs.free ? "green" : "grey"}`); const oi2 = el("ion-icon"); oi2.setAttribute("name", "shield-checkmark-outline"); oi.append(oi2);
+    const ob = el("div");
+    ob.append(el("h3", null, fs.free ? t("owedTitle", fs.on) : t("owedPastTitle", fs.on)), el("p", null, fs.free ? t("owedBody") : t("owedPastBody")));
+    if (fs.free) {
+      const on = dayName(data.device.installed, { day: "numeric", month: "long", year: "numeric" });
+      const ask = el("ion-button", null, t("owedAsk")); ask.setAttribute("size", "small");
+      ask.setAttribute("href", `https://wa.me/?text=${encodeURIComponent(t("owedMsg", fmt(data.device.kw, 1), data.device.model, data.device.serial, on, fs.on))}`); ask.setAttribute("target", "_blank");
+      ob.append(ask, el("p", "fine", t("owedEscalate")));
+    }
+    owed.append(oi, ob);
 
     const cal = $("calendar");
     cal.innerHTML = "";
@@ -567,6 +616,17 @@
     $("tabs").addEventListener("ionTabsDidChange", (e) => {
       reveal(e.detail.tab); setTimeout(() => { if (data) { renderToday(); renderHistory(); renderYears(); } Object.values(charts).forEach((c) => c.resize()); }, 60); });
     window.addEventListener("resize", () => Object.values(charts).forEach((c) => c.resize()));
+    // the website's iPhone plays the app in its demo: it opens a tab and the cards rise in again
+    if (new URLSearchParams(location.search).has("embed")) window.addEventListener("message", async (e) => {
+      const tab = e.origin === location.origin && e.data && e.data.suryaTab;
+      if (!tab || !data) return;
+      shown.delete(tab);
+      if ((await $("tabs").getSelected()) === tab) {
+        const content = document.querySelector(`ion-tab[tab="${tab}"] ion-content`);
+        if (content) content.scrollToTop(0);
+        reveal(tab);
+      } else $("tabs").select(tab);
+    });
     document.addEventListener("visibilitychange", () => { if (!document.hidden) load(); });
     setInterval(() => { if (!document.hidden && scrub === null) load(); }, 60000);
   }

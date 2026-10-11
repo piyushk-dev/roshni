@@ -46,7 +46,7 @@ TEXT = {
         "outage": ("Power cut", "There was no grid supply, so the inverter shut down for safety. Ordinary on-grid solar does not run during a power cut.",
                    "Nothing to fix. If backup matters, ask for a hybrid inverter with a battery and price it separately."),
         "offline": ("Monitoring offline", "The Wi-Fi logger stopped sending data. The panels kept working; only the readings are missing.",
-                    "Restart the Wi-Fi router, then the logger. If it keeps dropping, ask the installer to move it closer to the router."),
+                    "Restart the router, then the logger. Loggers only join 2.4 GHz Wi-Fi, so a new router or a changed Wi-Fi password disconnects them until the installer pairs them again. If it keeps dropping, the signal is weak: ask for the logger to be moved closer to the router."),
         "evidence": "On {day}, {start}–{end}: {title}. Inverter {model}, serial {serial}.",
     },
     "hi": {
@@ -57,7 +57,7 @@ TEXT = {
         "outage": ("बिजली कटी", "ग्रिड सप्लाई नहीं थी, इसलिए सुरक्षा के लिए इन्वर्टर बंद हुआ। सामान्य ऑन-ग्रिड सोलर बिजली कटने पर नहीं चलता।",
                    "ठीक करने को कुछ नहीं। बैकअप चाहिए तो बैटरी वाला हाइब्रिड इन्वर्टर अलग से पूछें।"),
         "offline": ("निगरानी ऑफ़लाइन", "वाई-फ़ाई लॉगर ने डेटा भेजना बंद किया। पैनल चलते रहे; सिर्फ़ रीडिंग नहीं आई।",
-                    "वाई-फ़ाई राउटर, फिर लॉगर दोबारा चालू करें। बार-बार हो तो इंस्टॉलर से लॉगर को राउटर के पास लगवाएँ।"),
+                    "राउटर, फिर लॉगर दोबारा चालू करें। लॉगर सिर्फ़ 2.4 GHz वाई-फ़ाई से जुड़ता है, इसलिए नया राउटर या बदला हुआ वाई-फ़ाई पासवर्ड उसे तब तक काट देता है जब तक इंस्टॉलर उसे दोबारा न जोड़े। बार-बार कटे तो सिग्नल कमज़ोर है: लॉगर को राउटर के पास लगवाएँ।"),
         "evidence": "{day}, {start}–{end}: {title}। इन्वर्टर {model}, सीरियल {serial}।",
     },
 }

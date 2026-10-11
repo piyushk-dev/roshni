@@ -417,6 +417,9 @@ Object.assign(T.en, {
   today: "Today", message: "Message", readMore: "Read more", chatSub: "online", typing: "typing…",
   demoReply: "☀️ Solar estimate for your BSES Rajdhani connection\n\nBest size: 2 kW (needs about 200 sq ft of shade-free roof)\nCost: ₹1,30,000 − ₹60,000 subsidy = ₹70,000\nSaves ₹14,300–15,600 a year, about ₹1,200 a month\nPays for itself in 4.9 years",
   demoApply: "APPLY",
+  appName: "My solar", iosSearch: "Search", bannerNow: "now",
+  bannerBody: "Your panels are connected. Open My solar to watch them work, live.",
+  widgetSub: "Producing now", widgetToday: (u, rs) => `${u} units today, ${rs} saved`, widgetNight: (u) => `After sunset. ${u} units today`,
   demoPlan: "🚀 Your application plan has 8 steps, from a pre-flight check to the subsidy in your account. If a step takes longer than usual, you'll get a reminder here.",
   usesTitle: "It stays with you after the estimate",
   u1t: "Check a vendor's quote",
@@ -461,6 +464,9 @@ Object.assign(T.hi, {
   today: "आज", message: "मैसेज", readMore: "और पढ़ें", chatSub: "ऑनलाइन", typing: "टाइप कर रहा है…",
   demoReply: "☀️ आपके BSES Rajdhani कनेक्शन के लिए सोलर अनुमान\n\nसही साइज़: 2 kW (लगभग 200 वर्ग फुट छाया-रहित छत चाहिए)\nलागत: ₹1,30,000 − ₹60,000 सब्सिडी = ₹70,000\nबचत: सालाना ₹14,300–15,600, यानी लगभग ₹1,200 महीना\n4.9 साल में पूरी लागत वसूल",
   demoApply: "आवेदन",
+  appName: "मेरा सोलर", iosSearch: "खोजें", bannerNow: "अभी",
+  bannerBody: "आपके पैनल जुड़ गए। मेरा सोलर खोलें और उन्हें लाइव काम करते देखें।",
+  widgetSub: "अभी बिजली बन रही है", widgetToday: (u, rs) => `आज ${u} यूनिट, ${rs} की बचत`, widgetNight: (u) => `सूरज ढल गया। आज ${u} यूनिट`,
   demoPlan: "🚀 आपके आवेदन प्लान में 8 कदम हैं, प्री-फ़्लाइट जाँच से लेकर खाते में सब्सिडी आने तक। कोई कदम सामान्य से ज़्यादा समय ले, तो यहीं याद दिलाया जाएगा।",
   usesTitle: "अनुमान के बाद भी साथ रहता है",
   u1t: "वेंडर का कोटेशन जाँचें",
@@ -528,6 +534,7 @@ function applyLang() {
   if (typeof renderSteps === "function") { renderSteps(); renderFacts(); renderWhatsApp(); renderSociety(); renderAskExamples(); renderTimes(); }
   if (window.renderProduct) window.renderProduct();
   if (window.renderRoof) window.renderRoof();
+  if (window.renderWidget) window.renderWidget();
 }
 
 function show(id) {
@@ -1245,19 +1252,142 @@ loadStats();
 loadJourney().then(loadTimes);
 loadFacts();
 
-// the hero chat plays once: the bill goes out, the bot types, the real reply comes back
+// the hero iPhone plays the whole story on a loop (Motion drives it): the home screen, WhatsApp with the bill going
+// in and the estimate coming back, a reply typed and sent, then home again and into the My solar app as the panels go live
 function playDemo() {
-  const phone = $("demo");
-  if (!phone || (window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches)) return;
-  phone.classList.add("playing");
-  const status = $("demo-status");
-  phone.querySelectorAll("[data-at]").forEach((el) => {
-    setTimeout(() => {
-      el.classList.add("shown");
-      if (el.classList.contains("typing")) status.textContent = t("typing");
-    }, +el.dataset.at);
-    if (el.dataset.until) setTimeout(() => { el.classList.add("gone"); status.textContent = t("chatSub"); }, +el.dataset.until);
-  });
+  const fig = $("demo"), M = window.Motion;
+  widget();
+  if (!fig || !M || matchMedia("(prefers-reduced-motion: reduce)").matches || new URLSearchParams(location.search).has("still")) return;
+  const screen = $("d-screen"), home = $("d-home"), wa = $("d-wa"), app = $("d-app"), banner = $("d-banner"), tap = $("d-tap");
+  const frame = app.querySelector("iframe"), status = $("demo-status"), typed = $("d-typed");
+  const msgs = [...wa.querySelectorAll(".wa-chat > .m")];
+  const [bill, typing1, reply, apply, typing2, plan] = msgs;
+  const ease = [0.2, 0.9, 0.25, 1];
+  let paused = false, wake = null;
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+  async function wait(ms) {
+    for (let left = ms; left > 0; left -= 100) {
+      while (paused) await new Promise((r) => { wake = r; });
+      await sleep(Math.min(100, left));
+    }
+  }
+  // the loop rests when the hero is off screen or the tab is hidden
+  new IntersectionObserver(([e]) => { paused = !e.isIntersecting || document.hidden; if (!paused && wake) wake(); }).observe(fig);
+  document.addEventListener("visibilitychange", () => { paused = document.hidden; if (!paused && wake) wake(); });
+
+  const scale = () => screen.getBoundingClientRect().width / screen.offsetWidth;
+  function centre(node) {
+    const a = screen.getBoundingClientRect(), b = node.getBoundingClientRect(), k = scale();
+    return { x: (b.left + b.width / 2 - a.left) / k, y: (b.top + b.height / 2 - a.top) / k };
+  }
+  async function press(x, y, icon) {
+    Object.assign(tap.style, { left: `${x}px`, top: `${y}px` });
+    if (icon) M.animate(icon, { scale: [1, 0.88, 1] }, { duration: 0.42 });
+    await M.animate(tap, { opacity: [0, 1, 0], scale: [0.6, 1, 1.25] }, { duration: 0.5, ease: "easeOut" });
+  }
+  async function open(scene, icon) {
+    const o = centre(icon);
+    scene.style.transformOrigin = `${o.x}px ${o.y}px`;
+    scene.style.opacity = "0";
+    scene.hidden = false;
+    fig.dataset.scene = scene === wa ? "wa" : "app";
+    M.animate(home, { scale: [1, 1.08], opacity: [1, 0.4] }, { duration: 0.45, ease });
+    await M.animate(scene, { scale: [0.16, 1], opacity: [0, 1], borderRadius: ["90px", "0px"] }, { duration: 0.5, ease, opacity: { duration: 0.18 } });
+  }
+  async function close(scene, icon) {
+    const o = centre(icon);
+    scene.style.transformOrigin = `${o.x}px ${o.y}px`;
+    fig.dataset.scene = "home";
+    M.animate(home, { scale: [1.08, 1], opacity: [0.4, 1] }, { duration: 0.45, ease });
+    await M.animate(scene, { scale: [1, 0.16], opacity: [1, 0], borderRadius: ["0px", "90px"] }, { duration: 0.42, ease, opacity: { duration: 0.2, delay: 0.24 } });
+    scene.hidden = true;
+  }
+  function pop(node) { node.classList.add("shown"); M.animate(node, { opacity: [0, 1], y: [10, 0], scale: [0.97, 1] }, { duration: 0.28, ease: "easeOut" }); }
+  function say(state) { status.textContent = t(state); }
+  const tell = (tab) => { try { frame.contentWindow.postMessage({ suryaTab: tab }, location.origin); } catch (_) { /* not loaded yet */ } };
+  function loadApp() {
+    const src = `app/?embed=1&lang=${state.lang}`;
+    if (frame.getAttribute("src") !== src) frame.setAttribute("src", src);
+  }
+
+  async function chat() {
+    msgs.forEach((m) => m.classList.remove("shown"));
+    typed.textContent = ""; wa.classList.remove("writing"); say("chatSub");
+    await wait(500); pop(bill);
+    await wait(800); pop(typing1); say("typing");
+    await wait(1700); typing1.classList.remove("shown"); pop(reply); say("chatSub");
+    await wait(1500);
+    const word = t("demoApply");
+    wa.classList.add("writing");
+    for (const ch of word) { typed.textContent += ch; await wait(110); }
+    await wait(350);
+    await press(360, 778);
+    typed.textContent = ""; wa.classList.remove("writing"); pop(apply);
+    await wait(600); pop(typing2); say("typing");
+    await wait(1300); typing2.classList.remove("shown"); pop(plan); say("chatSub");
+    await wait(2600);
+  }
+  async function solar() {
+    const tabs = [["ahead", 146], ["money", 243], ["care", 341]];
+    tell("today");
+    await wait(3400);
+    for (const [tab, x] of tabs) { await press(x, 790); tell(tab); await wait(2700); }
+  }
+
+  async function loop() {
+    fig.classList.add("playing");
+    wa.hidden = true; app.hidden = true; fig.dataset.scene = "home";
+    msgs.forEach((m) => m.classList.remove("shown"));
+    for (;;) {
+      await wait(1500);
+      const waIcon = $("d-ic-wa").firstElementChild, appIcon = $("d-ic-app").firstElementChild;
+      const w = centre(waIcon); await press(w.x, w.y, waIcon);
+      await open(wa, waIcon);
+      loadApp();
+      await chat();
+      await M.animate(fig.querySelector(".home-bar"), { y: [0, -10, 0] }, { duration: 0.35 });
+      await close(wa, waIcon);
+      await wait(700);
+      await M.animate(banner, { y: ["-160%", "0%"], opacity: [0, 1] }, { type: "spring", bounce: 0.25, duration: 0.6 });
+      await wait(2600);
+      await M.animate(banner, { y: ["0%", "-160%"], opacity: [1, 0] }, { duration: 0.35, ease: "easeIn" });
+      await wait(300);
+      const p = centre(appIcon); await press(p.x, p.y, appIcon);
+      loadApp();
+      await open(app, appIcon);
+      await solar();
+      await M.animate(fig.querySelector(".home-bar"), { y: [0, -10, 0] }, { duration: 0.35 });
+      await close(app, appIcon);
+      tell("today");
+    }
+  }
+  loop();
+}
+
+// the home screen's My solar widget shows the same simulated panels the app does
+async function widget() {
+  if (!$("d-kw")) return;
+  const now = new Date();
+  $("d-cal-day").textContent = now.toLocaleDateString("en-US", { weekday: "short" });
+  $("d-cal-date").textContent = now.getDate();
+  const day = (n) => new Date(Date.now() + n * 864e5).toISOString().slice(0, 10);
+  const q = new URLSearchParams({ kw: 3, lat: 28.53, lon: 77.21, installed: day(-190), cleaned: day(-10), use: 300, rate: 7, promised: 360, lang: state.lang });
+  try {
+    const r = await fetch(`${API}/plant?${q}`);
+    if (r.ok) state.widget = await r.json();
+  } catch (_) { /* the widget keeps its placeholder */ }
+  renderWidget();
+}
+function renderWidget() {
+  const d = state.widget;
+  if (!d || !$("d-kw")) return;
+  const night = d.now.status === "night";
+  $("d-kw").textContent = num(d.now.power_kw, 2);
+  $("d-sub").textContent = night ? t("widgetNight", num(d.today.day_kwh, 1)) : t("widgetToday", num(d.today.so_far_kwh, 1), rupees(d.today.saved_rs));
+  const f = Math.min(1, Math.max(0, (d.now.hour - d.today.sunrise) / (d.today.sunset - d.today.sunrise)));
+  $("d-arc").style.strokeDasharray = `${f * 100} 100`;
+  $("d-sun").setAttribute("cx", (60 - 52 * Math.cos(Math.PI * f)).toFixed(1));
+  $("d-sun").setAttribute("cy", (60 - 52 * Math.sin(Math.PI * f)).toFixed(1));
 }
 playDemo();
 if (location.hash) route(location.hash);
